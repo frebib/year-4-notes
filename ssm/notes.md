@@ -55,7 +55,7 @@
 ### Exercises/Suggestions
 - A load of suggestions in the slides for stuff. Will probably go into detail later.
 
-### Cycle of quality systems 03/10/2017
+### Cycle of Quality Systems (03/10/2017)
 - Plan
   - Identify assets, risks, threats
   - Associate controls
@@ -64,10 +64,11 @@
 - Check
   - Design and collect metrics
   - Design and collect audit info
-  - Assess the success of the system
+  - Assess (the best you can) the security of the system
 - Act
   - Improve the system
   - Return to "do" (or "plan")
+  - Repeat
 
 
 - ISO 9001

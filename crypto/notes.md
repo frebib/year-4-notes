@@ -174,3 +174,10 @@ D(_k_, E(_k_, _m_)) = _m_
     - _D_<sub>_i_</sub> = _D_<sub>_i_-1</sub> <<< _p_<sub>_i_</sub>
     - Where _p_<sub>_i_</sub> = 1 (if _i_ = 1,2,9,16) else 2
   - Join _C_<sub>i</sub> and _D_<sub>i</sub> and apply permutation PC-2 to produce a 48 bit output
+
+### Security of block ciphers (03/10/2017)
+{missing notes here}
+
+### Back to DES
+- Good design but only 56 bit keys - 2<sup>56</sup> security
+- {missing notes here}

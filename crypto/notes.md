@@ -176,8 +176,29 @@ D(_k_, E(_k_, _m_)) = _m_
   - Join _C_<sub>i</sub> and _D_<sub>i</sub> and apply permutation PC-2 to produce a 48 bit output
 
 ### Security of block ciphers (03/10/2017)
-{missing notes here}
+- Use an abstract notion: pseudorandom permutations
+  - Let X = {0,1}<sup>_n_</sup> and pseudorandom permutation over (K,X) is function E: K x X -> X
+  - There exists an efficient deterministic algorithm to compute E(k,x) for any k and x
+  - The function E(k,_) is one-to-one for each k
+  - There exists a function D : K × X → X which is efficiently computable, and D(k, E(k, x)) = x for all k and x.
+
+#### Security of pseudorandom permutations
+- Secure is an adversary can't distinguish it from a "genuine" random permutation
+- There are far fewer pseudorandom permutations than in total
+
+### Negligible functions
+A function of natural numbers to positive real number is negligible if the output number is less than 1/(everything greater than the input)
+
+### Pseudorandom permutation
+{insert definition here}
 
 ### Back to DES
 - Good design but only 56 bit keys - 2<sup>56</sup> security
-- {missing notes here}
+- 2DES encrypts twice, key length of 112 bit, not much more secure
+
+#### 3DES
+- Good but slow
+- 168 bit key split into K<sub>1</sub>, K<sub>2</sub>, K<sub>3</sub>
+- Encrypt M: Enc<sub>K<sub>1</sub></sub>(Dec<sub>K<sub>1</sub></sub>(Enc<sub>K<sub>1</sub></sub>(M)))
+  - Enc-Dec-Enc gives option of setting K<sub>1</sub>, K<sub>2</sub>, K<sub>3</sub> so we can also do DES
+- Security of 2<sup>118</sup>

@@ -131,3 +131,36 @@
 - How to manage departure of staff
 - Who can be let into the building at night
 - How to provision a new laptop
+
+## Asset Registers (05/10/2017)
+- Register of all info assets in the business
+- Define scope of an information management system
+- Should include everything that can affect security of information
+
+### The full scope
+- Everything you might want to record a **threat** against
+  - Things an attacker may want to control/destroy/compromise
+  - Things that might stop working
+- Everything you might want to apply a **control** to
+  - Things to consider
+
+### Construction: an approach
+1. Systems and databases
+    * Payroll, HR, source control
+2. Expand downwards
+3. "What you can see"
+    * Boxes ("tin"), buildings, people, cabling
+4. Expand upwards
+
+
+- Iterate and improve
+
+#### Reality
+- End up finding a lot of things you didn't know about
+- Legacy systems and infrastructure
+
+#### Maintenance
+- Hard to add new systems and new dependencies
+- Requires active co-operation
+- Keeping up-to-date important to present current systems in use
+  - This often doesn't get done because...who can be bothered?

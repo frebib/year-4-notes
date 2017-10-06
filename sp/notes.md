@@ -126,3 +126,46 @@
 - Use automated tools
   - Static analysis: search known vulns in code
   - Dynamic analysis: run code with known attack patterns
+
+### SQL Injections (06/10/2017)
+- Attacker modifies SQL queries through uncleaned inputs
+
+#### Potential damage
+- **Confidentiality:** could read sensitive data
+- **Integrity:** could change data
+- **Authentication:** could bypass authentication
+- **Authorisation:** could change authorisation info
+
+#### Prevention mechanisms
+- Prepared statements
+  - Prepare phase:
+    - Create SQL statement template with parameters
+    - Send prepared statement to database for parse, compile, optimisation and storage
+  - Binding phase:
+    - Application binds values to parameters, executes statement
+    - Can be done several times with different values
+  - **Advantages:**
+    - Reduced parsing time (only once for multiple executions)
+    - Reduced bandwidth (only send params, not whole query)
+    - Prevent injection by separating code and data
+    - Critical code preimplemented by experts
+- Object-relational mappers
+  - Object database: DB management system, info is represented by objects
+  - Convert info from relational to object database
+  - **Advantages:**
+    - Reduce code size
+    - SQL injection can be blocked by the OR mapper
+  - **Disadvantages:**
+    - Hides implementation
+- Stored procedures
+  - Similar to parameterised queries
+  - Difference to prepared statements: procedure stored in database
+- Whitelist validation
+  - Use when above methods are not an option
+  - Defence in depth: always use, even on binded variables
+- Escaping
+
+#### Least privilege
+- Users that only need read access to DB only get that
+- Users only need access to part of DB only get that
+- DB management systems not run as root

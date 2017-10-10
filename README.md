@@ -24,6 +24,6 @@
 ### Secure System Management
 [Lecture Slides](../../tree/master/ssm/lecture-slides)
 |
-[Notes](ssm/noted.md)
+[Notes](ssm/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27287)

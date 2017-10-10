@@ -202,3 +202,60 @@ A function of natural numbers to positive real number is negligible if the outpu
 - Encrypt M: Enc<sub>K<sub>1</sub></sub>(Dec<sub>K<sub>1</sub></sub>(Enc<sub>K<sub>1</sub></sub>(M)))
   - Enc-Dec-Enc gives option of setting K<sub>1</sub>, K<sub>2</sub>, K<sub>3</sub> so we can also do DES
 - Security of 2<sup>118</sup>
+
+## AES (06/10/17)
+- 128 bit key size
+- Block size of 128, 256 or 512
+- Works in rounds, with round keys
+  * 10, 12 or 14 rounds depending on number of bits in the key
+- Is a _substitution-permutation network_ (not a Feistel network)
+- Came about from a competition winner (run by NIST in 1997)
+  * 15 submissions (1998)
+  * 5 finalists (1999)
+  * Rijndael won, became AES (2000)
+
+### Encryption Process
+Arrange the message in a 4×4 matrix (8 bits per square), spreading 128 bits over the grid, as below:
+
+|8|8|8|8|
+|-|-|-|-|
+|8|8|8|8|
+|8|8|8|8|
+|8|8|8|8|
+
+Below is 1 round defined. AES consists of 10 rounds
+- Byte Substitution
+- ShiftRows
+- MixColumn
+- Key Addition (XOR round key)
+
+#### Byte Substitution
+- Using the s-box lookup table, map each value in the matrix to the matching value in the table
+
+#### ShiftRows
+Cyclic shift each row left by the row index, top to bottom, starting at row 0 (the top)
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/AES-ShiftRows.svg/640px-AES-ShiftRows.svg.png)
+
+### Key derivation
+AES requires 11 round keys (one initial, 10 for the rounds)
+
+<code>
+for i := 1 to 10 do  
+    T := W <sub>4i−1</sub> ≪ 8  
+    T := SubBytes(T)  
+    T := T ⊕ RC<sub>i</sub>  
+    W 4i := W<sub>4i−4</sub> ⊕ T  
+    W 4i+1 := W<sub>4i−3</sub> ⊕ W <sub>4i</sub>  
+    W 4i+2 := W<sub>4i−2</sub> ⊕ W <sub>4i+1</sub>  
+    W 4i+3 := W<sub>4i−1</sub> ⊕ W <sub>4i+2</sub>  
+end
+</code>
+
+### AES and finite fields of polynomials
+- e.g. a bit string written as a polynomial
+
+01111010
+
+x<sup>6</sup> + x<sup>5</sup> + x<sup>4</sup> + x<sup>3</sup> + x<sup>1</sup>
+

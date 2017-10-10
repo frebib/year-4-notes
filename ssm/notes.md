@@ -164,3 +164,45 @@
 - Requires active co-operation
 - Keeping up-to-date important to present current systems in use
   - This often doesn't get done because...who can be bothered?
+
+## Risks and threats (10/10/2017)
+### Threats, compromise methods, risks
+- **Threats:** people who might do things
+- **Compromise methods:** how they might do things
+- **Risk:** consequence to defender of threat's success
+
+#### Threats
+- Something that an attacker might attempt to do to an asset
+- To assess, look at attacker capability and intent
+  - Attackers need both to be a danger
+
+
+**HMG #1**
+- **Threat source:** a person/organisation that desires to breach security and benefit
+- **Threat actor:** a person that performs an attack
+- **Threat level:** a level attributed to the to capability/motivation of a threat actor/source to an asset
+
+
+**Deterrable?**
+- Threat to lose job, clearance, livelihood, liberty...
+- Appeal to "better nature", ethical codes, etc.
+
+#### Compromise methods
+- How an attack may be carried out
+- Only considers methods plausible for identified threat sources
+
+#### Risks
+- Risks are things that might happen to an asset, combining likelihood with impact
+- Risks for ISO 27001 include fire and flood that don't have threat actors
+
+
+#### Risk assessment
+- A list of things that might happen to assets, looking at likelihood and impact
+- Multiplication is OK, breaks down for high impact/low likelihood events
+  - Sometimes need to consider high impact events even if low likelihood
+- Weigh outcomes in light of likelihood
+
+#### Threat assessment
+- A list of people that may attack you, looking at capability and motives
+- Nation states have capability but for most people, limited intent
+- Random fired dude likely has lots of intent, limited capability

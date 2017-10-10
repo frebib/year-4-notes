@@ -169,3 +169,40 @@
 - Users that only need read access to DB only get that
 - Users only need access to part of DB only get that
 - DB management systems not run as root
+
+### Cross-site scripting attacks (XSS)
+- Inject js code into the client's browser via messages between client/server
+
+
+#### Impact
+- Cookie or session data sent to attacker
+- Browser history, documents revealed
+- Redirected to dangerous website
+- Trojan installed
+
+#### DOM-based XSS
+- DOM = Document Object Model
+  - Representation of HTML doc
+  - Separates doc structure from content
+  - DOM includes document's URL
+- Attacks are entirely client side
+  - Use anchor tags '#' in HTTP request
+  - Anchor tags not sent to the server
+  - Full URL stored in the DOM
+  - Script executed by browser when document is loaded
+
+#### Preventing XSS
+- Escape untrusted input and output data
+- When needing to allow code, use sanitizing libraries on untrusted inputs
+- Use Context Security Policy (CSP)
+
+#### Set cookies HttpOnly
+- Cookies often used to create HTTP sessions
+- Cookies contain auth credentials
+- HttpOnly cookie flag prevents js script access to it
+- Mitigates impact of XSS attacks
+
+#### Content security policy (CSP)
+- Browser can only use resources from trusted sources
+- Browser should ignore hostile sources
+- Enabled in HTTP header

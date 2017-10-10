@@ -205,7 +205,7 @@ A function of natural numbers to positive real number is negligible if the outpu
 
 ## AES (06/10/17)
 - 128 bit key size
-- Block size of 128, 256 or 512
+- Block size of 128, 192 or 256
 - Works in rounds, with round keys
   * 10, 12 or 14 rounds depending on number of bits in the key
 - Is a _substitution-permutation network_ (not a Feistel network)

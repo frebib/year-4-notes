@@ -179,7 +179,7 @@ D(_k_, E(_k_, _m_)) = _m_
 - Use an abstract notion: pseudorandom permutations
   - Let X = {0,1}<sup>_n_</sup> and pseudorandom permutation over (K,X) is function E: K x X -> X
   - There exists an efficient deterministic algorithm to compute E(k,x) for any k and x
-  - The function E(k,_) is one-to-one for each k
+  - The function E(k,\_) is one-to-one for each k
   - There exists a function D : K × X → X which is efficiently computable, and D(k, E(k, x)) = x for all k and x.
 
 #### Security of pseudorandom permutations

@@ -263,7 +263,7 @@ for i := 1 to 10 do
 end
 </code></pre>
 
-### AES and finite fields of polynomials
+### AES and finite fields of polynomials (10/10/2017)
 - e.g. a bit string written as a polynomial
 
 01111010 = x<sup>6</sup> + x<sup>5</sup> + x<sup>4</sup> + x<sup>3</sup> + x<sup>1</sup>

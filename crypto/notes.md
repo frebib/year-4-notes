@@ -225,37 +225,78 @@ Arrange the message in a 4×4 matrix (8 bits per square), spreading 128 bits ove
 
 Below is 1 round defined. AES consists of 10 rounds
 - Byte Substitution
+  - Gives non-linearity
 - ShiftRows
-- MixColumn
-- Key Addition (XOR round key)
+- MixColumns
+  - MixColumns and ShiftRows give _diffusion_
+- Key Addition (XOR with round key)
 
-#### Byte Substitution
-- Using the s-box lookup table, map each value in the matrix to the matching value in the table
+#### SubBytes
+- Using the S-box lookup table, map each value in the matrix to the matching value in the table
 
 #### ShiftRows
 Cyclic shift each row left by the row index, top to bottom, starting at row 0 (the top)
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/AES-ShiftRows.svg/640px-AES-ShiftRows.svg.png)
 
-### Key derivation
+#### MixColumns
+- Achieved by multiplying with a matrix
+- Use ⊕ (xor) for addition
+- Use ⊗ "special" operation for multiplication
+
+#### AddRoundKey
+- Use the key schedule to compute round keys
+- Xor round key with state matrix
+
+### Key schedule
 AES requires 11 round keys (one initial, 10 for the rounds)
 
-<code>
-for i := 1 to 10 do  
-    T := W <sub>4i−1</sub> ≪ 8  
-    T := SubBytes(T)  
-    T := T ⊕ RC<sub>i</sub>  
-    W 4i := W<sub>4i−4</sub> ⊕ T  
-    W 4i+1 := W<sub>4i−3</sub> ⊕ W <sub>4i</sub>  
-    W 4i+2 := W<sub>4i−2</sub> ⊕ W <sub>4i+1</sub>  
-    W 4i+3 := W<sub>4i−1</sub> ⊕ W <sub>4i+2</sub>  
+<pre><code>
+for i := 1 to 10 do
+    T := W <sub>4i−1</sub> ≪ 8
+    T := SubBytes(T)
+    T := T ⊕ RC<sub>i</sub>
+    W 4i := W<sub>4i−4</sub> ⊕ T
+    W 4i+1 := W<sub>4i−3</sub> ⊕ W <sub>4i</sub>
+    W 4i+2 := W<sub>4i−2</sub> ⊕ W <sub>4i+1</sub>
+    W 4i+3 := W<sub>4i−1</sub> ⊕ W <sub>4i+2</sub>
 end
-</code>
+</code></pre>
 
 ### AES and finite fields of polynomials
 - e.g. a bit string written as a polynomial
 
-01111010
+01111010 = x<sup>6</sup> + x<sup>5</sup> + x<sup>4</sup> + x<sup>3</sup> + x<sup>1</sup>
 
-x<sup>6</sup> + x<sup>5</sup> + x<sup>4</sup> + x<sup>3</sup> + x<sup>1</sup>
+#### Irreducible polynomials
+A polynomial that is only divisible by 1 and itself.
 
+- If _p_(x) is an irreducible polynomial in F<sub>2</sub>[x]
+  - Write F<sub>2</sub>[x]/_p_(x) for set of polynomials in F<sub>2</sub>[x] considered modulo _p_(x)
+
+### The ⊗ operation
+- Bitstrings interpreted as polynomials
+- The two polynomials are multiplied together and reduced mod x<sup>3</sup> + x + 1
+- Result is converted back into a 3-bit string
+
+### AES field
+- F2[x] / (x<sup>8</sup> + x<sup>4</sup> + x<sup>3</sup> + x + 1)
+  - This gives operations ⊕ and ⊗ on bytes
+  - These two operations are used to define MixColumns and S-boxes
+
+#### Substitution in AES
+Substitution for byte _B_:
+  1. Compute multiplicative inverse of _B_ in the AES field to
+      - Obtains _B'_ = [x<sub>7</sub>,...,x<sub>0</sub>]
+      - Zero element mapped to [0,...,0]
+  2. Compute new bit vector _B''_ = [y<sub>7</sub>,...,y<sub>0</sub>] with transformation:
+  ![](https://i.imgur.com/dLB01sp.png)
+
+#### Key schedule in AES
+- RC<sub>1</sub>,...,RC<sub>10</sub>
+  - RC<sub>i</sub> = x<sup>i-1</sup> mod x<sup>8</sup> + x<sup>4</sup> + x<sup>3</sup> + x + 1
+
+### AES Security
+So far, only small "erosions" of AES
+  - Meet-in-the-middle key recovery attack. Requires 2<sup>126</sup> operations (about 4x faster than brute-force)
+  - "Related key" attack on AES-192 and AES-256. Security may be reduced if keys are related in a certain way but this is an "invalid" attack since keys should always be random.

@@ -72,7 +72,7 @@ What remains after defences are in place.
   - Creates incentives for fixing vulnerabilities
   - Companies advertise bounties
 
-## Principles of secure design
+## Principles of secure design (11/10/2017)
 
 ### 12 principles
 - Inspired by **simplicity** and **restriction**

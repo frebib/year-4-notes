@@ -300,3 +300,45 @@ Substitution for byte _B_:
 So far, only small "erosions" of AES
   - Meet-in-the-middle key recovery attack. Requires 2<sup>126</sup> operations (about 4x faster than brute-force)
   - "Related key" attack on AES-192 and AES-256. Security may be reduced if keys are related in a certain way but this is an "invalid" attack since keys should always be random.
+
+## Block Cipher Modes (13/10/2017)
+
+### Properties of good block ciphers
+1. [Security] Identical plaintexts shouldn't produce identical ciphertexts
+2. [Security] Identical blocks within a plaintext shouldn't produce identical ciphertext blocks
+3. [Security] There should be protection against deletion or insertion of blocks
+4. [Recovery] Ciphertext transmission errors should only affect the block containing the error
+5. [Efficiency] It should be efficient (e.g. parallelisable)
+
+<!-- TODO: Fill this table out -->
+|   |ECB|CBC|CTR|GCM|
+|--:|:-:|:-:|:-:|:-:|
+| 1 | ✘ | ✔ | ✔ | ✔ |
+| 2 | ✘ | ✔ |   |   |
+| 3 |   | ✘ |   |   |
+| 4 |   | ✘ |   |   |
+| 5 |   | ✘ | ✔ |   |
+
+<!-- trailing whitespace is bad :( -->
+### ECB (Electronic Codebook Mode)
+It's not secure
+
+![](https://blog.filippo.io/content/images/2015/11/Tux\_ecb.jpg)
+
+### CBC (Cipher-Block Chaining)
+- Uses an IV (Initialisation Vector (Random number))
+  - IV is random and different for every encryption
+  - First block of plaintext is XORed with the IV
+- Each block uses the same key
+- IV is publicly sent along with ciphertext (as the first block)
+  - Could be thought as the 'zeroth block'
+
+#### Encryption
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/CBC_encryption.svg/800px-CBC_encryption.svg.png)
+
+#### Decryption
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/CBC_decryption.svg/800px-CBC_decryption.svg.png)
+
+### CTR (Counter Mode)
+- Uses a random nonce as a counter IV, which is incremented for each block
+- As with CBC, the nonce is sent publicly along with the ciphertext

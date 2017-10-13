@@ -207,58 +207,71 @@
 - Nation states have capability but for most people, limited intent
 - Random fired dude likely has lots of intent, limited capability
 
-### Threat Actors (12/10/2017)
+### Threat Actors (according to HMG #1) (12/10/2017)
 FOI = focus of interest
 
-#### Bystander
+#### Bystander (BY)
 - Authorised physical access to equipment
   - No business to handle or logically access
 - e.g. Cleaners, visitors
 
-#### Handler
+#### Handler (HAN)
 - Business role requires physical access to equipment
 - No logical access to system
   - May have temporary supervised access for test purposes
 - e.g. people that transport, test, repair or replace hardware
 
-#### Indirectly connected
+#### Indirectly Connected (IC)
 - No legitimate or authorised business connectivity to the FoI
 - May be able to access via business partners etc.
 
-#### Information exchange partner
+#### Information Exchange Partner (IEP)
 - Needs to exchange data with focus of interest through a media exchange
 - May be originator, recipient or both
 - e.g. Someone using a third-party email host
 
-#### Person within range
+#### Person Within Range (PWR)
 - Within range of electronic, electromagnetic, etc. emanations from equipment
 - May be in a position to jam communication paths
+- Can potentially steal data with specialist equipment
+  - e.g. reading CRT screens without line-of-sight
 
-#### Normal user
+#### Normal User (NU)
 - Registered user or account holder that uses applications within FoI
+  - Data can be stolen and leaked
+  - Data can be deleted and modified
 - Provided standard facilities and privileges
 
-#### Physical intruder
+#### Physical Intruder (PI)
 - Gains unauthorised physical access to equipment
-- e.g. someone breaking into a data centre
+  - e.g. someone breaking into a data centre
+- By gaining access they have already broken the law so are more likely to cause damage or being more brutal and leaving traces
 
-#### Privileged user
+#### Privileged User (PU)
 - Registered user/account holder that manages applications etc. within the FoI
 - Usually can't be constrained like a normal user
+  - e.g. System Administrators
 
-#### Service provider
+#### Service Provider (SP)
 - Provides services to the FoI
-- e.g. ISP, intrusion detection services
+  - Communications
+  - Shared databases
+  - Internet access
+  - Web hosting
+  - Resource sharing
+  - Archive services
+  - Intrusion detection services
+  - Antivirus scanning software
 
-#### Service consumer
+#### Service Consumer (SP)
 - Makes use of services advertised/provided by the FoI
 - e.g. user of 'walk in' kiosk
 
-#### Shared service subscribers
+#### Shared Service Subscribers (SSS)
 - Someone who is an authorised user of services used by the FoI
 - Not a registered user of the systems/services within the FoI
 - e.g. FoI may rely on same power distribution service as user, user could make it unavailable, affecting FoI
 
-#### Supplier
+#### Supplier (SUP)
 - Someone in supply chain that provides, maintains, has access to software/equipment
 - May have knowledge to allow/facilitate compromise of security property

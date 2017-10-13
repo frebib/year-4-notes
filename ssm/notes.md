@@ -206,3 +206,59 @@
 - A list of people that may attack you, looking at capability and motives
 - Nation states have capability but for most people, limited intent
 - Random fired dude likely has lots of intent, limited capability
+
+### Threat Actors (12/10/2017)
+FOI = focus of interest
+
+#### Bystander
+- Authorised physical access to equipment
+  - No business to handle or logically access
+- e.g. Cleaners, visitors
+
+#### Handler
+- Business role requires physical access to equipment
+- No logical access to system
+  - May have temporary supervised access for test purposes
+- e.g. people that transport, test, repair or replace hardware
+
+#### Indirectly connected
+- No legitimate or authorised business connectivity to the FoI
+- May be able to access via business partners etc.
+
+#### Information exchange partner
+- Needs to exchange data with focus of interest through a media exchange
+- May be originator, recipient or both
+- e.g. Someone using a third-party email host
+
+#### Person within range
+- Within range of electronic, electromagnetic, etc. emanations from equipment
+- May be in a position to jam communication paths
+
+#### Normal user
+- Registered user or account holder that uses applications within FoI
+- Provided standard facilities and privileges
+
+#### Physical intruder
+- Gains unauthorised physical access to equipment
+- e.g. someone breaking into a data centre
+
+#### Privileged user
+- Registered user/account holder that manages applications etc. within the FoI
+- Usually can't be constrained like a normal user
+
+#### Service provider
+- Provides services to the FoI
+- e.g. ISP, intrusion detection services
+
+#### Service consumer
+- Makes use of services advertised/provided by the FoI
+- e.g. user of 'walk in' kiosk
+
+#### Shared service subscribers
+- Someone who is an authorised user of services used by the FoI
+- Not a registered user of the systems/services within the FoI
+- e.g. FoI may rely on same power distribution service as user, user could make it unavailable, affecting FoI
+
+#### Supplier
+- Someone in supply chain that provides, maintains, has access to software/equipment
+- May have knowledge to allow/facilitate compromise of security property

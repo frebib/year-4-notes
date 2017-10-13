@@ -206,3 +206,38 @@
 - A list of people that may attack you, looking at capability and motives
 - Nation states have capability but for most people, limited intent
 - Random fired dude likely has lots of intent, limited capability
+
+### Threat Actors (according to HMG #1) (12/10/2017)
+
+#### Bystander (BY)
+Someone who is authorised for physical access to a facility but have no authorisation to access information/data systems
+e.g. cleaners, guests
+
+#### Person Within Range (PWR)
+Someone who can retrieve information from systems with wireless sniffing equipment
+
+#### Normal User (NU)
+A person that has legitimate registered access to systems, applications and services.
+- Data can be stolen and leaked
+- Data can be deleted and modified
+
+#### Physical Intruder (PI)
+Someone who gains unauthorised access by breaking in
+- By gaining access they have already broken the law so are more likely to cause damage or being more brutal and leaving traces
+
+#### Privileged User (PU)
+Similar to a 'Normal User' but have escalated access to data such as confidential or secret information.
+e.g. System Administrators
+
+#### Service Provider (SP)
+A provider of the following systems, for example:
+- Communications
+- Shared databases
+- Internet access
+- Web hosting
+- Resource sharing
+- Archive services
+- Intrusion detection
+- Antivirus scanning software
+
+#### Service Consumer (SC)

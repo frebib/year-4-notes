@@ -208,36 +208,70 @@
 - Random fired dude likely has lots of intent, limited capability
 
 ### Threat Actors (according to HMG #1) (12/10/2017)
+FOI = focus of interest
 
 #### Bystander (BY)
-Someone who is authorised for physical access to a facility but have no authorisation to access information/data systems
-e.g. cleaners, guests
+- Authorised physical access to equipment
+  - No business to handle or logically access
+- e.g. Cleaners, visitors
+
+#### Handler (HAN)
+- Business role requires physical access to equipment
+- No logical access to system
+  - May have temporary supervised access for test purposes
+- e.g. people that transport, test, repair or replace hardware
+
+#### Indirectly Connected (IC)
+- No legitimate or authorised business connectivity to the FoI
+- May be able to access via business partners etc.
+
+#### Information Exchange Partner (IEP)
+- Needs to exchange data with focus of interest through a media exchange
+- May be originator, recipient or both
+- e.g. Someone using a third-party email host
 
 #### Person Within Range (PWR)
-Someone who can retrieve information from systems with wireless sniffing equipment
+- Within range of electronic, electromagnetic, etc. emanations from equipment
+- May be in a position to jam communication paths
+- Can potentially steal data with specialist equipment
+  - e.g. reading CRT screens without line-of-sight
 
 #### Normal User (NU)
-A person that has legitimate registered access to systems, applications and services.
-- Data can be stolen and leaked
-- Data can be deleted and modified
+- Registered user or account holder that uses applications within FoI
+  - Data can be stolen and leaked
+  - Data can be deleted and modified
+- Provided standard facilities and privileges
 
 #### Physical Intruder (PI)
-Someone who gains unauthorised access by breaking in
+- Gains unauthorised physical access to equipment
+  - e.g. someone breaking into a data centre
 - By gaining access they have already broken the law so are more likely to cause damage or being more brutal and leaving traces
 
 #### Privileged User (PU)
-Similar to a 'Normal User' but have escalated access to data such as confidential or secret information.
-e.g. System Administrators
+- Registered user/account holder that manages applications etc. within the FoI
+- Usually can't be constrained like a normal user
+  - e.g. System Administrators
 
 #### Service Provider (SP)
-A provider of the following systems, for example:
-- Communications
-- Shared databases
-- Internet access
-- Web hosting
-- Resource sharing
-- Archive services
-- Intrusion detection
-- Antivirus scanning software
+- Provides services to the FoI
+  - Communications
+  - Shared databases
+  - Internet access
+  - Web hosting
+  - Resource sharing
+  - Archive services
+  - Intrusion detection services
+  - Antivirus scanning software
 
-#### Service Consumer (SC)
+#### Service Consumer (SP)
+- Makes use of services advertised/provided by the FoI
+- e.g. user of 'walk in' kiosk
+
+#### Shared Service Subscribers (SSS)
+- Someone who is an authorised user of services used by the FoI
+- Not a registered user of the systems/services within the FoI
+- e.g. FoI may rely on same power distribution service as user, user could make it unavailable, affecting FoI
+
+#### Supplier (SUP)
+- Someone in supply chain that provides, maintains, has access to software/equipment
+- May have knowledge to allow/facilitate compromise of security property

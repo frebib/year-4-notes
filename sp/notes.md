@@ -206,3 +206,96 @@
 - Browser can only use resources from trusted sources
 - Browser should ignore hostile sources
 - Enabled in HTTP header
+
+## Web Sessions (17/10/2017)
+
+* Authentication: Verifying the user
+* Authorisation: Verifying permission (of the user/action)
+
+### Authentication Methods
+
+* What you know
+  - Passwords
+* What you have
+  - Physical key
+  - Physical device
+  - Certificate
+* What you are
+  - Biometrics
+
+#### Password Authentication Methods
+
+* Basic auth: Sending the password in the clear (e.g. HTTP basic auth)
+* Digest auth: Sending hash of a password
+* Challenge-Response:
+  1. Client initiates a connection
+  2. Server sends a challenge
+  3. Client sends response
+  4. Server checks/verifys response
+
+Client’s response is a cryptographically strong function of challenge and password
+
+* HTTPS (HTTP over TLS)
+  - Agree a common secret session key (key exchange via DHE)
+  - Communicate using encrypted session via agreed secret session key
+
+### HTTP
+
+* HTTP is stateless
+  - Each request is independent to the previous
+  - `keep-alive` or `persistent` connections can be used but will still timeout after several minutes
+
+#### Sessions
+
+* Aim: extend the length of communication
+* Idea:
+  - Client opens a connection
+  - Server sends a session ID to identify the client
+  - Client uses session id in every communication with the server to identify itself
+
+##### Methods of sending Session ID
+
+* URL parameters `example.com/page1?id=..`
+* Body arguments on POST requests
+* Cookies via header: `Cookie: ..`/`Set-Cookie: ..`
+* [Proprietary](http://i.imgur.com/V5K7N1I.jpg) HTTP headers
+
+### Security Threats
+
+* Stealing cookies
+  Impersonating a user by posing as them with their authentication
+  - Session Hijacking: steal a session id and use it
+    * Session fixation: give the user a session id to use
+    * Packet sniffing: steal via packet observation
+    * Malware/Spyware
+    * XSS
+  - Cross-Site Request Forgery: make the client perform an action whilst holding the session id, allowing it to be stolen.
+
+#### Countermeasures
+
+* Don't send session ids in plaintext
+* Use unpredictable ids (cryptographically secure randoms)
+* Use short-lived sessions
+* Regenerate fresh ids at login
+* Check source IP address against cookie (not always effective)
+* Refresh ids regularly (regenerate)
+* Ensuring the client remembers to log out
+
+####  HTTP Cookie attributes
+
+* `HTTPOnly` - cookie cannot be accessed by scripts (helps against XSS attacks) _(?)_
+* `SameSite` - only allow cookie on the same domain
+* `Domain` and `Path` - restrict cookie sending by domain and subpath
+* `MaxAge` - timeout cookie after some time
+* `Secure` - only allow cookies on HTTPS connections
+
+### HTTPS (Secure HTTP)
+
+* HTTP over TLS (SSL)
+  - You know what TLS is, this isn't 'Intro to Security'
+
+* Provides advantages:
+  - Confidentiality (AES encrypted transport)
+  - Authenticatiotn (client/server certificates)
+  - Integrity (Signatures)
+  - PFS (Forward secrecy): old messages cannot be retrieved with a current key/certificate

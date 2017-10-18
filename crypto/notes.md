@@ -332,6 +332,7 @@ It's not secure
 - Each block uses the same key
 - IV is publicly sent along with ciphertext (as the first block)
   - Could be thought as the 'zeroth block'
+- Encrypting the IV is pointless, CBC is _provably secure_ without it (assuming a random IV)
 
 #### Encryption
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/CBC_encryption.svg/800px-CBC_encryption.svg.png)
@@ -340,5 +341,5 @@ It's not secure
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/CBC_decryption.svg/800px-CBC_decryption.svg.png)
 
 ### CTR (Counter Mode)
-- Uses a random nonce as a counter IV, which is incremented for each block
+- Uses a random nonce as well as a counter IV (which is incremented for each block), combined together
 - As with CBC, the nonce is sent publicly along with the ciphertext

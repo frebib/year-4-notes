@@ -275,3 +275,21 @@ FOI = focus of interest
 #### Supplier (SUP)
 - Someone in supply chain that provides, maintains, has access to software/equipment
 - May have knowledge to allow/facilitate compromise of security property
+
+{Missing slides/notes}
+
+### Risk Appetite (24/10/2017)
+- {Missing slides/notes
+
+#### What is insurance?
+- Bet on an event happening
+- Person taking out insurance "wins" if even occurs and they receive payment
+- Insurer prices their bet based on likelihood
+
+#### Self-insurance
+- If you can afford the maximum payout
+- Put money in the bank
+
+#### Risk Acceptance
+- Not paying insurance for cheap risks
+- Insurance for more expensive risks

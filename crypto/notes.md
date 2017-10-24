@@ -343,3 +343,38 @@ It's not secure
 ### CTR (Counter Mode)
 - Uses a random nonce as well as a counter IV (which is incremented for each block), combined together
 - As with CBC, the nonce is sent publicly along with the ciphertext
+
+## Stream Ciphers
+{Missing notes}
+
+## Integrity and Authentication (24/10/2017)
+### Integrity of messages
+**Goal:** Ensure change of message by attacker can be detected
+**Definition:** Cryptographic hash functions are functions from bitstrings of almost any length to a bitstring of a small, fixed length
+  - Easy to compute
+  - One-way (hard to invert
+  - Collision-resistant. Infeasible to find two files with the same hash
+
+#### Collision-resistance
+- Changing one bit of input should "completely change" the output
+- e.g. typically half of output bits are changed
+
+#### One-way vs collision-resistant
+**One-way:** given y, infeasible to find x such that h(x) = y
+
+**Collision-resistant:** infeasible to find x and x' such that h(x) = h(x')
+
+### The Merkle-Damgard Construction
+- Produces a cryptographic hash function from a compression function shown as _f_ below.
+- Apply compression function repeatedly
+- Used by MD4, MD5, SHA-1 and SHA-2
+![](https://i.imgur.com/NaihODP.png)
+
+### MD4
+#### MD4 algorithm
+- IV is constant (part of hash function definition)
+- K constant (part of the hash function definition)
+{Missing notes}
+
+#### MD4 compression function
+{Missing notes}

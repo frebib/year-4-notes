@@ -186,3 +186,63 @@ Server has public key pk
   - CA signs certificate to do this
 - Browser knows the verification key to verify a public key's signature
 - CA verification keys built into browser
+
+## Device Security (18/10/2017)
+- Physical security
+- Firmware/OS security
+- Application security
+
+
+- Protects devices against
+  - Malicious applications
+  - Rootkits
+
+### Malicious applications
+Distributed using OS specific applications, designed to exploit the operating system vulnerabilities
+
+- High success rate, masquerading as useful applications
+- Often used to install more dangerous malware (e.g. backdoors, rootkits)
+
+{Missing notes}
+
+### How to prevent a rollback attack? (25/10/2017)
+- Counter based version control
+- Blacklist version control
+- eFuses (physically blow when firmware is updated)
+- Apple nonce based protocol: random unique value generated at every restore, signed by Apple
+
+## Data Security
+### Key encapsulation
+- Encryption of large data slow with public key encryption
+- Steps:
+  - Encrypt data with symmetric key encryption
+  - Encrypt symmetric key with public key
+  - Send both encrypted data
+
+### What you get/don't get from encryption
+- Does:
+  - Protect data while resting
+  - Protect data from apps that don't have access to the keys
+  - Protect data if stolen or accessed
+- Doesn't:
+  - Prevent data loss
+  - Make the system more resilient
+  - {Missing point}
+
+### Disk based encryption
+(Stuff about what's encrypted and what's not.. e.g. kernel not encrypted)
+
+### Storing the key
+- USB stick
+  - Easy
+  - Requires USB on system
+  - Vulnerable to stealing
+- TPM
+  - Difficult to set up
+  - Transparent
+  - Protected from stealing
+
+### {Missing notes}
+
+### Bitlocker
+{Missing notes}

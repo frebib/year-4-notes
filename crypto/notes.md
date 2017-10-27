@@ -378,3 +378,48 @@ It's not secure
 
 #### MD4 compression function
 {Missing notes}
+
+### SHA-3
+- Uses _sponge construction_ rather than _Merkle-Damgard_ construction
+- Output length can be varied
+
+![](https://i.imgur.com/icKhGLC.png)
+
+- P are input blocks
+- C cannot be altered by input
+
+### Message Authentication Codes (MAC)
+- Used to guarantee authenticity
+- A keyed hash function where Alice and Bob share key k
+  - Alice -> Bob: _m_, MAC<sub>_k_</sub>(_m_)
+  - Bob computes MAC<sub>_k_</sub>(_m_), checks if it matches what he was sent
+
+#### How to define MAC from a hash function?
+- MAC<sub>_k_</sub>(_m_) could be defined as _h_(_k_||_m_)
+  - Vulnerable to _length extension attack_
+    - Given _m_ and _h_(_k_||_m_), can construct _m'_ and _h_(_k_||_m_')
+    - We've been able to get a hash without the key by adding to the end of original _m_
+
+#### HMAC
+- HMAC<sub>_k_</sub>(_m_) = _h_( (_k_ ⊕ _opad_) || _h_( (_k_ ⊕ _ipad_) || _m_) )
+- _k_ padded with zeros to blocksize of hash function
+- _ipad_ and _opad_ are constants of the blocksize
+  - Large hamming distance from each other. Inner and outer keys have fewer bits in common
+
+#### CBC-MAC
+Uses CBC operation of block cipher
+![](https://i.imgur.com/BEjuxVw.png)
+
+#### PMAC
+- Parrallelisable, unlike HMAC and CBC-MAC
+![](https://i.imgur.com/ypIQ7aW.png)
+
+### Security of hash function
+Secure if attacker can't output a collision.
+{Missing notes}
+
+### Security of MAC
+MAC is secure if attacker cannot produce a valid (message, tag) pair that he hasn't seen before. (Assume he doesn't have the key)
+
+### MAC Game
+{Missing rules}

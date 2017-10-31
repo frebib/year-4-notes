@@ -423,3 +423,39 @@ MAC is secure if attacker cannot produce a valid (message, tag) pair that he has
 
 ### MAC Game
 {Missing rules}
+
+## Authenticated encryption (31/10/2017)
+For privacy and integrity:
+- Combine encryption and MAC in appropriate way
+- Use new mode, guarantees confidentiality and authenticity
+
+### Combination possibilities
+- Encrypt-then-MAC
+  - Encrypt, compute MAC of ciphertext
+  - E<sub>k1</sub>(m), MAC<sub>k2</sub> (E<sub>k1</sub> (m))
+  - Gives both privacy and integrity (provided encrypt and MAC are secure)
+  - Used in IPsec
+- MAC-then-encrypt
+  - Compute MAC, encrypt message-MAC pair
+  - E<sub>k2</sub> (m, MAC<sub>k1</sub> (m))
+- Encrypt and MAC
+  - Pair of ciphertext and MAC
+  - E<sub>k1</sub> (m), MAC<sub>k2</sub> (m)
+
+### Authenticated encryption game
+- Challenger picks random encryption key
+- Attacker does computations, may send messages m<sub>1</sub>,...,m<sub>n</sub>
+- Challenger responds with ciphertexts c<sub>1</sub>,...,c<sub>n</sub>
+- Attacker does more computations, submits different ciphertext c to challenger
+- Attacker has won if he's forged a valid ciphertext c (where MAC is correct)
+
+### Galois counter mode (GCM)
+- Encrypt-then-MAC is secure but requires two passes over data
+- GCM only needs to pass through data once
+
+- Encrypts nonce and counter value, produces key stream to XOR with plain text
+- Computes an authentication tag on ciphertext
+- Can authenticate additional unencrypted data
+
+#### GCM: the authentication tag
+{Missing notes}

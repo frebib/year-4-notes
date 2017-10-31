@@ -10,7 +10,7 @@ Consists of
 
 3) A distinguished start symbol `S`
 
-4) Rules of the form `A -> X1 ... Xn`
+4) Rules of the form `A -> X_1 ... X_n`
 
 
 ## Notation

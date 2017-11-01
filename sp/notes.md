@@ -299,3 +299,62 @@ Client’s response is a cryptographically strong function of challenge and pass
   - Authenticatiotn (client/server certificates)
   - Integrity (Signatures)
   - PFS (Forward secrecy): old messages cannot be retrieved with a current key/certificate
+
+## Race Conditions (31/10/2017)
+> Anomalous behaviour due to unexpected critical dependence on relative timing of events
+
+### Secure file opening
+- **open:** checks effective UID permissions
+- **access:** checks real UID permissions
+
+#### Example of TOCTOU vulnerable code
+```c
+if ( access (" filename ", W_OK ) != 0) {
+  exit (1);
+}
+fd = open (" filename ", O_WRONLY );
+write ( fd , buffer , sizeof ( buffer ));
+```
+
+Something unexpected may happen between access check and when file is used
+
+#### Time Of Check to Time Of Use (TOCTOU)
+- Race condition - something unexpected may happen between access check and when file is used
+- May be able to replace file by another one after access check
+- Use symlinks to redirect filenames to files
+- Attacks require local access to system and precise timing
+
+![](https://i.imgur.com/xshgb7R.png)
+
+- Improve attack success probability
+  - Slow down computer with CPU intensive programs
+  - Run many attack processes in parallel
+
+#### Countermeasures
+- Use atomic operations
+  - Check and use in single system call
+  - Use `open ( "filename", O_CREAT | O_EXCL | O_WRONLY );
+  - If `O_CREAT` and `O_EXCL` set, open fails if file exists
+- Decrease probability (check-use-check again)
+  - Get file info, open, get file info, abort if info are different
+  - Attacker can defeat by restoring file
+  - Increase number of checks to reduce success probability
+- Drop perms
+  - Use seteuid to temp drop real UID perms
+- Use unpredictable filenames
+  - Hard for attacker to attack filename he doesn't know
+  - Filenames aren't totally unpredictable
+  - Better to use mkstemp, which returns a file descriptor
+
+### Locking bugs
+#### Example: incrementing a global value
+{Missing image}
+
+- Needs synchronisation mechanism between threads (enforce atomicity)
+
+#### Locks
+- When resource is in use, lock to prevent use
+- BEWARE OF THE DEADLOCKS OMG
+- Unix
+  - Shared ("reading") and exclusive ("writing") locks
+

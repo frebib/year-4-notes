@@ -27,3 +27,10 @@
 [Notes](ssm/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27287)
+
+### Compilers and Languages
+[Lecture Slides](../../tree/master/cl/lecture-slides)
+|
+[Notes](cl/notes.md)
+|
+[Canvas](https://canvas.bham.ac.uk/courses/27239)

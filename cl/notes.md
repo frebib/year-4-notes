@@ -43,7 +43,7 @@ Rightmost derivation step: `βAz =>r βαz`
 
 ## Dyck Language Grammar Example
 
-Contains all well bracketed sentences, e.g. [[()[]]] but not [(])
+Contains all well bracketed sentences, e.g. `[[()[]]]` but not `[(])`
 
 Rules:
 1) `D -> [D]D`

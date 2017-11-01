@@ -69,13 +69,14 @@ Given a grammar and some string `w`:
 - Parser always terminates
 
 
-# LL Parser
+# LL and LR Parsers
+## LL Parser
 
-## State
+### State
 
 `<π, w>` where `π` is the stack of predictions, and `w` is the remaining terminal input symbols
 
-## Rules:
+### Rules
 
 1) Predict: `<Aπ, w> -> <απ, w>` iff `A -> α`. If we can apply a rule on the head of the stack, apply it
 
@@ -87,13 +88,42 @@ Given a grammar and some string `w`:
 
 5) We fail on either `<ε, w>` or `<π, ε>`
 
-# LR Parser
+### Example
 
-## State
+Given the rules:
+```
+S -> Lb
+L -> aL
+L -> ε
+```
+
+Parse `aab`:
+```
+<S, aab>
+predict -> <Lb, aab>
+predict -> <aLb, aab>
+match   -> <Lb, ab>
+predict -> <aLb, ab>
+match   -> <Lb, b>
+predict -> <b, b>
+match   -> <ε, ε> // reached accepting state!
+```
+
+Parse `ba`:
+```
+<S, ba>
+predict -> <Lb, ba>
+predict -> <b, ba>
+match   -> <ε, a> // can't perform predict or match, so the input isn't accepted
+```
+
+## LR Parser
+
+### State
 
 `<π, w>` where `π` is the stack of reduced input, and `w` is the remaining terminal input symbols
 
-## Rules
+### Rules
 
 1) Shift: `<ρ, aw> -> <ρa, w>`. Move a terminal from the input into the stack
 
@@ -102,4 +132,24 @@ Given a grammar and some string `w`:
 3) Start with `<ε, w>`, so that we can start shifting onto the empty stack to eventually reduce
 
 4) Accept on `<S, ε>`, when there's no input left and we've reduced all seen input to the start state
+
+### Example
+
+Given the rules:
+```
+S -> A
+S -> B
+D -> a
+A -> ab
+B -> ac
+```
+
+Parse `ab`:
+```
+<ε, ab>
+shift  -> <a, b>
+shift  -> <ab, ε>
+reduce -> <A, ε>
+reduce -> <S, ε> // reached accepting state!
+```
 

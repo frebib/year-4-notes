@@ -352,9 +352,22 @@ Something unexpected may happen between access check and when file is used
 
 - Needs synchronisation mechanism between threads (enforce atomicity)
 
-#### Locks
+### Locks
 - When resource is in use, lock to prevent use
 - BEWARE OF THE DEADLOCKS OMG
 - Unix
   - Shared ("reading") and exclusive ("writing") locks
+  - Can be ignored
+- Windows
+  - File system prevents write or delete access on executing files
+  - Share-access controls for whole-file access-share for read, write delete
+  - Byte-range locks
 
+### Databases: Transactions
+- Sequence of operations, perceived as single logical operation on data
+- Must have ACID properties
+  - Atomicity - all or nothing
+  - Consistency - transaction moves DB from valid state to valid state
+  - Isolation - result as if transactions executed sequentially
+  - Durability - transaction remains effective once committed
+- Implemented by locking resource, keeping partial copy til complete

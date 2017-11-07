@@ -363,7 +363,7 @@ Something unexpected may happen between access check and when file is used
   - Share-access controls for whole-file access-share for read, write delete
   - Byte-range locks
 
-### Databases: Transactions
+### Databases: Transactions (07/11/2017)
 - Sequence of operations, perceived as single logical operation on data
 - Must have ACID properties
   - Atomicity - all or nothing

@@ -459,3 +459,12 @@ For privacy and integrity:
 
 #### GCM: the authentication tag
 {Missing notes}
+
+## Public Key Cryptography
+{Missing first D. Galindo lecture notes}
+
+## Greatest Common Divisor (Euclidean Algorithm) (07/11/2017)
+{Sorry what?}
+
+### Inverses modulo N
+{Que?}

@@ -246,3 +246,38 @@ Distributed using OS specific applications, designed to exploit the operating sy
 
 ### Bitlocker
 {Missing notes}
+
+## Cloud Storage Security
+{Missing notes}
+
+## Metadata Security
+### Cryptography issues
+- Protecting metadata, using public key crypto gives larger attack surface
+  - Symmetric doesn't have this problem and is more efficient
+- Symmetric keys are hard to share
+  - Use public key exchange protocols to share
+
+We want:
+- **Content security:** data is encrypted
+- **Metadata security:** ownership info, timestamps, access rights, ciphertext length, etc.
+- **Access pattern security:** when accessed, who accesses, how accessed, etc.
+
+### Searchable encryption
+We can decrypt emails with key, but can the email provider? Solution: Searchable encryption.
+
+- Generate searchable index (precomputed search)
+  - Foreach(doc in DB.docs){ foreach(word in doc) { if (word == keyword) { store(doc.id) } } }
+- Store index encrypted in the cloud
+
+#### Forward index
+List keywords associated with documents
+- Efficiency:
+  - As no. of docs increases, so does time
+  - As no. of keywords increases, so does time
+
+#### Inverted index
+List documents associated with keywords
+- Efficiency:
+  - As no. of keywords increases, so does time
+
+{ Missing notes}

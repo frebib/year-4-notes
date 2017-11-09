@@ -1,5 +1,10 @@
 # Secure System Management
 
+## Acronyms
+
+- IA - _Information Assurance_
+- IS - _Infosec Standard_
+
 ## Introduction (26/09/2017)
 
 ### Content

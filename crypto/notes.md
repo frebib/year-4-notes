@@ -468,3 +468,26 @@ For privacy and integrity:
 
 ### Inverses modulo N
 {Que?}
+
+### Euler's theorem
+{Letter, modulo, idk}
+
+### Fermat's little theorem
+{Stupid name for a theorem}
+
+### RSA
+- Key generation KG(λ)
+  - Generate two distinct primes, p and q of same bit-size λ
+  - Compute N = p x q and Φ = (p - 1)(q - 1)
+  - Select random int e, 1 < e < phi such that gcd(e,Φ) = 1
+  - Compute d, inverse of e mod Φ (e x d = 1 mod phi) using extended euclidean algorithm
+  - Public key is PK = (N, e)
+  - Private key is SK = d
+
+
+- **Encryption:** Enc(PK, m)
+  - With message (m) and public key (PK = N, e)
+  - Ciphertext c = m<sup>e</sup> mod N
+- **Decryption:** Dec(SK, c)
+  - With ciphertext c, N from public key and private key (SK = d)
+  - Message m = c<sup>d</sup> mod N

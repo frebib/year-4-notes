@@ -1,3 +1,59 @@
+# Machine Learning 2017/18
+
+## Linear Modelling by Least Squares
+
+We have some inputs `X = {x₁, x₂, ..., xn}` and their corresponding labels `T = {t₁, t₂, ... tn}`. We want to predict the `t` for any `x`.
+
+We can approximate the data using a linear equation:
+```
+t = mx + c
+```
+Where `m` and `c` are learnt variables.
+
+### Vectorizing
+
+We can vectorize this by converting `m` and `c` into a vector of weights `W = {c, m}` and the input becomes `X = {1, x}`. Therefore, we can do `t = trans(W) * X`.
+
+This has the benefit of us being able to add more input attributes to `X` without having to restructure our algorithms.
+
+### Loss/Cost Function
+
+A function that estimates how poorly our model performs on the dataset.
+
+We use here squared difference:
+```
+L = avg((t - t')²)
+```
+Where `t` is the ground truth, and `t'` is our prediction.
+
+### Deriving Optimal Values for the Weights `W`
+
+We need to find `dW/dL = 0`, i.e. what values of `W` give use the minimum value for our loss function
+
+TODO: How do we know that this is the global minima? And not just a local minima/maxima?
+
+We can derive from the loss function `L` the minimum value is given by:
+```
+W' = (trans(X) * X)⁻¹ * trans(X) * t
+```
+Where `W'` is our approximation for the perfect values of `W`.
+
+### Making Our Model Non-Linear
+
+We can do this by adding extra variables to our `X` input vector.
+
+If we add `x²`, `x³`, etc. to `X` then we can allow the model to make non-linear predictions from a single input value `x`.
+
+Therefore, `X` becomes `[x⁰, x¹, x², ..., xn]` or `[1, x, x², ..., xn]` for some complexity `n`.
+
+The more we increase `n`, the more our model can fit the data exactly. This has two main effects:
+
+1) The model becomes very good at predicting data it has seen before
+
+2) The model becomes very bad at predicting data it hasn't seen before
+
+This is called overfitting, and should be avoided. Therefore, we want to pick an `n` that is large enought to model the complexity of the data, but not too big to overfit it.
+
 ## 0/1 Loss
 
 ```

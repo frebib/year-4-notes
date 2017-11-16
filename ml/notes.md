@@ -52,7 +52,17 @@ The more we increase `n`, the more our model can fit the data exactly. This has 
 
 2) The model becomes very bad at predicting data it hasn't seen before
 
-This is called overfitting, and should be avoided. Therefore, we want to pick an `n` that is large enought to model the complexity of the data, but not too big to overfit it.
+This is called overfitting, and should be avoided. Therefore, we want to pick an `n` that is large enough to model the complexity of the data, but not too big to overfit it.
+
+## Regularisation
+
+Regularising is a technique to stop a model from overfitting its training data.
+
+One way to regularise is append another term to the cost function:
+```
+L' = L + λσ(W)
+```
+Where `λ` is the weighting of our regularisation, and `σ` is some function that combines the values of `W`. For `L1` regularisation, we have `σ(W) = avg(abs(W))`, and for `L2` regularisation, we have `σ(W) = abs(W²)`.
 
 ## 0/1 Loss
 

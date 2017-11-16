@@ -34,3 +34,10 @@
 [Notes](cl/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27239)
+
+### Machine Learning
+[Lecture Slides](../../tree/master/ml/lecture-slides)
+|
+[Notes](ml/notes.md)
+|
+[Canvas](https://canvas.bham.ac.uk/courses/27269)

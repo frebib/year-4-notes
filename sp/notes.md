@@ -371,3 +371,84 @@ Something unexpected may happen between access check and when file is used
   - Isolation - result as if transactions executed sequentially
   - Durability - transaction remains effective once committed
 - Implemented by locking resource, keeping partial copy til complete
+
+## Code Review (21/11/2017)
+{Missing notes}
+
+### Attack Surface
+- Identify entities interacting with application.
+  - Internal/external users
+  - Database user/admin
+  - Web server user/admin
+  - ...
+- Identify trust relationships between entities
+- Identify access each agent should have
+- Create use cases to understand application use
+
+### Application Design
+- Understand app design/architecture
+- Understand where app is used
+- Identify entry points
+- Decompose application to submodules
+- Understand interactions and trust between submodules
+- Read docs, specs, etc.
+- Talk to app devs
+
+### Threats
+- List and rank all threats
+- Threat category lists useful:
+  - Threats from attacker's PoV
+  - Threats from defensive PoV
+- Threat lists:
+  - STRIDE (OWASP) - attacker's PoV
+  - Application Security Frame (Microsoft) - defensive PoV
+
+### Countermeasures and Mitigations
+- Identify security measures in place to address threats
+- Identify mitigated and non-mitigated threats
+
+### Review Code
+- Check security measures are properly implemented
+- Check for known vulnerability patterns
+- Run static/dynamic analysis tools
+
+### Security Risk: DREAD Model
+- **Damage:** how big can damage be
+- **Reproducibility:** how easy to reproduce
+- **Exploitability:** how much it can be exploited (remotely, without auth, automated)
+- **Affected users:** % of users
+- **Discoverability:** how easy it is
+
+
+- All ranked from 1-10, average value = DREAD score
+- Alternative: Risk = Likelihood x Impact
+
+{Missing notes}
+
+### Review Priorities
+- Where is most valuable data stored?
+- Which attacks would cause worst impact?
+- Which threat is most likely?
+- Which parts have been reviewed?
+
+### What to Look at
+- Security in place to address threat categories
+- Known vulnerability patterns
+  - Specific to languages
+  - Specific to applications
+- Use checklists
+
+{Missing notes}
+
+### Data Flow Analysis
+- Follow data through the application
+- Where is entry point?
+- Where is storage?
+- Are inputs sanitised?
+- Is there authentication for data retrieval/modification?
+- Is data output properly escaped?
+- Advantages:
+  - Large apps split into modules
+  - Can identify modules with large attack surface
+
+{Missing notes}

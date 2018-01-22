@@ -1,5 +1,6 @@
 # Year 4 Notes
 
+## First Term
 ### Cryptography
 [Lecture Slides](../../tree/master/crypto/lecture-slides)
 |
@@ -41,3 +42,18 @@
 [Notes](ml/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27269)
+
+## Second Term
+### Distributed and Parallel Computing
+[Lecture Slides](../../tree/master/dp/lecture-slides)
+|
+[Notes](dp/notes.md)
+|
+[Canvas](https://canvas.bham.ac.uk/courses/27250)
+
+### Hardware and Embedded Systems Security
+[Lecture Slides](../../tree/master/hes/lecture-slides)
+|
+[Notes](hes/notes.md)
+|
+[Canvas](https://canvas.bham.ac.uk/courses/27256)

@@ -163,3 +163,44 @@ Examples:
 -> <2 | {f |-> λx.x, x |-> 2} | ■>
 ```
 
+## Here and Go
+
+The language is now extended:
+```
+M ::= ...
+    | go N
+    | here M
+```
+
+With an extended stack:
+```
+F ::= ... | »
+```
+
+### New Rules
+```
+<here M | E | K> → <M | E | », K>
+```
+If we encounter a `here M`, push a `»` onto the stack
+
+```
+<go N | E | K₁, », K₂> → <N | E | K₂>
+```
+If we encounter a `go N`, go to after the next `»` in the stack. `K₁` and `K₂` are sequences in the stack, and `K₁` does not contain any `»`
+
+```
+<W | E | », K> → <W | E | K>
+```
+If we encounter a `»` on the stack, ignore it
+
+### Examples
+
+```
+<here ((λx.2)(go 5)) | ∅ | ■>
+-> <(λx.2)(go 5) | ∅ | »>
+-> <λx.2 | ∅ | (○ (go 5) ∅), »>
+-> <clos(λx.2, ∅) | ∅ | (○ (go 5) ∅), »>
+-> <go 5 | ∅ | (clos(λx.2, ∅) ○), »>
+-> <5 | ∅ | ■>
+```
+

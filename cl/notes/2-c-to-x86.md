@@ -88,6 +88,31 @@ movq %rdi, (%rsi)
 ret
 ```
 
+Another example:
+```c
+long f(long x, long y) {
+  long a, b;
+  a = x + 42;
+  b = y + 23;
+  return a * b;
+}
+```
+```asm
+f:
+pushq %rbp
+movq %rsp %rbp
+addq $16 %rsp ; not necessary, leaf function!
+movq %rdi -8(%rbp)
+addq $42 -8(%rbp)
+movq %rsi -16(%rbp)
+addq $23 -16(%rbp)
+movq -8(%rbp) %rax
+mulq -16(%rbp) %rax
+subq $16 %rbp
+popq %rbp
+ret
+```
+
 # Optimisations
 
 ## Function Inlining

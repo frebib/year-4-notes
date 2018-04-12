@@ -1,6 +1,17 @@
 # Machine Learning 2017/18
 
-## Linear Modelling by Least Squares
+# Intro
+
+Machine learning is improving in a task `T`, w.r.t. performance measure `P`, based on experience `E`.
+
+# Supervised Linear Modelling
+
+We try to fit a linear line to some data set, making these assumptions:
+- There is a relationship between the variables
+- This relationship is linear
+- This relationship will hold in the future
+
+## Linear Modelling (by Least Squares, and Maximum Likelihood)
 
 We have some inputs `X = {x₁, x₂, ..., xn}` and their corresponding labels `T = {t₁, t₂, ... tn}`. We want to predict the `t` for any `x`.
 
@@ -9,6 +20,10 @@ We can approximate the data using a linear equation:
 t = mx + c
 ```
 Where `m` and `c` are learnt variables.
+
+### With single variables
+
+We need to derive `m` and `c` (a.k.a `w₁` and `w₂`) that minimises a loss function.
 
 ### Vectorizing
 
@@ -48,9 +63,8 @@ Therefore, `X` becomes `[x⁰, x¹, x², ..., xn]` or `[1, x, x², ..., xn]` for
 
 The more we increase `n`, the more our model can fit the data exactly. This has two main effects:
 
-1) The model becomes very good at predicting data it has seen before
-
-2) The model becomes very bad at predicting data it hasn't seen before
+1. The model becomes very good at predicting data it has seen before
+2. The model becomes very bad at predicting data it hasn't seen before
 
 This is called overfitting, and should be avoided. Therefore, we want to pick an `n` that is large enough to model the complexity of the data, but not too big to overfit it.
 
@@ -64,7 +78,11 @@ L' = L + λσ(W)
 ```
 Where `λ` is the weighting of our regularisation, and `σ` is some function that combines the values of `W`. For `L1` regularisation, we have `σ(W) = avg(abs(W))`, and for `L2` regularisation, we have `σ(W) = abs(W²)`.
 
-## 0/1 Loss
+Intuition: Model complexity (thus overfitting) increases as `W` increases. If we punish high values of `W`, then the model will only increase `W` (and therefore complexity), if it is worth the gain in the original loss function.
+
+## Classification
+
+### 0/1 Loss
 
 ```
 avg(d(truth[n] == prediction[n]))
@@ -76,55 +94,49 @@ d(b: bool) = 1 if b else 0
 
 Can be used to get classification accuracy
 
-## Confusion Matrix
-
+### Confusion Matrix
 - Create a table of True Positive, True Negative, False Positive, False Negative
-
 - Can be expanded for >2 classes
 
-### Sensitivity
+#### Sensitivity
 ```
 Sensitivity = TP / (TP + FN) = TP / (All Positive)
 ```
 
-### Specificity
+#### Specificity
 ```
 Specificity = TN / (TN + FP) = TN / (All Negative)
 ```
 
-### ROC Analysis
+#### ROC Analysis
+1. Plot sensitivity and complementary specificity (`1 - Spec`) on a graph
+2. Modify the model in some way (e.g. change threshold)
+3. Check with modification has a point in the ROT graph closest to the top left corner (i.e. highest sensitivity and specificity)
 
-1) Plot sensitivity and complementary specificity (`1 - Spec`) on a graph
+##### Area Under Curve (AUC)
+- Get the area under the ROC curve
+- Higher is better
+- That way we get a performance metric that is independent of the variable we changed during ROC analysis (e.g. we might change threshold at run time)
 
-2) Modify the model in some way (e.g. change threshold)
-
-3) Check with modification has a point in the ROT graph closest to the top left corner (i.e. highest sensitivity and specificity)
-
-#### Area Under Curve (AUC)
-
-Get the area under the ROC curve
-
-Higher is better
-
-That way we get a performance metric that is independent of the variable we changed during ROC analysis (e.g. we might change threshold at run time)
-
-#### For >2 Classes
-
+##### For >2 Classes
 Do one-against-all ROC analyses, so if you have 3 classes, you have 3 ROC graphs
 
 ## Hold-Out Validation
-
 - Take a percentage of the dataset and don't show it to the model (e.g. 80/20)
 
 ### Disadvantages
+1. Reduce training data
+2. Reduce representativeness, as you've lost some data
 
-1) Reduce training data
+### K-fold 
 
-2) Reduce representativeness, as you've lost some data
+1. Separate data into `K` sets
+2. Train once with `K-1` of the sets, validated on the remaining set
+3. Repeat, cycling the validation set
 
-### K-fold and LOO cross validation
+### Leave-one-out cross validation (LOOCV)
 
-TODO
+Special case of k-fold where `K = N`
 
 ## Instance Based Supervised Learning
 

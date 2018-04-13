@@ -80,6 +80,16 @@ Where `λ` is the weighting of our regularisation, and `σ` is some function tha
 
 Intuition: Model complexity (thus overfitting) increases as `W` increases. If we punish high values of `W`, then the model will only increase `W` (and therefore complexity), if it is worth the gain in the original loss function.
 
+## Generative Models
+- Add some random noise to make linear predictions look like real data
+- Use additive noise: `tn = f(xn; W) + ε`
+  - where `p(ε) = N(0, σ²)`
+  - Model now determined by `W` and `σ`
+- For each `(t, x)` we have a likelihood of `t` being observed, given by:
+  - `p(t | x, W, σ²)`
+  - We now want to maximise this function
+- TODO: Go over the maths for this part
+
 ## Classification
 
 ### 0/1 Loss
@@ -183,4 +193,59 @@ Special case of k-fold where `K = N`
 ### Distance-Weighted kNN
 
 - Multiply the effect of each label by the distance to that instance
+
+## Bias-variance tradeoff
+- Generalisation vs overfitting
+- Error of a model consists of two components: `M = B² + V`
+  - `B²` is mismatch between model and actual process that generated data
+  - `V` is the variance, a more complex model has higher variance
+
+# Supervised Bayesian Classification
+
+## Probabilistic vs Non-probabilistic
+- Non-prob models give hard classifications, `C=1, C=2...`
+- While prob models give percentage likeliness, `C=10% 1, 90% 2`
+  - Provides a lot more information
+  - Important when the cost of misclassification is high
+
+## Bayes Rule
+
+```
+P(x|y) = P(y|x) * P(x) / P(y)
+```
+- `P(x)` prior belief: probability of `x` occurring, without any other data
+- `P(y|x)` class-conditional likelihood: prob of `y` occurring given `x` occurred
+- `P(y)` data evidence: marginal probability of the observed data `y`
+  - `= Σ(P(y && x))` for all `x`
+  - `= Σ(P(y|x)P(x))` for all `x`
+- `P(x|y)` posterior probability: probability of `x` occurring after seeing the new data `y`
+
+## Bayesian classification
+- Pick the class that optimises the posterior probability
+- For "maximum a posterior hypothesis":
+  - `argmax_c P(c|x)` where `c` is the class, and `x` is the observed data
+  - `= argmax_c P(x|c) * P(c) / P(x)`
+  - `= argmax_c P(x|c) * P(c)` because `P(x)` is independent of `c`, and can be omitted
+- For "maximum likelihood hypothesis":
+  - We omit `P(c)`, therefore assuming all classes are equally likely to occur
+  - The equation becomes: `argmax_c P(x|c)`
+
+## Naive Bayes Assumption
+- We're now classifying a list of data `X = {x₁, x₂...}`
+- Maximum a posterior now becomes:
+  - `argmax_c P(x₁, x₂... | c) * P(c)`
+- The naive assumption is that all in `X` are conditionally independent, thus:
+  - `P(X|c) = P(x₁|c) * P(x₂|c) * ...`
+  - Although, theoretically should be violated...
+  - This assumption simplifies process, and works well in practice
+- Example:
+  - If we have attributes "has runny nose", "has temperature", and want to predict "has flu", the equation becomes:
+  - `P(flu|RN, TMP) = P(RN|flu) * P(TMP|flu) * P(flu)`
+
+## Continuous Values
+- We calculate mean (`μ`) and stddev (`σ²`) for each attribute in `X`
+- Then, `P(x|μ, σ²)` is the Gaussian formula
+- Then, we can calculate the MAP and ML hypotheses
+- We can do multi-variate Gaussian where `μ` is a vector and `Σ` is a matrix, this is non-naive
+- We can also use naive bayes assumption here to deal with small amounts of training data
 

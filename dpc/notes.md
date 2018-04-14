@@ -105,3 +105,46 @@ There is the concept of a warp:
 
 ## Invoking Kernel Functions
 (Missing notes)
+
+# Measuring Parallel Speedup
+
+## Terms
+- Latency: time from start to end of task
+- Work: measure of work to do, i.e. FLOPS, num images processed
+- Throughput: work done per time unit
+- Speedup: improvement in speed from using 1 computational unit to `P` computational units
+  - `S(p) = T1 / Tp` where `T1` is time taken for one computational unit and `Tp` is time taken for `p` computational units
+  - Perfect linear speedup: `S(p) = p`
+    - Means that for every computational unit we add, we get an extra `T1` boost to work done in a time unit
+- Efficiency: ratio of `S(p) : p`
+  - `E(p) = T1 / (Tp * p) = S(p) / p`
+  - Measures how well computational units are contributing to latency/throughput
+  - Perfect linear efficiency: `E(p) = 1`
+
+## Amdahl's Law
+- `T1 = Tser + Tper` where
+  - `T1` is time spent using 1 computational unit
+  - `Tser` is time spent doing non-parallelizable work
+  - `Tpar` is time spent doing parallelizable work
+- Therefore, using `p` computational units gives us:
+  - `Tp = Tser + (Tpar / S(p))`
+- Therefore, overall speed up is:
+  - `S'(p) = (Tset + Tpar) / (Tser + (Tpar / S(p)))`
+  - TODO: Are these equations right?
+- We can write `Tser` and `Tpar` using a time `T` and a fraction of it that is parallelizable `f`
+  - `S'(p) = ((1 - f)T + fT) / ((1 - f)T + (fT / S(p)))`
+  - `S'(p) = 1 / (1 - f + (f / S(p)))`
+- If as `p` tends to infinity, so does `S(p)`, the limit of speed is `Tser` or `(1 - f)T`
+
+## Gustafson-Barsis Law
+- Focuses on _workload_ instead of _time_
+- `W = (1 - f)W + fW` where
+  - `W` is the total workload executed
+  - `f` is the fraction of the workload that is parallelizable
+- Therefore, with `s` as some speedup factor for parallel parts:
+  - `Ws = (1 - f)W + sfW`
+- We can measure the ratio between `Ws` and `W`, giving us speedup:
+  - `S = Ws / W`
+  - `S = ((1 - f)W + sfW) / ((1 - f)W + fW)`
+  - `S = 1 - f + fs`
+

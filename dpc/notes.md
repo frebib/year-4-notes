@@ -148,3 +148,38 @@ There is the concept of a warp:
   - `S = ((1 - f)W + sfW) / ((1 - f)W + fW)`
   - `S = 1 - f + fs`
 
+# Using Warps Effectively
+- A grid contains a collection of blocks, which contain a collection of threads
+- Threads are executed in warps
+  - e.g. 1024 threads in a block, 32 threads in a warp, 1024/32=32 warps needed to execute a block
+  - TODO: How do warps relate to streaming multiprocessors?
+
+## Synchronisation
+- Warps execute in lock step, so implicit synchronisation
+- For synchronisation in a block, we use `__syncthreads()`
+  - All threads in a block will hit this point and wait
+  - Once all threads reach it, execution will continue
+  - Can not call `__syncthreads()` in a conditional
+- Can not synchronise in a grid
+
+## Warp allocation
+- In a 1D block
+  - Warp 0 has threads 0-31
+  - Warp 1 has threads 32-63
+- In a 2D block
+  - Let's say block size of `(4, 4, 4)`
+    - Thread `(0, 0, 0)` is given index 0
+    - Thread `(0, 0, 1)` is given index 1
+    - Thread `(0, 1, 0)` is given index 4
+    - Thread `(0, 1, 2)` is given index 6
+    - Thread `(1, 0, 0)` is given index 16
+    - etc.
+  - Then we allocate the warps as we did with 1D block, using these new indices
+
+## Divergence
+- In a warp, say threads 0-15 take branch A, and threads 16-31 take branch B. This is called divergence.
+- They all have to execute the same commands, which means that the complete warp has to process branch A _and_ branch B
+- If they all take branch A, branch B does not have to be executed
+- We want to minimise divergence, and will design our algorithms so that threads next to each other in terms of index will execute the same instructions
+
+

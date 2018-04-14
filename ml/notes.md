@@ -145,56 +145,39 @@ Do one-against-all ROC analyses, so if you have 3 classes, you have 3 ROC graphs
 3. Repeat, cycling the validation set
 
 ### Leave-one-out cross validation (LOOCV)
-
 Special case of k-fold where `K = N`
 
-## Instance Based Supervised Learning
-
+# Instance Based Supervised Learning
 - No training, just store training examples and use those
-
 - Lazy, does all work on inference
-
 - Local approximation / generalisation
 
 ## kNN Classification
-
 - Store all `N` training examples
-
 - Choose parameter `k < N`
-
 - Find `k` nearest instances in training set
-
 - Find the most common class in these `k` nearest
-
 - In case of tie, assign randomly from tied
 
 ### Real Valued
-
 - Same as above, but average `k` nearest labels
-
 - Could use any distance measurement: Euclidean, Manhattan, cosine angle
+  - Cosine angle is measuring the difference in angles, so we essentially ignore the "magnitude" of the vectors
 
 ### Disadvantages
-
 - Class imbalance, if you have a class with only 5 instances, and a `k` of 11, you will never classify this class
-
 - Classification performance cost is high, even though training performance cost is non-existent
-
 - There may be irrelevant attributes in the dataset
 
 ### When To Use?
-
 - Not too much data attributes (~20)
-
 - Lots of training data
-
 - Can learn complex target functions (lots of wiggly class boundaries)
 
 ### Distance-Weighted kNN
-
 - Multiply the effect of each label by the distance to that instance
 
-## Bias-variance tradeoff
+# Bias-variance tradeoff
 - Generalisation vs overfitting
 - Error of a model consists of two components: `M = B² + V`
   - `B²` is mismatch between model and actual process that generated data

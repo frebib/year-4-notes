@@ -182,4 +182,39 @@ There is the concept of a warp:
 - If they all take branch A, branch B does not have to be executed
 - We want to minimise divergence, and will design our algorithms so that threads next to each other in terms of index will execute the same instructions
 
+# Prefix Sum
+- Apply some operator to a list of data and store the cumulative output
+- e.g.
+  - List is [1, 2, 1, 3]
+  - Operator is addition
+  - Output is [1, 3, 4, 7]
 
+## Block prefix sum
+- Only works within a single block
+
+### Hillis Stelle Horn
+- Work through the list, where thread `n` adds together:
+  - Items `n` and `n - 1`
+  - Then items `n` and `n - 2`
+  - Then items `n` and `n - 4`
+  - etc.
+- FLOPS:
+  - `(N - 1) + (N - 2) + (N - 4) + ...`
+  - For 1024, serial has 1023 FLOPS
+  - For 1024, HSH has 9217 FLOPS
+  - BAD!
+
+### Blelloch Scan
+- Two phases, reduction and distribution
+- Can optimise through copying block into shared memeory, performing operations, and then copying back (this works for HSH too)
+- Hopefully we don't get examined on this because it was in the assignment... imma skip.
+- FLOPS:
+  - Reduction phase: `(N/2) + (N/4) + (N/8)...`
+  - Distribution phase: `...(N/8 - 1) + (N/4 - 1) + (N/2 - 1)`
+  - For 1024, Blelloch has 2037 FLOPS
+
+## Full prefix sum
+1. Perform block scan on all blocks in the list
+2. Extract the last value of each block into new list
+3. Perform block scan on this list
+4. Add this list back into the original block scanned list

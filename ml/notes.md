@@ -266,3 +266,100 @@ P(x|y) = P(y|x) * P(x) / P(y)
 - We can also use naive bayes assumption here to deal with small amounts of
   training data
 
+# Unsupervised Clustering
+- Given some data `X = {x₁, x₂...}`, can we group similar ones together?
+- Similarity
+  - We measure similarity as closeness, i.e. `(x₁ - x₂)²`
+
+## K-means Clustering
+- We want to find a set `K` parameters
+- Each cluster is represented by it's center
+  - Say cluster `μ` contains `X = {x₁, x₂..}`
+  - We represent it as the average of `X`
+- Algorithm:
+  1. Randomly initialise `K` clusters `C = {μ₁, μ₂...}`
+  2. Assign each of `X` to its closest cluster in `C`
+  3. Update each cluster in `C` to be represented by the average of its new
+     members
+  4. If the members of each `C` do not change, finish
+    - Otherwise, go to step 2
+- Alternate algorithm:
+  1. Randomly set all in `X` to a random cluster in `C`
+    - `C` originally has no center until `X`s are assigned to it
+  2. Update each cluster in `C` to be the average of its assigned elements
+  3. Continue from step 2 in original algorithm
+- We can evaluate the performance of a run of K-means by calculating the
+  intra-group distance estimate:
+  - `D = avg(for c in C, for x in c: (x - c)²)`
+- K-means will find local-minima for `D`
+  - We can find a better `D` by re-running K-means several times, and picking
+    the clustering with the best `D`
+- How to choose `K`?
+  - When we increase `K`, `D` decreases, but we do not get better results
+  - Best to increase `K` until you stop seeing _large_ improvements in `D`
+
+### Using Kernels
+- If we have non-linear groups, it is hard to cluster it with linear K-means
+  comparison metrics
+- So we can project it into some new space, by perhaps squaring the elements
+  - `φ(x) = x²`
+  - `k(x₁, x₂) = φ(x₁).t ⋅ φ(x₂)`
+- Some kernel functions:
+  - Linear kernel: `k(x₁, x₂) = x₁.t ⋅ x₂`
+  - Gaussian kernel: `k(x₁, x₂) = exp{γ||x₁ - x₂||²}`
+  - Polynomial kernel: `k(x₁, x₂) = (x₁.t ⋅ x₂ + c)^β`
+- For K-means, whenever we compare to elements we now use this kernel function
+  - When calculating distance to cluster, we average the cluster then use the
+    kernel function
+  - We can use the kernel trick to estimate the distance between an element of
+    `X` and a cluster in `C`
+- Kernel trick:
+```
+D(x, μ) = (x - μ).t ⋅ (x - μ)
+μ = avg(for x in μ)
+D(x, μ) = (x - sum(for x in μ)).t ⋅ (x - sum(for x in μ))
+D(x, μ) = (x.t ⋅ x)
+... - 2*sum((x't ⋅ x) for x' in μ)
+... + avg((x'.t ⋅ x'') for x' in μ, for x'' in μ)
+```
+And then replace dot product with kernel function:
+```
+D(x, μ) = k(x, x)
+... - 2*sum(k(x, x) for x' in μ)
+... + avg(k(x', x'') for x' in μ, for x'' in μ)
+```
+
+### K-means Limitations
+- Sensitive to initialisation
+- Computationally expensive, having to calculate `n²` distances each iteration
+- Need to run repeatedly
+- Makes hard assumptions, each element is 100% belonging to 1 cluster
+
+## Hierarchical Clustering
+- Agglomerative (bottom-up) approach
+  - Each object starts as a singleton cluster
+  - The two most similar clusters are merged iteratively
+  - Stops when all objects are in the same cluster
+- Divisive (top-down) approach
+  - Each object starts in same cluster
+  - Outsider objects from least cohesive cluster are  removed iteratively
+  - Stops when all objects are in singleton clusters
+- Measuring similarity between clusters:
+  - Smallest distance between elements
+    - Clusters can get very large
+  - Largest distance between links
+    - Small, round clusters
+  - Average distance between links
+    - Compromise between small and large
+
+### Hierarchical Agglomerative Clustering (HAC)
+Algorithm:
+1. Each object is a singleton cluster
+2. Compute distance between all pairs of clusters
+3. Merge the closest pair
+4. If there is more than one cluster, go to step 2
+
+### Benefits
+- Can tune the level of clustering easier
+- More efficient than K-means
+

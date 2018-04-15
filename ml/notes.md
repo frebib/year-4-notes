@@ -363,3 +363,48 @@ Algorithm:
 - Can tune the level of clustering easier
 - More efficient than K-means
 
+# Supervised Learning - Discriminative Classification
+
+## Generative vs Discriminative
+- Generative classifiers generate a model for each class
+  - e.g. Bayesian classifiers have some data for existing classes, and for new
+    data try to see what class model fits best
+- Discriminative classifiers attempt to define where these classes cross over
+- TODO: These definitions seem a bit weak, are they correct?
+
+## Support Vector Machines (SVMs)
+- We want to find a linear hyperplane that separates the two classes positions
+  - Formalised as: `w.t ⋅ x + b = 0`
+- We can then find the best `w` and `b` that optimise this decision boundary
+  - End up having to perform `argmin_w 1/2 w.t ⋅ w`, with the constraint that
+    `tₙ(w.t ⋅ xₙ + b) ≥ 1`
+  - See slides, I ain't copying that out
+- Called SVMs due to the vectors closest to the decision boundary that "support"
+  it
+
+### Soft Margins
+- Allow the some data points to lie closer to (or even over) the decision
+  boundary
+- This is done by relaxing the constraint to:
+  - `tₙ(w.t ⋅ xₙ + b) ≥ 1 - ξₙ` and `ξₙ ≥ 0`
+- The optimisation problem becomes:
+  - `argmin_w 1/2 w.t ⋅ w + C*sum(ξₙ)`
+- `C` controls the "softness" of the boundary
+
+### Non-linear Decision Boundaries
+- Project into another space
+  - `x → φ(x)`
+- But we can just use the kernel tricks
+  - `x₁.t ⋅ x₂ → k(x₁, x₂)`
+- Gaussian kernel: `exp{-β||x₁ - x₂||²}`
+  - `β` controls model complexity
+
+### Multi-class Classification
+- If we have `N'` classes, have `N'` different classifiers that do 1 vs rest
+  classification
+- Each SVM returns a confidence score, we pick the one that gives the most
+  confidence
+- Can also train `N'(N' - 1) / 2` different binary classifiers
+  - Assign according to maximum voting
+  - Addresses class imbalance in the data
+

@@ -43,6 +43,13 @@
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27269)
 
+### Networks
+[Lecture Slides](../../tree/master/net/lecture-slides)
+|
+[Notes](net/notes.md)
+|
+[Canvas](https://canvas.bham.ac.uk/courses/27275)
+
 ## Second Term
 ### Distributed and Parallel Computing
 [Lecture Slides](../../tree/master/dp/lecture-slides)

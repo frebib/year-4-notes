@@ -16,12 +16,15 @@ Latency vs Throughput:
   - Get first result ASAP, even if it slows getting all results
 - Throughput oriented
   - Get all results back with minimum delay
-  - Doesn't matter how long to get each result, so long as total time is short as possible
+  - Doesn't matter how long to get each result, so long as total time is short
+    as possible
 
 ## Latency Oriented Processors - Standard CPUs
 - Large cache to speed up memory access
-  - Temporal/Spatial locality, Working sets (likely to use same value from memory again, likely to use value close to used value from memory)
-    - Ensure each operation has smallest probability of fetching from slow memory
+  - Temporal/Spatial locality, Working sets (likely to use same value from
+    memory again, likely to use value close to used value from memory)
+    - Ensure each operation has smallest probability of fetching from slow
+      memory
     - May be a good idea to pre-fetch data
 - Complex control units
   - Short pipelines, Branch prediction, Data forwarding
@@ -42,7 +45,8 @@ Latency vs Throughput:
 - Simple energy efficient ALU
   - Long pipeline
   - Large no. of cycles per operation, heavily pipelined
-    - Long wait for 1st result (filling the pipeline), following results come quickly
+    - Long wait for 1st result (filling the pipeline), following results come
+      quickly
   - Requires large no. of threads to keep processor occupied
 
 ## Von Neumann Architecture
@@ -53,13 +57,18 @@ Latency vs Throughput:
 ![](https://i.imgur.com/8tV9eRa.png)
 
 ## Compiling for CUDA
-- Conceptually, host CPU and GPU are separate devices, connected by communication path
-  - Need to generate separate code for each device. Nvidia compiler for CUDA "nvcc"
-  - nvcc takes C/C++ with Nvidia extensions, separates and compiles GPU code itself, passes host code to host for compilation
-  - Result binary contains host and device binary, downloaded to device from host when run
+- Conceptually, host CPU and GPU are separate devices, connected by
+  communication path
+  - Need to generate separate code for each device. Nvidia compiler for CUDA
+    "nvcc"
+  - nvcc takes C/C++ with Nvidia extensions, separates and compiles GPU code
+    itself, passes host code to host for compilation
+  - Result binary contains host and device binary, downloaded to device from
+    host when run
 
 ## Programming in CUDA
-- Have to identify if function runs on host, device or both. Identify where it's callable from:
+- Have to identify if function runs on host, device or both. Identify where it's
+  callable from:
   - Host: `__host__ void f(...)`
     - Default, can be omitted
     - Callable from host only
@@ -67,9 +76,11 @@ Latency vs Throughput:
     - Special functions called _kernel_ functions
     - Callable from host only, how host gets code to run on GPU
   - Device: `__device__ void f(...)`
-    - Callable from device only, helper functions to kernel functions and other GPU functions
+    - Callable from device only, helper functions to kernel functions and other
+      GPU functions
   - Both: `__host__ __device__ void f(...)`
-    - Generates host and device function, same code can run on both. Host/device cannot call other version
+    - Generates host and device function, same code can run on both. Host/device
+      cannot call other version
 
 ## GPU Computational Unit Structure
 - When calling kernel function, specify how threads are organised to execute it
@@ -80,8 +91,9 @@ Latency vs Throughput:
 ## CUDA Thread Issues
 - Don't want fixed no. of threads to dictate size of largest vector we can add
 - Don't want to change code to run on different GPU with different thread count
-- Want to be able to organise threads to co-locate groups of threads on sets of processing units, taking advantage of shared caches and synchronisation facilities.
-
+- Want to be able to organise threads to co-locate groups of threads on sets of
+  processing units, taking advantage of shared caches and synchronisation
+  facilities.
 
 - Nvidia GPUs organise threads into hierarchical structure
   - A _Grid_ is a collection of _Blocks_
@@ -90,15 +102,21 @@ Latency vs Throughput:
 
 ## CPU Thread Organisation (16/01/2018)
 There is the concept of a warp:
-- A set of tightly related threads, must execute fully in lock step with each other
-- Not part of the CUDA spec, but a feature of all Nvidia GPUs in low level hardware design
+- A set of tightly related threads, must execute fully in lock step with each
+  other
+- Not part of the CUDA spec, but a feature of all Nvidia GPUs in low level
+  hardware design
 - No. of threads in a warp is a feature of GPU but current GPUs mostly 32
-- Low level basis of thread scheduling on a GPU. If a thread is scheduled to execute, so must all other threads in warp
-- Executing same instructions in lock step, all threads in warp have same instruction exec timing
+- Low level basis of thread scheduling on a GPU. If a thread is scheduled to
+  execute, so must all other threads in warp
+- Executing same instructions in lock step, all threads in warp have same
+  instruction exec timing
 
 ## Grid/Block/Thread
-- A block can have between 1 and max block size no. of threads for GPU. Is high-level basis for thread scheduling
-- Because of warps, block size should be multiple of warp size, otherwise blocks are padded with remaining threads from a warp and many are wasted
+- A block can have between 1 and max block size no. of threads for GPU. Is
+  high-level basis for thread scheduling
+- Because of warps, block size should be multiple of warp size, otherwise blocks
+  are padded with remaining threads from a warp and many are wasted
 - Grids have a large no. of blocks, more than can be executed at once
 - Grid = whole problem divided into bitesize blocks
 - (Missing notes)
@@ -112,10 +130,13 @@ There is the concept of a warp:
 - Latency: time from start to end of task
 - Work: measure of work to do, i.e. FLOPS, num images processed
 - Throughput: work done per time unit
-- Speedup: improvement in speed from using 1 computational unit to `P` computational units
-  - `S(p) = T1 / Tp` where `T1` is time taken for one computational unit and `Tp` is time taken for `p` computational units
+- Speedup: improvement in speed from using 1 computational unit to `P`
+  computational units
+  - `S(p) = T1 / Tp` where `T1` is time taken for one computational unit and
+    `Tp` is time taken for `p` computational units
   - Perfect linear speedup: `S(p) = p`
-    - Means that for every computational unit we add, we get an extra `T1` boost to work done in a time unit
+    - Means that for every computational unit we add, we get an extra `T1` boost
+      to work done in a time unit
 - Efficiency: ratio of `S(p) : p`
   - `E(p) = T1 / (Tp * p) = S(p) / p`
   - Measures how well computational units are contributing to latency/throughput
@@ -131,10 +152,12 @@ There is the concept of a warp:
 - Therefore, overall speed up is:
   - `S'(p) = (Tset + Tpar) / (Tser + (Tpar / S(p)))`
   - TODO: Are these equations right?
-- We can write `Tser` and `Tpar` using a time `T` and a fraction of it that is parallelizable `f`
+- We can write `Tser` and `Tpar` using a time `T` and a fraction of it that is
+  parallelizable `f`
   - `S'(p) = ((1 - f)T + fT) / ((1 - f)T + (fT / S(p)))`
   - `S'(p) = 1 / (1 - f + (f / S(p)))`
-- If as `p` tends to infinity, so does `S(p)`, the limit of speed is `Tser` or `(1 - f)T`
+- If as `p` tends to infinity, so does `S(p)`, the limit of speed is `Tser` or
+  `(1 - f)T`
 
 ## Gustafson-Barsis Law
 - Focuses on _workload_ instead of _time_
@@ -151,7 +174,8 @@ There is the concept of a warp:
 # Using Warps Effectively
 - A grid contains a collection of blocks, which contain a collection of threads
 - Threads are executed in warps
-  - e.g. 1024 threads in a block, 32 threads in a warp, 1024/32=32 warps needed to execute a block
+  - e.g. 1024 threads in a block, 32 threads in a warp, 1024/32=32 warps needed
+    to execute a block
   - TODO: How do warps relate to streaming multiprocessors?
 
 ## Synchronisation
@@ -177,10 +201,13 @@ There is the concept of a warp:
   - Then we allocate the warps as we did with 1D block, using these new indices
 
 ## Divergence
-- In a warp, say threads 0-15 take branch A, and threads 16-31 take branch B. This is called divergence.
-- They all have to execute the same commands, which means that the complete warp has to process branch A _and_ branch B
+- In a warp, say threads 0-15 take branch A, and threads 16-31 take branch B.
+  This is called divergence.
+- They all have to execute the same commands, which means that the complete warp
+  has to process branch A _and_ branch B
 - If they all take branch A, branch B does not have to be executed
-- We want to minimise divergence, and will design our algorithms so that threads next to each other in terms of index will execute the same instructions
+- We want to minimise divergence, and will design our algorithms so that threads
+  next to each other in terms of index will execute the same instructions
 
 # Prefix Sum
 - Apply some operator to a list of data and store the cumulative output
@@ -206,8 +233,10 @@ There is the concept of a warp:
 
 ### Blelloch Scan
 - Two phases, reduction and distribution
-- Can optimise through copying block into shared memeory, performing operations, and then copying back (this works for HSH too)
-- Hopefully we don't get examined on this because it was in the assignment... imma skip.
+- Can optimise through copying block into shared memeory, performing operations,
+  and then copying back (this works for HSH too)
+- Hopefully we don't get examined on this because it was in the assignment...
+  imma skip.
 - FLOPS:
   - Reduction phase: `(N/2) + (N/4) + (N/8)...`
   - Distribution phase: `...(N/8 - 1) + (N/4 - 1) + (N/2 - 1)`

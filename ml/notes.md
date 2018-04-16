@@ -408,3 +408,54 @@ Algorithm:
   - Assign according to maximum voting
   - Addresses class imbalance in the data
 
+# Dimensionality Reduction
+- Dimensionality is the number of features in the data
+
+## Feature Selection
+- Gradually add features, seeing how it effects performance
+
+## Subspace Projection
+- Make new features by merging old features (linearly/non-linearly)
+- `X = Y⋅W` where
+  - `Y` is `(N x M)`, the original data with high dimensionality `M`
+  - `W` is `(M x D)`, the matrix that reduces dimensionality to `D`
+  - `X` is `(N x D)`, the data with reduced dimensionality `D`
+- We want to preserve the interesting aspects of the data
+
+## Principle Component Analysis
+- Define the columns of `W` one by one
+  - This means we define one of the output dimensions one by one
+- `xₙ = Y⋅wₙ` to get the `n`th output dimension
+- Each `wₙ` is defined so that
+  - The variance of `xₙ` is minimised
+  - The new column `wₙ` is orthogonal to previous columns
+- `W` is the collection of _eigenvectors_ of the _covarience matrix_ `Σ` of `Y`
+- Calculating `Σ`
+  - `Σₘₙ = avg((yₘ - μₘ)(yₙ - μₙ) for y in Y)`
+  - If we set `Y' = Y - avg(Y)`
+  - `Σ = (1/N)(Y'.t ⋅ Y')`
+- Calculating `W`
+  - `wₙ.t ⋅ wₘ = 0` when `n ≠ m`
+  - Chose `wₙ` to maximise variance:
+    - `argmax_w var(Y'w)`
+    - `var(Y'w) = (Y'w).t ⋅ (Y'w)`
+    - `var(Y'w) = w.t ⋅ Y'.t ⋅ Y' ⋅ w`
+    - `var(Y'w) = w.t ⋅ NΣ ⋅ w`
+    - `argmax_w w.t ⋅ Σ ⋅ w`
+    - Must have constraint `w.t ⋅ w = 1`, otherwise can just keep increasing
+      `w` to increase variance
+    - Using Lagrange multiplier trick to add constraint in:
+      - `argmax_w (w.t⋅Σ⋅w - λ(w.t⋅w - 1))`
+    - Differentiate w.r.t `w` and set to 0
+      - `2Σw - 2λw = 0`
+      - `Σw = λw`
+    - Solve using eigenvalue/eigenvector method (not in this module)
+  - Aside about eigenvectors
+    - `Σw = λw` means that matmul by `Σ` for `w` increases by a scalar factor
+    - `w` is called an eigenvector, and `λ` is the eigenvalue
+- Solving `Σw = λw` gives us `M` eigenvectors and `M` eigenvalues
+  - The one with the highest `λ` has the highest variance (we can see this by
+    mutliplying both sides by `w.t`
+- In summary: the principle components of `Y` are the eigenvectors
+  `{w₁, w₂...}`, ordered by their eigenvalues `{λ₁, λ₂...}`
+

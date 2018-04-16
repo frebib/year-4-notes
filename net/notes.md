@@ -209,3 +209,57 @@
 
 TODO: Some other techs mentioned here, but not in any detail - need to know?
 
+# Internet Protocol (IP)
+- Network layer that can
+  - Have all transports run on it
+  - Run on all available lower layers
+- Unreliable, unsequenced, no checksum
+- Has an address, and the network makes a best-effort attempt to deliver it
+- IPv4 has 32 bit addresses
+- Leftmost part defines network, rightmost defines node on that network
+  - If address starts with a 0, first 8 bits identify the network (class A)
+    - Gives us 128 networks, give to big companies/govs
+  - 0 not used, 127 reserved for loopback
+  - If address starts with 10, first 16 bits identify the network (class B)
+  - If address starts with 110, first 24 bits identify the network (class C)
+  - Rest used for multicast, and experimental things
+- Wasteful, but made it easy for routers
+  - Routers look at address, is it local? If so, send directly
+  - Is first bit 0? If so, look up first 8 bits in "next hops"
+    - These are IPs that are closer to the destination
+  - Otherwise, look up the address in a more complicated structure
+  - Otherwise, use the default route
+- Netmasks
+  - Netmask for class A is /8
+    - `/8` → `11111111.0000...`
+    - `11111111.0000... & addr` → net address
+
+## RFC1918
+- Private addresses
+- 10.0.0.0/8, 172.16.0.0/16, 192.168.0.0/16 are for private use
+- Can not be sent outside of private domains
+
+## IPv6
+- 128 bit addresses
+- But in reality, mainly 64 bit addresses
+  - Even phones will get a /64 address
+- `::` means as many zeros as fit here
+- `::/128` uninitialised
+- `::1/128` loopback
+- `::ffff/96` IPv4 mapping (e.g. `::ffff:1.2.3.4`)
+- `fc00::/7` private address space
+- `fe80::/8` link local (?)
+- `2001:db8::/32` documentation (?)
+- `2000::/3` single block for normal use (?)
+
+## IP on Ethernet
+- Need to know MAC address to send to
+- Uses Address Resolution Protocol (ARP)
+  - Ask broadcast "who owns this IP?"
+
+## Hop Counts
+- Each IP packet has a Time To Live (TTL)
+- Decremented each time packet is processed (or held for a second)
+- When it hits 0, packet discarded and error sent back to sender
+- IPv6 doesn't have this, relies on lower-level constructs
+

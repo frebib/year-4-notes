@@ -79,3 +79,10 @@
 [Canvas](https://canvas.bham.ac.uk/courses/27245)
 |
 [Past Papers](../../tree/master/cav/past-papers)
+
+### Network Security
+[Lecture Slides](../../tree/master/sec/lecture-slides)
+|
+[Notes](sec/notes.md)
+|
+[Canvas](https://canvas.bham.ac.uk/courses/27274)

@@ -247,3 +247,39 @@ There is the concept of a warp:
 2. Extract the last value of each block into new list
 3. Perform block scan on this list
 4. Add this list back into the original block scanned list
+
+# CUDA Programming Tips
+
+## Coalesced Global Memory Access
+- Global memory read/writes in transactions of size 32, 64, or 128 bytes
+- Each memory transaction takes approx the same amount of time, so writing 8
+  bytes is equivalent to writing 128 bytes
+- If consecutive threads access consecutive bytes, then all reads will be done
+  in one memory transaction
+- If consecutive threads access non-consecutive bytes, then all reads will be
+  done in separate memory transactions, which is a lot slower
+
+### Array of Structs (AoS) or Struct of Arrays (SoA)
+- In CUDA programming, favour SoA as it helps coalesced memory accesses
+
+## Shared Memory Banks
+- 2 orders of magnitude faster than global memory accesses
+- There are 32 banks (since compute 2.0)
+- 32 consecutive shared memory accesses are spread across the 32 banks
+- `n` reads to `n` different banks can be done in one read operation
+- `n` reads to `1` bank has to be done in `n` read operations - must be done
+  serially
+- With exception:
+  - `n` reads to the same address in the same bank only takes one operation
+  - TODO: What do these other exceptions mean?
+
+## Atomic Operations
+- Sometimes we need to perform an atomic operation, e.g. `array[i] += 1;`
+  - This line contains a read, a modification, and a write
+- We have some options:
+  - Use `__syncthreads()` to make sure all threads can perform the operation
+    uninterupted
+  - Restructure so that one thread collects all the updates and performs them
+  - Use an atomic operation: `atomicAdd(&(array[i]), 1);`
+- TODO: Is this fast? How does it work? Not mentioned in the slides
+

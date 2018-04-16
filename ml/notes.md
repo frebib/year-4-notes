@@ -459,3 +459,39 @@ Algorithm:
 - In summary: the principle components of `Y` are the eigenvectors
   `{w₁, w₂...}`, ordered by their eigenvalues `{λ₁, λ₂...}`
 
+# Supervised Learning - Ensemble Methods
+
+## Ensemble Methods
+- Boosting
+  - Train a new classifier focusing on training examples misclassified b
+    earlier model
+- Bagging (bootstrap aggregation)
+  - Generate new training data as a random subset of original data
+  - Train new classifier on this subset
+
+## Binary Decision Tree
+- For each split node `n`, go right if `fₙ(x) ≤ thₙ`, and go left otherwise,
+  where
+  - `x` is `N` dimensional attributes
+  - `fₙ` selects a single attribute from its input
+  - `thₙ` is the threshold value
+- For each leaf node, return a probability distribution across all classes
+
+### Learning
+- Select a subset of the data `X`
+- Create a set of random features `f`
+  - `f(x) = ax₁ + bx₂` for 2D data, where `a, b` are chosen randomly
+- Try several combinations of `f` and `th`
+  - Separate `X` according to `f` and `th` into `Xₗ, Xᵣ`
+  - Pick the `f` and `th` that optimise the information gain of this split
+  - `IG(Xₗ, Xᵣ) = E(Xₗ + Xᵣ) - (|Xₗ|/|Xₙ|)E(Xₗ) - (|Xᵣ|/|Xₙ|)E(Xᵣ)`
+    - where `E = sum(P(c)log₂(P(c)) for c in classes)`
+- Recurse for left and right children
+
+### Randomised Decision Forests
+- Generate `n` binary decision trees
+  - Each one uses a random subset of the training data
+    - Subsets can overlap
+    - Increases runtime
+- When evaluating, run all and average the response
+

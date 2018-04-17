@@ -338,3 +338,87 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
     - Your MAC address as available to everyone else
     - Meaning 3rd parties can track your devices across networks
 
+# TCP/UDP
+- TCP is reliable
+  - Arrives in-order
+  - Congestion control
+  - Connection setup
+- UDP is unreliable
+  - Unordered, basic extension of IP
+
+## UDP
+- Socket identified by two-tuple: (destination IP, destination port)
+- Packets directed to same port, but from different IPs, will be sent to the
+  same socket
+- Connectionless, no handshaking, all packets handled independently of each
+  other
+- Header:
+  - Source port #
+  - Destination port #
+  - Length of packet, incl. header
+  - Checksum
+  - Payload
+- TODO: Do we need to know checksums?
+
+## TCP
+- Need to ACK packets
+- If we get no ACK, resend after some period
+- Have sequence numbers in order to detect duplicates
+- However, waiting for ACKs is long
+- Therefore, we pipeline packets
+  - Sender can have `n` unACK'd packets at one time
+  - Receiver sends cumulative ACK, i.e. ACK up to packet #
+  - So you have:
+    - ACK'd packets
+    - Send, unACK'd packets
+    - In buffer, unsent
+    - Not in buffer yet
+- Selective repeat
+  - If we have packet #1, #2, and #4
+  - We ACK #1, #2, and then #2 again to say that's where we got up to
+- Header
+  - Source port #
+  - Destination port #
+  - Sequence number
+  - ACK number
+  - Flags
+  - Receive window
+  - Checksum
+  - Urgent data pointer
+  - Options
+  - Data
+
+### Flow Control
+- Use the receive window section in header
+- This is the amount of data that can be unACK'd
+
+### 3-way Handshake
+- Client chooses seq# `x`, send `(SYN, seq=x)`
+- Server chooses seq# `y`, send `(SYN+ACK, seq=y, ack=x+1)`
+- Client acknowledges, send `(ACK, seq=x+1, ack=y+1)`
+
+### Close Connection
+- Send TCP packet with `FIN` flag
+- Reply with `FIN+ACK`
+- Reply with `ACK`
+
+### Window Scaling
+- Receive window limited to 64k
+- Very low limit
+- To solve this, there's a scaling value
+- Increases window size to 2^30
+
+### PAWS
+- 4GB worth of sequence numbers, so if you want to send more than 4GB there's
+  no way to distinguish between new and old packets
+- We add a timestamp to the headers in order to distinguish
+- This timestamp can also be used to measure round-trip time
+
+### Slow Start
+- LAN is faster than WAN mainly
+- So we advertise large rec window, but then the router has to churn it out
+  slowly
+- This could lead to router running out of memory
+- So what we do, is send one packet, then two, and then increase by one every
+  time we get an ACK, until we hit rec window
+

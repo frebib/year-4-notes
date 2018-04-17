@@ -236,8 +236,9 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
 
 ## RFC1918
 - Private addresses
-- 10.0.0.0/8, 172.16.0.0/16, 192.168.0.0/16 are for private use
-- Can not be sent outside of private domains
+- 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 are for private use
+- Should not be sent outside of private domains
+  - Often routers filter them out, but not always
 
 ## IPv6
 - 128 bit addresses
@@ -375,7 +376,8 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
     - Not in buffer yet
 - Selective repeat
   - If we have packet #1, #2, and #4
-  - We ACK #1, #2, and then #2 again to say that's where we got up to
+  - We ACK #2, #3, and then #3 again to say that's where we got up to
+    - We ACK the next number we're expecting
 - Header
   - Source port #
   - Destination port #
@@ -406,7 +408,7 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
 - Receive window limited to 64k
 - Very low limit
 - To solve this, there's a scaling value
-- Increases window size to 2^30
+- Increases window size to 2^14
 
 ### PAWS
 - 4GB worth of sequence numbers, so if you want to send more than 4GB there's
@@ -419,6 +421,6 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
 - So we advertise large rec window, but then the router has to churn it out
   slowly
 - This could lead to router running out of memory
-- So what we do, is send one packet, then two, and then increase by one every
-  time we get an ACK, until we hit rec window
+- So what we do, is send one packet, then two, and then increase some amount
+  every time we get an ACK (usually exponentially), until we hit rec window
 

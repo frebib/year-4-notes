@@ -263,3 +263,78 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
 - When it hits 0, packet discarded and error sent back to sender
 - IPv6 doesn't have this, relies on lower-level constructs
 
+# Address Allocation
+
+## Ethernet/MAC Address
+- Unique to a machine
+- 48 bits/6 bytes
+- 3 bytes for manufacturer
+- 3 bytes for device
+
+## Getting IP Numbers
+- Small allocations come from ISP, still belong to them
+- Can get allocations from regional registries, hard to get
+
+### Getting Local IP Numbers
+- Static allocation
+  - Node given an IP address in a config
+  - Every time node boots, uses that IP
+  - Can cause conflicts, or even be outside of IP range for that network
+  - Used for routers etc. that need to be up quickly after network goes down
+- bootp
+  - Device broadcasts MAC
+  - bootp server sends back IP number
+    - And stuff like DNS server, default router, etc.
+  - No means to reclaim addresses that aren't used anymore
+
+## Dynamic Host Configuration Protocol (DHCP)
+- You "lease" temp IP addresses for a set duration
+- Handles static IP addresses
+- Setup steps:
+  1. `DHCPDISCOVER`: Node broadcasts request for any IP address, sends its MAC
+     address in the packet
+  2. `DHCPOFFER`: DHCP server reserves an IP address, and replies with an
+     offer which has a lease time
+  3. `DHCPREQUEST`: Node chooses among offers (if there are multiple DHCP
+     servers) and broadcasts reply with the chosen IP address
+  4. `DHCPACK`: The server sees the request and acknowledges that it has been
+     processed. Other servers can see that their offer has been declined
+- Can send a request to known DHCP server, asking to renew the lease
+  - Conventionally done once half the lease has passed
+- Can use static IPs, always handing the same MACs the same IPs
+- Some DHCP servers will update DNS servers with the IP address bindings
+- DHCP redundancy
+  - Two DHCP servers, disjoint pools, let client select
+  - Backup DHCP server, lagging behind by a second, in case first goes down
+  - Complex failover protocols, all DHCPs make same request (rare)
+
+### DHCP with Multiple Networks
+- DHCP server on each network
+  - Now you have multiple points of failure
+- DHCP server attached to all networks
+  - Doesn't scale well
+  - Bad for security, as DHCP server bypasses firewalls
+- Relaying
+  - Relay agent on each network, usually tied into router
+  - Relay agent hears broadcast packet, sends it on to known DHCP server
+  - Server sends back to relay, relay sends back to requester
+
+### DoS DHCP
+- Send loads of requests, and the DHCP servers will run out of IPs quick
+
+## IPv6 Allocation
+- DHCPv6, with all the same problems
+- IPv6 routers will periodically broadcast their info, including subnetmask
+- So we can use Stateless Address Auto Configuration (SLAAC)
+  - Take /64 of subnet, and use our MAC and other stuff to put into the address
+  - Collisions unlikely
+  - Difficult to do DNS with just IPv6
+    - If router ad has `M` flag set, network is managed
+      - Clients can't use SLAAC, must use DHCPv6
+    - If router ad has `O` flag set..
+      - Use SLAAC, but go to DHCPv6 server for other data (like DNS)
+      - DHCPv6 server doesn't need to manage leases, essentially static
+  - Privacy issue
+    - Your MAC address as available to everyone else
+    - Meaning 3rd parties can track your devices across networks
+

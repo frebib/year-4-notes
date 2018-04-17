@@ -283,3 +283,37 @@ There is the concept of a warp:
   - Use an atomic operation: `atomicAdd(&(array[i]), 1);`
 - TODO: Is this fast? How does it work? Not mentioned in the slides
 
+# GPU Programming Patterns
+- Map
+  - One-to-one, each thread responsible for converting one element
+- Gather
+  - Read many, write one
+  - No read/write races still
+- Scatter
+  - Read one, write many
+  - Need to be careful with writes
+- Stencil
+  - Special case of gather
+  - Pattern of reads is constant across threads
+- Transpose
+  - AoS → SoA
+- Reduce
+  - All values into one single value
+- Scan/sort
+  - All-to-all (or at least many-to-all)
+
+## Example - Histogram
+- Each thread calculates value for some element, and increments histogram bin
+- Need to do atomic add
+  - This doesn't scale well if you have many elements writing to one histogram
+    bin
+- Improvement
+  - Each thread calculates histogram for a subset of the data, no atomic adds
+    here
+  - Add to final result
+  - Atomic add final results
+- Improvement 2
+  - Instead of adding final results, perform reduce operation
+- Improvement 3
+  - Sort the keys, and then reduce by key
+

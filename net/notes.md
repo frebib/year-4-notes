@@ -458,3 +458,47 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
   - This creates a *new* socket to communicate with the connectee, and leaves
     the old socket to listen for new connections
 
+# HTTP and Friends
+
+## FTP
+- Send a file name, receive a file
+- Many variants
+  - FTP, oldest, ugliest
+  - kermit
+  - uucp
+- Mainly killed by HTTP
+
+## Hypertext Transport Protocol (HTTP)
+- Originally supposed to deal with downloading HTML with support for hyperlinks
+- Can request with `HTTP GET`
+- Very easy to implement
+- Very flexible
+- Decouples names from things
+
+### Requests
+- Send `GET /index.html HTTP/1.1`
+  - Tells us what operation, what resource to get, and the HTTP version
+- Can have several attributes, e.g. `User-Agent: ...`
+- Followed by blank line
+  - Liens terminated with `\r\n`
+
+### Responses
+- Reply `HTTP/1.1 200 OK`
+  - Code saying response, and string describing response
+- Can also have several attributes, e.g. `Date: ...`
+
+### Other Operations
+- `PUT`
+  - File upload
+- `DELETE`
+  - Delete a resource. Not used for actual files, but used for RESTful APIs
+
+## Cookies
+- Store a string on a HTTP client
+- Can have lifetimes
+- Often abused in usage, and therefore abused for security holes
+
+## Caching
+- Often cache HTTP results in the HTTP client
+- But perhaps better to cache on HTTP server
+

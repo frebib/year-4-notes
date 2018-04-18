@@ -376,3 +376,99 @@ Algorithm:
 3. Run segmented inclusive sum scan on `M`
   - `[by + cz, dx + ey + fz, iz]`
 
+# Sorting on GPUs
+
+## Odd-even Sort
+- In every even step, thread `i` compares elements `2i` and `2i + 1`, and swaps
+  if out of order
+- In odd steps, thread `i` compares `2i + 1` and `2i + 2`
+- `O(n)` steps, `O(n²)` work
+
+## Parallel Merge Sort
+- Start with trivially sorted segments of size 1
+- Merge pairs of segments at each step
+- End when there is only one segment
+- Small segments:
+  - Perform merge on one thread
+- Medium segments:
+  - Use multiple threads to merge segments
+- Large segments (bigger than block size)
+  - Use multiple blocks to handle each merge
+
+### Merging on Multiple Threads
+- Merging `A[]` and `B[]`
+- Thread `i` looks at element `A[i]`
+- Binary search for `A[i]` in `B[]`, get index `j`
+- We now know to insert into new array at index `i + j`
+
+### Merging on Multiple Blocks
+- Split `A[]` and `B[]` into segments of size `k`
+- Take each of the splitting values, and merge into a single list using previous
+  algorithm
+- Find each of these splitting values in the _other_ array
+- e.g.
+  - Have splitting values `a₁, a₂, a₃` and `b₁, b₂, b₃`
+  - Merged, they become `a₁, b₁, b₂, a₂, b₃, a₃`
+  - We take range `0 - a₁` from _both_ `A[]` and `B[]` (where `a₁` is binary
+    searched for in `B[]`)
+  - We merge these two ranges into the final array
+  - We do the same for `a₁ - b₁`, `b₁ - b₂`, `b₂ - a₂` from the previously
+    merged splitters array
+
+## Bitonic Sort
+
+### Bitonic Sequences
+- A monotonic sequence is where each value is greater than the last, or less
+  than the last, e.g. `[1, 2, 3, 4]`
+- A bitonic sequence is where the values in the list change once, e.g.
+  `[1, 2, 3, 4, 2, 1]`
+- A bitonic sequence can be shifted circularly, e.g. for the previous example,
+  `[3, 4, 2, 1, 1, 2]`, and still remain a bitonic sequence
+
+### Bitonic Split
+- You can split a bitonic sequence into two bitonic sequences
+- This is done by splitting it in half, and comparing swapping elements between
+  the splits so that the first split contains all the lower elements
+```
+[1, 2, 3, 4, 2, 1]
+=> [1, 2, 3]
+   [4, 2, 1]
+=> [1, 2, 1]
+   [4, 2, 3]
+```
+
+### Bitonic List → Monotonic List
+- We can split the bitonic list repeatedly, until there is only one element in
+  each bitonic list
+- Since they only have one element, they are trivially sorted
+- Due to the nature of bitonic splits, all the lists concatenated will be sorted
+- But first, we need a bitonic list...
+
+### Unordered List → Bitonic List
+- Change vector into lists of two elements
+- Each of these is trivially bitonic
+- We then turn it into a monotonic list (using above method)
+- We then group these lists together, e.g. `[a₁, a₂, a₃, a₄] → [a₁++a₂, a₃++a₄]`
+- These lists are then bitonic, as we've concatenated two monotonic lists, but
+  they are of size 4
+- We do this until all elements are merged into a single bitonic list, and then
+  turn the list into a monotonic (i.e. sorted) list
+
+### Evaluation
+- Algorithm is easily parallelizable
+- `O(nlog²n)` steps
+- Fastest for small lists
+
+## Radix Sort
+- Can sort integers
+- Look at each integer's binary representation, and do a _stable_ split based on
+  whether the least significant bit is 0/1
+  - Stable means that when you sort, if two elements are equal then they do not
+    change order
+- Then do this for the 2nd least significant bit, then 3rd, etc.
+- Complexity is `O(kn)` where `k` is the number of bits, and `n` is the size of
+  the list
+- Where to put each element can be done with the `compact` operation previously
+  discussed
+- Fastest for medium to large lists
+

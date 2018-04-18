@@ -424,3 +424,37 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
 - So what we do, is send one packet, then two, and then increase some amount
   every time we get an ACK (usually exponentially), until we hit rec window
 
+# Network APIs
+
+## Reading/Writing Files in Unix
+- `fd = open(path, mode);`: Open a file that indexes into a table of open files
+- `bytes_read = read(fd, buffer, size);`
+- `bytes_written = write(fd, buffer, size);`
+- `err = close(fd);`
+- `err = ioctl(fd, op, argptr);`: perform operation on underlying physical
+  device
+- `err = fcntl(fd, op, argptr);`: perform operation to file descriptor
+
+## Reading/Writing Sockets in Unix
+- Originally done as in files, but `ls`ing the `/net` directory wouldn't work
+- Now we have the socket API:
+  - `socket()` syscall creates our end of the connection (returns `fd`)
+    - Takes domain `{PF_UNIX, PF_INET, PF_INET6}` for stuff like unix sockets,
+      IPv4, IPv6
+    - Takes type `{SOCK_STREAM, SOCK_DGRAM, SOCK_RAW}` for TCP, UDP, raw
+      packets.
+  - `bind()` syscall associates local end with addressing information (i.e.
+    port)
+    - Takes an address struct `sockaddr_in, sockaddr_in6`
+  - `connect()` syscall links socket to another node
+  - `send(), sendto(), recv(), recvfrom()` syscalls are `read(), write()`
+    analogues
+  - `shutdown()` syscall is the same as `close()`
+- Must convert to big endian on the wire
+  - `htons(), htonl(), ntohs(), ntohl()` for converting long/short values
+    to/from network endienness
+- On the server:
+  - Call `listen()` instead of `bind()`
+  - This creates a *new* socket to communicate with the connectee, and leaves
+    the old socket to listen for new connections
+

@@ -502,3 +502,49 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
 - Often cache HTTP results in the HTTP client
 - But perhaps better to cache on HTTP server
 
+# Other Transports
+
+## Real-time Transport Protocol
+- Used to transport voice and video in some applications
+- Doesn't do much more than UDP
+- Problems for voice/audio
+  - Consistent timing
+  - Drop, or catch up?
+  - Buffering?
+- Apparently latency over 35ms is problematic for voice
+- Each packet contains sequence number and timestamp
+- No ACKs
+
+## Multipath TCP
+- Allows multiple paths to be used by one TCP connection
+- e.g. Wifi and 4G together
+- Performance + fail safe
+- Very new
+
+# Network Address Translation (NAT)
+- Extends scarce IP numbers
+- Also provides some security, hiding local machines from the internet
+- Breaks "end to end principle"
+- Outbound NAT
+  - Connection is modified so that multiple IPs are mapped to subset of ports of
+    smaller amount of IPs
+- Inbound NAT
+  - Reverse of outbound, but keeps ports inbound the same
+- This works because TCP connections are distinguished by `(src ip, dst ip, srt
+  port, dst port)`
+- Usually only use one external IP, unless you need >65535 connections
+
+## Problems
+- Hard to log
+- Hard to authenticate users behind same NAT
+- TODO: Clock offsets?
+- Delays IoT
+  - Need universal connectivity
+
+## IPv6
+- No NAT
+- Proposals of IPv6 NAT for security reasons
+- NAT is kinda a stateful firewall
+- Regarding NAT as an actual firewall is a problem, because it is not designed
+  to be
+

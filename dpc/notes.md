@@ -317,3 +317,62 @@ There is the concept of a warp:
 - Improvement 3
   - Sort the keys, and then reduce by key
 
+# Sparse Matrix Multiplication
+
+## Prerequisites
+- Gather
+  - One-to-one mapping, but which "ones" are included is not uniform
+- Exclusive scan
+  - The scan at index `i` does not contain the value at index `i` in the
+    original array
+- Segmented scan
+  - Only cumulate results across specific ranges
+
+## Conditionally Mapping
+- We want to apply `f()` to elements that satisfy `p()`
+- While all threads execute `p()`, only few will execute `f()`, meaning that
+  there will be a lot of divergence
+- So we can compact all elements that satisfy `p()` into one array, and then
+  iterate over that - call this `compat()`
+  - First, map `xs` through `p()`
+    - `xs = [1, 3, 2, 3, 2, 4], p(x) = iseven(x)`
+    - `bs = [f, f, t, f, t, t]`
+  - Cast booleans from `p()` into `0/1`s
+    - `is = [0, 0, 1, 0, 1, 1]`
+  - Perform exclusive sum scan
+    - `scan = [0, 0, 0, 1, 1, 2]`
+  - Perform scatter with original `xs` with indices `scan` if `bs` satisfied for
+    index
+    - `2 → 0, 2 → 1, 4 → 2`
+    - `[2, 2, 4]`
+  - Perform some arbitrary `f()` on the final array
+- Can use this for clipping 2D triangle into a viewport
+  - If a triangle is outside the viewport, it maps to 0 triangles
+  - If a triangle is inside the viewport, it maps to 1 triangle
+  - If the triangle is partially inside the viewport, it maps to `n` different
+    triangles
+  - We can use `compat()` to allocate indices for these triangles
+
+## Sparse Matrix Dense Vector Multiplication (SpMv)
+Matrix representation of `X⋅Y`:
+```
+[0 b c][x]   [bx + cx]
+[d e f][y] = [dy + ey + fy]
+[0 0 i][z]   [iz]
+```
+
+We can represent this as:
+- `V = [b, c, d, e, f, i]`: The values in the `X`, excluding zeros
+- `C = [1, 2, 0, 1, 2, 2]`: The columns of the values in `V`
+- `R = [0, 2, 5]`: The indices of values in `V` that start a row
+
+Algorithm:
+1. Gather from `Y` using `C`:
+  - `G = gather([x, y, z], [1, 2, 0, 1, 2, 2])`
+  - `G = [y, z, x, y, z, z]`
+2. Map `V * G`
+  - `M = map(_*_, zip(V, G))`
+  - `M = [by, cz, dx, ey, fz, iz]`
+3. Run segmented inclusive sum scan on `M`
+  - `[by + cz, dx + ey + fz, iz]`
+

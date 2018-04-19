@@ -472,3 +472,78 @@ Algorithm:
   discussed
 - Fastest for medium to large lists
 
+# Floating Point Numbers
+- IEEE-754 floating point number has:
+  - 1 bit sign (`S`)
+  - 8 bit exponent field (`E`)
+    - Bias of 127, i.e. `exponent = E - 127`
+    - 0 and 255 reserved for special numbers
+  - 23 bit mantissa field (`M`)
+- For normal numbers, implicit initial 1 bit in the mantissa is assumed
+  - i.e. `010101 → 1010101`
+- Special bit patterns in `S, E, M` for:
+  - Positive/negative zero
+  - Positive/negative infinity
+  - NaN
+  - Other sub-normal numbers
+- For normal numbers:
+  - `(-1)^S * (1 + (2^-23) * M) * 2^(E - 127)`
+- For sub-normal numbers:
+  - Difference between `0 - succ(0)` is far greater than `succ(0) -
+    succ(succ(0))`
+  - Non-zero numbers that are smaller than the magnitude of the smallest
+    IEE-754 floating point number
+  - If `E=0`, then do not use the implicit 1 bit in the mantissa
+
+## Unit in Last Place (ULP)
+- Given some number `x`, what is the shortest distance between the pair `a, b`
+  where `a ≤ x ≤ b`
+- IEEE-754 requires operations round to the nearest representable floating point
+  number
+  - i.e. the computed result must be with in 0.5 ULPs of the mathematically
+    correct result
+
+## Problem
+- If we try to sum the list `[1000.0, 0.1, 0.1, 0.1...]` the result will always
+  be `1000.0` because the operation `1000.0 + 0.1` results in `1000.0`
+- Worst error is `O(n)`
+
+### Solution: Sorting
+- Sort the list as ascending first, then sum
+- However, accumulated small values will get significantly larger that later
+  values in the vector
+
+### Solution: Kahan
+- Accumulate the sum, but calculate a correction term
+```c
+  float kahan_add(float *xs, size_t len) {
+    float sum = 0;
+    float correction = 0;
+    for (size_t i = 0; i < len; i++) {
+      float corrected_next_term = xs[i] - correction;
+      float new_sum = sum + corrected_next_term;
+      correction = (new_sum - sum) - corrected_next_term;
+      sum = new_sum;
+    }
+    return sum;
+  }
+```
+- Worst error is `O(1)`
+- Not easy to parallelise
+
+### Solution: Parallel Addition
+- Sort the list, then thread `i` performs `a[i*s] + a[i*s + (s / 2)]`
+  - where `s` is the stride that starts at 2 and doubles on each iteration
+- Starts with adding similar pairs, but difference increases as you go on
+- Worst error is `O(log(n))`
+- Poor thread blocking, memory access patterns
+  - Could have thread `i` perform `a[i] + a[i + s]`
+    - where `s` is the stride that starts at `len(a) / 2` and halves on each
+      iteration
+  - This needs careful original ordering of `a[]`
+
+## Error Measurements
+- Absolute error: `|v - v'|` where `v` is the true value, and `v'` is the
+  approximation
+- Relative error: `|v - v'| / |v|` when `v ≠ 0`
+

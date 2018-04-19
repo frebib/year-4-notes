@@ -548,3 +548,59 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
 - Regarding NAT as an actual firewall is a problem, because it is not designed
   to be
 
+# Multiple Interfaces
+- Typical desktop only has one interface
+- Typical server has several interfaces (called multihomed server)
+  - For performance
+  - For keeping networks separate without buying multiple routers
+
+## Programming
+- Can bind to `INADDR_ANY` to listen on all interfaces
+- Source address is set based on the packet that initiates the request
+
+## Connecting to Multihomed Servers
+- Try each interface in turn (not in parallel)
+- Cache the live interface
+- Naive clients will assume one interface
+  - Then we handle which interface is given through DNS hacks
+  - Use round-robin behaviour (iterate through interfaces)
+- Smarter clients will try all interfaces in order returned by `gethostname`
+- Even smarter clients will use `getaddrinfo`
+  - Returns IPv4/6 addresses
+
+## UDP
+- If you send a request to an IP, you should receive response from that IP
+- One technique:
+  - Listen on `0.0.0.0`, look at destination address on each packet received
+  - Copy destination address into source address of response
+- Another technique:
+  - Listen on each interface individually
+  - Effectively have multiple copies of the application
+  - More flexible, but need to iterate over interfaces and update when they
+    change
+- You can set sender to any IP on some kernels, but kernel will still route
+  through interface it believes to be closest to destination
+
+## TCP
+- Kernel will handle replies having the same source address
+- Can just listen on `0.0.0.0`
+
+## Link-Agg
+- Link aggregation
+- Multiple interfaces, one IP number
+- Fast failover if an interface goes down
+- Efficient multiplexing and load spreading
+- However, only goes as far as the nearest switch
+
+## VLANs
+- Ethernet frames have an optional `tag` field (0-1023, or 0-4095)
+- Differentiate between different "networks" going over the same wire
+- OS sees them as two separate networks
+- Untagged ports
+  - Don't need to understand VLANs
+
+## Link-Agg + VLANs
+- Deliver two+ networks over two+ cables
+- Full load balancing
+- Full failover
+

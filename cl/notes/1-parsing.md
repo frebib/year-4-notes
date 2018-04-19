@@ -225,6 +225,19 @@ can come after `C` if `γ` can disappear.
 ### Calculating `FIRST`, `FOLLOW`, and `NULLABLE`
 TODO: Check if we need to know this
 
+### Factorising
+`FIRST`/`FIRST` conflict:
+```
+A -> ab
+B -> ac
+```
+Can be resolved by factorising:
+```
+A -> aB
+B -> b
+B -> c
+```
+
 ## LR(0)
 
 ### Items Introduction

@@ -547,3 +547,59 @@ Algorithm:
   approximation
 - Relative error: `|v - v'| / |v|` when `v ≠ 0`
 
+# Multi-dimensional Kernels
+- Used for image analysis, matrix multiplication, spacial simulations
+- Threads are essentially broken down into 1D again, for example with a `(2, 2,
+  2)` dimensional block
+  - `threadIdx = (0, 0, 0) → thread 0`
+  - `threadIdx = (1, 0, 0) → thread 1`
+  - `threadIdx = (0, 1, 0) → thread 2`
+  - `threadIdx = (1, 1, 0) → thread 3`
+  - etc.
+
+## Coalesced Global Memory Access
+- `D[blockIdx.x][blockIdx.y]` where `D` and block size is `2x2`
+  - Thread `(0, 0) → 0` accesses `D + 0`
+  - Thread `(1, 0) → 1` accesses `D + 2`
+  - Thread `(0, 1) → 2` accesses `D + 1`
+  - So we're not coalesced
+- `D[blockIdx.y][blockIdx.x]` (we switch `x` and `y`)
+  - Thread `(0, 0) → 0` accesses `D + 0`
+  - Thread `(1, 0) → 1` accesses `D + 1`
+  - Thread `(0, 1) → 2` accesses `D + 2`
+  - So we're coalesced!
+
+## Shared Memory Bank Conflicts
+- `D[x][y]` where `D` and block size is `K x K` and `K` is a multiple of 32
+  - Thread `(0, 0) → 0` accesses bank 0
+  - Thread `(1, 0) → 1K` accesses bank 0
+  - Thread `(2, 0) → 2K` accesses bank 0
+  - Conflicts!
+- `D[y][x]` (we switch `x` and `y`)
+  - Thread `(0, 0) → 0` accesses bank 0
+  - Thread `(1, 0) → 1K` accesses bank 1
+  - Thread `(2, 0) → 2K` accesses bank 2
+  - No conflicts!
+
+## Transposing
+- When transposing, we need to access both `D[y][x]` and `D[x][y]`, meaning one
+  of the accesses will have uncoalesced global memory accesses, and shared
+  memory bank conflicts
+- Trick:
+  1. Copy in a element of `D` into shared memory with good indexing
+  2. `__syncthreads()`
+  3. Copy out a different element with also good indexing
+
+## Matrix Multiplication
+- Naive: each thread handles an output element, and performs the dot product of
+  the correct row and column.
+  - For the "compute to global memory access" ratio, we have two global reads,
+    one multiplication, one addition. This gives us a 1:1 ratio - not good
+- Clever:
+  - Do dot product for tiles of the outputs
+    - e.g. if we have 64x64 matrices, and 32x32 tiles, we have 2x2 tiles
+    - To calculate `O[0, 0]`:
+      - First do partial dot products of `A[0, 0]` and `B[0, 0]`
+      - Then do partial dot products of `A[1, 0]` and `B[0, 1]`
+      - Sum the results for the final `O[0, 0]` values
+

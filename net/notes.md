@@ -604,3 +604,79 @@ TODO: Some other techs mentioned here, but not in any detail - need to know?
 - Full load balancing
 - Full failover
 
+# Domain Name System (DNS)
+- Maps names to IP numbers (v4, v6) and vice versa
+- Locates resources (TODO: ?)
+- Once you own a domain name
+  - Create resource records within the domain
+  - Delegate portions of the namespace to other nameservers
+  - Zone: group of resource records served from one nameserver
+- Lots of caching involved
+
+## Resource Records
+- Map a name to some data + some book keeping
+- `A` records contain IPv4 addresses
+- `AAAA` records contain IPv6 addresses
+- `PTR` records contain IP addresses to domain names
+- `MX` records contain mail exchangers
+- `NS` records contain nameservers
+- `CNAME` records contain aliases
+- `SOA` records contain authority records
+- `TXT` records contain random text information
+- Each record has a class, but is always set to internet (`IN`)
+- Represented as (name, TTL, class, type, data)
+  - `foo.domain.com` represented as `[3]foo[6]domain[3]com[0]` where `[3]` is the
+    byte value for 3 (`0b00000011`)
+
+## Time to Live (TTL)
+- In seconds
+- You can cache a RR for this long
+
+## Zones
+Example:
+- .com
+  - xyz.com
+  - abc.com
+    - eu.abc.com
+      - sales.eu.abc.com
+    - asia.abc.com
+      - east.asia.abc.com
+      - west.asia.abc.com
+Can segment the tree up however you want to create zones
+
+## Components
+- Clients
+  - Make DNS queries to recursive servers
+- Recursive/caching servers
+  - Will give an answer, but sometimes inauthoritative
+- Authoritative/iterative server
+  - Will give authoritative answers about zones they are configured to know
+    about
+
+## Header
+- ID, 16 bit: identifier for question and answer
+- QR, 1 bit: 0 is query, 1 is response
+- OP, 5 bits: 0 is QUERY, 1 is IQUERY, 2 is STATUS, 4 is NOTIFY (master
+  informing slave that zone has changed), 5 is update (dynamic DNS)
+- Some flags:
+  - AA: Authoritative answer, or answer is fresh from authoritative server
+  - TC: Truncation, if 1, more than 512 bytes of response, so client should open
+    TCP connection and get information
+  - RD: Recursion desired, please answer this question in its entirety (TODO: ?)
+  - RA: Recursion available
+  - Various error codes
+
+## Label Compression
+- Labels are max 63 bytes, so largest value for length field is `0b00111111`
+- Length fields starting 11 are special:
+  - If starts with 11, the next 6 bits + 1 byte = 14 bits are special
+- TODO: How does this work?
+
+## Name Resolution
+- Recursive nameserver will ask for `dom.ain.com`, and either get a reply for:
+  - `com`
+  - `ain.com`
+  - `dom.ain.com`
+- Then can ask the next server down until someone answers with an A record
+- Multiple servers, meaning load balancing and redundancy
+

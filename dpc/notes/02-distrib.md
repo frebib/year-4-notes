@@ -167,3 +167,77 @@
 - Disadvantages: `2(n - 1)` messages, `N` points of failure, every node needs to
   keep track of every other node in the system
 
+# Snapshots
+- Allows saving program state so we can resume later
+- Allows returning to previous state if things break
+- With distributed systems, can't do this because there's no global clock
+- Messages could be on the fly, difficult to record this state
+- Recording local snapshots must be coordinated correctly to ensure a consistent
+  global snapshot
+- If each process takes a local snapshot:
+  - An event is pre-snapshot if it occurs in a process before the local snapshot
+  - Otherwise it is post-snapshot
+- A snapshot is consistent if
+  - When `a` is pre-snapshot, `x ≺ a` implies `x` is pre-snapshot
+  - A message is included in channel state if its sending is pre-snapshot and
+    its receiving is post-snapshot
+
+## Chandy-Lamport Algorithm
+- Applies to FIFO channel systems only
+- Send control messages called markers along channels to separate pre- and
+  post-snapshot events and trigger local snapshots
+- Initiator takes local snapshot and sends marker through all outgoing channels
+- When process `pₘ` receives marker along channel `cₙₘ`
+  - If `pₘ` has not yet saved state
+    - `pₘ` saves local state
+    - `pₘ` sets `cₙₘ` state to `{}`
+    - `pₘ` sends marker through to all outgoing channels
+  - Else
+    - `pₘ` records state of `cₘₙ` as set of all basic messages received after it
+      has saved its local state, and before it received the marker message from
+      `pₙ`
+
+### Correctness
+- If `a ≺ b` and `b` is pre-snapshot then `a` is pre-snapshot
+- If `a` is send and `b` is receive of the same message in processes `p` and `q`
+  - `b` is pre-snapshot → `q` has not received a marker when `b` occurs
+  - Since channels are FIFO, `p` has not sent a marker when `a` occurs
+  - Hence, `a` is pre-snapshot
+TODO: Rest
+
+## Lai-Yang-Mattern Algorithm
+- Works on non-FIFO channels
+- Rather than having separate marker messages, attach boolean flag to basic
+  messages
+  - Typically described as white/red
+- Lai-Yang algorithm didn't need control messages, but required keeping all
+  message history
+- Lai-Yang-Mattern algorithm uses control messages with logical clocks
+
+### Algorithm
+- Every process initialised to white
+- When a process saves its local state:
+  - Turn red
+  - Send control message on all outgoing channels to say how many white messages
+    it has sent down that channel
+- Every basic message is the same colour as the process that sends it
+- White process can save local state at any time
+  - But must save it no later than on receiving a red message, and before
+    processing that message
+- When receiving the control message:
+  - Save local state if it hasn't already
+  - Process knows how many white messages it has received currently on each
+    input channel
+  - Process knows how many white messages it needs to receive from the control
+    message
+  - Waits for white messages
+  - Each process channel computes channel state as the set of white messages it
+    receives after saving its local state
+
+## Mutliple Snapshots
+- Instead of red/white, use counter `k`
+- On first snapshot, `k = 0` is white, `k = 1` is red
+- On second snapshot, `k = 1` is white, `k = 2` is red
+- If two nodes start snapshot concurrently, they will both increment and the
+  snapshot will be the same
+

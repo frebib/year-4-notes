@@ -1,4 +1,4 @@
-# Distributed and Parallel Computing
+# Distributed and Parallel Computing - Parallel Computing
 
 ## Task vs Data Parallelism (11/1/2017)
 Types of parallelism:

@@ -241,7 +241,7 @@ B -> c
 ## LR(0)
 
 ### Items Introduction
-- We can make LR deterministic but using items
+- We can make LR deterministic by using items
 - An item is a rule with a "pointer" to how much of that rule we have seen so
   far
 - For example `[A -> α∘β]` means that:
@@ -276,7 +276,7 @@ set has been expanded to contain all `ε-move`s.
 1. Shift: `<σs, aw> -> <σss', w>` iff `[B -> α∘cβ] ∈ s` and `s a-> s'`. As long
    as there is something left to read in one of the states, and we can
    transition using `a`, make that transition
-2. Reduce: `<σs₁s₂...sn, w> -> <σs₀s', w>` if `[B -> X₁...Xn∘] ∈ sn` and `s₁ B->
+2. Reduce: `<σs₁s₂...sn, w> -> <σs₁s', w>` if `[B -> X₁...Xn∘] ∈ sn` and `s₁ B->
    s'`. If we've seen the end of a rule, go back down the stack until we can
    make a transition using that rule, and make that transition
 3. Accept: If `<σs, ε>` and `[Sт -> S∘] ∈ s`.

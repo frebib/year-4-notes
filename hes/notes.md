@@ -145,3 +145,70 @@ S-Box | 3 2 1 0 | … 49 … 33 … 17 … 1 0
   S-Box
 - Could combine table approach with S-Box merging, approx halving S-Box lookup
   and permutation
+
+### Bitslicing
+- Smallest addressable unit on processor, normally a byte
+- Could store each bit in a byte but with significant wasted space
+- Bitslicing works on idea that we usually encrypt many blocks
+- Bitslicing allows to "reclaim" some bits that would be lost in approach above
+
+#### Expanded Form
+Where each bit is represented in a byte.
+
+**Key Addition**
+- Both key and state are in "expanded" form, can XOR them byte-wise
+
+**Permutation Layer**
+- Becomes byte-wise permutation
+- Example of byte-wise PRESENT permutation:
+```C
+state_out[0] = state[0];
+state_out[16] = state[1];
+state_out[32] = state[2];
+state_out[48] = state[3];
+state_out[1] = state[4];
+// …
+```
+
+**S-Box Layer**
+- Can no longer be easily implemented as a LUT
+- Instead, represent outputs as boolean functions in input bits
+  * We Mainly look at Algebraic Normal Form
+
+**Modification to "Reclaim" Bits**
+- Store plaintext in bitsliced state _s_'[0...63]
+  * First bit of first block _p_<sub>_0_</sub> goes into bit 0 of _s_'[0]
+  * First bit of second block _p_<sub>_1_</sub> goes into bit 1 of _s_'[0]
+  * Second bit of _p_<sub>1</sub> goes into bit 1 of _s_'[1]
+  * etc.
+- Apply key addition, S-Box and permutation
+- Map _s'_ back to normal representation
+
+**Complexity**
+- Significant performance increase due to operations saved for permutations
+- Key addition layer keeps similar performance
+- S-Box more costly, depends on number of boolean operations (more = bad)
+- Memory overhead since multiple cipher states stored at once
+- Code size may increase
+
+#### Algebraic Normal Form
+- Representation of boolean functions
+- Use Fast Fourier Transform (FTT)-like algorithm to compute functions
+  * Write the truth table for function inputs
+  * Apply "butterfly" _n_ times, with spacing
+  σ = 2<sup>0</sup> = 1, 2<sup>1</sup>, 2<sup>2</sup>, ..., 2<sup>n−1</sup>
+
+
+Butterfly for computing ANF:
+
+![](https://i.imgur.com/1N3B7Cu.png)
+
+A full ANF butterfly table:
+
+![](https://i.imgur.com/kGQgcEo.png)
+
+- We take the rows that are set to one in the final column and use the inputs
+  of these rows to form the boolean function
+- If 000 is set, the result is inverted (+1)
+- Example table above results in: x<sub>2</sub> + x<sub>1</sub> +
+  x<sub>1</sub> * x<sub>2</sub>... + 1

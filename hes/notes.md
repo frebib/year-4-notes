@@ -325,3 +325,27 @@ we store the number in _k_ = ceiling(<sup>_l_</sup>/<sub>_w_</sub>)
   multiplications and k divisions
 - Barrett reduction is an optimisation by performing an expensive
   pre-computation floor(b<sup>2k</sup> / n)
+
+### Exponentiation Algorithms
+**Square-and-Multiply (SAM)**
+- Interleaves modular reduction and multiplications
+  * Square first, then reducing would require huge storage/computation
+
+<img src="https://i.imgur.com/OIQ9n7w.png" style="width: 35em;" />
+
+- _t_ = exponent length
+- Scans binary exponent _e_ from left to right
+- Squares for each bit and multiplies if exponent bit = 1
+
+<img src="https://i.imgur.com/JP0aIRQ.png" style="width: 40em;" />
+
+**Complexity**
+- On average, assume half of the bits are set
+- We need (t-1)/2 multiplications and t-1 squares
+
+### Elliptic Curve Cryptography
+- 2048-bit keys recommended in RSA, for ECC 256-bit is sufficient
+- Faster long-number ops due to shorter key inputs
+- Single group operation requires multiple long-number operations
+- ECC better suited for constrained embedded devices
+

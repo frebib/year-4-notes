@@ -212,3 +212,116 @@ A full ANF butterfly table:
 - If 000 is set, the result is inverted (+1)
 - Example table above results in: x<sub>2</sub> + x<sub>1</sub> +
   x<sub>1</sub> * x<sub>2</sub>... + 1
+
+## Implementation of Asymmetric (Public Key) Cryptography
+
+- Higher computational and storage requirements
+- Longer keys
+- Easy for PCs, harder for embedded systems
+
+### RSA
+- _l_-bit RSA
+- Pick secret primes _p,q_, each about <sup>_l_</sup>/<sub>2</sub> size
+- _n_ = _p * q_
+- Pick public exponent _e_
+- **Public key**: (_n, e_)
+- **Private Key**: (_p, q, d_) where _d_ = _e<sup>-1</sup>_ mod _𝜙_(_n_)
+- **Encrypt _x_**: _y_ = _x<sup>e</sup>_ mod _n_
+- **Decrypt _y_**: _x_ = _y<sup>d</sup>_ mod _n_
+
+### Long-Number Arithmetic
+- Required for computations with numbers > width _w_ of a single CPU register
+
+#### Number Representation
+- With a processor with _w_-bit registers, given an _l_-bit number _u_,
+we store the number in _k_ = ceiling(<sup>_l_</sup>/<sub>_w_</sub>)
+- Example:
+  * Take 12345678 in binary this is a 24-bit number
+  _u_ = (101111000110000101001110)<sub>2</sub>
+  * We have a CPU with 5-bit registers
+  * ceil(24/5) = 5
+  * _u_ = (01011 11000 11000 01010 01110)<sub>2<sup>5</sup></sub>
+  (added a leading zero)
+  * _u_ = (a<sub>4</sub>, a<sub>3</sub>, a<sub>2</sub>, a<sub>1</sub>,
+  a<sub>0</sub>)<sub>2<sup>5</sup></sub>
+
+#### Addition
+<img src="https://i.imgur.com/ovyUymI.png" style="width: 30em;"/>
+
+- mod: take lower limb of result _t_
+- floor(_t/b_): take upper limb of result _t_
+- _t_ must be a two limb number for algorithm to work
+
+
+- Some architectures have an add-with-carry (ADDC) instruction
+- Use workarounds to implement add-with-carry in higher-level languages
+  * e.g. _if t >= b: c = 1 else c = 0_
+  * In this example, execution time is dependent on inputs (less secure)
+
+**Subtraction**
+- Done similar to addition, carry becomes "borrow" bit
+- Can work in two's complement representation
+  - Negative sign by negating each bit and adding 1
+
+**Complexity**
+- _k_ base-_b_ additions-with-carry
+- _2k_ if no ADDC instruction
+- Complexity O(_k_)
+
+#### Multiplication
+<img src="https://i.imgur.com/a0OCNZf.png" style="width: 35em;" />
+
+- Product of _k_-limb and _m_-limb numbers is at most _k_ + _m_ length
+
+<img src="https://i.imgur.com/kcYrjfg.png" style="width: 30em;" />
+
+**Complexity**
+- Requires _k_ + _m_ base-_b_ multiplications and _2_(_b_ + _m_) base-_b_ shifts
+- If _k_ = _m_, complexity O(_k_<sup>2</sup>)
+
+#### Karatsuba Multiplication
+- Split two _k_-digit numbers _u, v_ into halves of equal size
+  _k_ = ceil(<sup>_k_</sup>/<sub>_2_</sub>)
+- Write values as:
+  * _u_ = _u_<sub>H</sub> * b<sup>_k_</sup> + _u_<sub>L</sub>
+  * _v_ = _v_<sub>H</sub> * b<sup>_k_</sup> + _v_<sub>L</sub>
+- _u * v_ written as:
+
+  (u<sub>H</sub> * b<sup>k</sup> + u<sub>L</sub>) *
+  (v<sub>H</sub> * b<sup>k</sup> + v<sub>L</sub>) =
+  u<sub>H</sub>v<sub>H</sub>b<sup>2k</sup> +
+  (u<sub>H</sub>v<sub>L</sub> +u<sub>L</sub>v<sub>H</sub>)b<sup>k</sup> +
+  u<sub>L</sub>v<sub>L</sub>
+- Middle part (u<sub>H</sub>v<sub>L</sub> +u<sub>L</sub>v<sub>H</sub>)
+  can be expressed as:
+
+  (u<sub>H</sub> + u<sub>L</sub>) * (v<sub>L</sub> + v<sub>H</sub>) −
+  u<sub>H</sub>v<sub>H</sub> − u<sub>L</sub>v<sub>L</sub> =
+  u<sub>H</sub>v<sub>L</sub> + u<sub>L</sub>v<sub>H</sub>
+- u<sub>H</sub>v<sub>H</sub> and u<sub>L</sub>v<sub>L</sub> are already computed
+  once, so we save one multiplication
+- Method expressed as:
+  * D<sub>0</sub> = u<sub>L</sub> * v<sub>L</sub>
+  * D<sub>2</sub> = u<sub>H</sub> * v<sub>H</sub>
+  * D<sub>1</sub> = (u<sub>H</sub> + u<sub>L</sub>) *
+    (v<sub>L</sub> + v<sub>H</sub>)
+  * Hence:
+  * u * v = D<sub>2</sub>b<sup>2k</sup> +
+    [D<sub>1</sub> - D<sub>2</sub> - D<sub>0</sub>]b<sup>k</sup> + D<sub>0</sub>
+
+**Recursion**
+- Algorithm should be implemented recursively to compute sub-products
+- In practice, algorithm applied until threshold, then schoolbook algorithm used
+  * At some point, additional additions/management become more expensive than
+    the saved multiplication
+
+**Complexity**
+- O((<sup>3</sup>/<sub>4</sub>)<sup>i</sup> k<sup>2</sup>)
+- Refactor to O(k<sup>1.585</sup>) for two numbers of length k = 2<sup>i</sup>
+
+#### Modulo Arithmetic
+- Complicated algorithms
+- Dividing 2k-digit number by a k-digit number, requires k * (k - 2)
+  multiplications and k divisions
+- Barrett reduction is an optimisation by performing an expensive
+  pre-computation floor(b<sup>2k</sup> / n)

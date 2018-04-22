@@ -680,3 +680,40 @@ Can segment the tree up however you want to create zones
 - Then can ask the next server down until someone answers with an A record
 - Multiple servers, meaning load balancing and redundancy
 
+# Other Protocols
+
+## File Transfer Protocol (FTP)
+- Old protocol for transfering files
+- Requires lot of engineering in NATs
+- Old mechanism:
+  - Client requests using server's port 21
+  - Request contains open port on client
+  - Server sends file back to client on port, from server port 20
+- New mechanism:
+  - Server listens on high port
+  - Client calls to it from high port
+
+## Simple Mail Transfer Protocol (SMTP)
+- Sending email
+- Extensions for auth, encryption, etc.
+- Mail user agents (MUAs) talk to mail transport/submission agents (MTAs/MSAs)
+
+## POP3
+- Downloading email
+- Connect, count messages, download
+- Assumes user has one device
+- Always prefer IMAP
+
+## IMAP
+- Downloading email
+- Remote searching
+- Can provide POP3 interface
+
+## Secure Shell (SSH)
+- Encrypted transport
+- Suited for short messages, e.g. character-by-character typing
+- Can use password auth, or public key
+
+## NFS
+- Remote filesystem for thin clients
+

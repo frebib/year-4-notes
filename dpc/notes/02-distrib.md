@@ -283,3 +283,70 @@ TODO: Rest
       would be required)
     - Messages only travel down spanning tree edges, so `2E → 2N - 2`
 
+## Echo Algorithm
+- Wave, but not traversal algorithm
+- Centralised
+- Undirected networks
+- Outline:
+  1. Initiator sends message to all neighbours
+  2. When non-initiator receives message:
+    - Makes the sender its parent
+    - Sends message to all neighbours except its parent
+  3. When non-initiator received messages from all neighbours:
+    - Send message to parent
+  4. When initiator received all messages from neighbours, the algorithm
+     terminates
+- This builds a spanning tree
+- Number of messages: `2E`
+- Worst case time to complete: `2N - 2`
+
+# Deadlocks
+- Process stuck in infinite wait
+- Communication deadlock
+  - Cycle of processes, each waiting for the next to send a message
+- Resource deadlock
+  - Cycle of processes waiting for a resource held by the next process
+  - Different resources
+
+## Dealing with Deadlocks
+- Make deadlocks impossible by designing protocols with this in mind
+- Only obtain resource if global state ensures it is safe
+- Detect deadlocks, and break the chain when they occur
+
+### Waits-For Graph (WFG)
+- Directed graph
+- Nodes are processes
+- Edge from `p` to `q` means that `p` is waiting for `q` to respond
+- If there's an cycle in the WFG, then a deadlock has happened (in simple
+  models)
+- Single-resource model
+  - Process can only have one outstanding request for a resource
+  - Cycle in WFG means deadlock
+  - Simplest model
+- AND model
+  - Process can request multiple simultaneously, and all resources needed to
+    unblock
+  - Cycle in WFG means deadlock
+- OR model
+  - Process can request multiple simultaneously, and only one resource needed to
+    unblock
+  - Cycle in WFG does not mean deadlock
+  - Knot in WFG means deadlock
+    - A knot is a set of vertices such that every vertex `u` reachable from a
+      not vertex `v` can also reach `v`
+- AND-OR model
+  - Generalises AND model and OR model
+  - No simple graph structure for detecting deadlocks (TODO: why do we use it
+    then?!)
+- p-out-of-q model
+  - Equivalent to AND-OR model
+  - Process requests `p` resources and `q` are needed to unblock
+- Unrestricted model
+- Problems
+  - We need to maintain the WFG
+  - We need to find cycles/knots in WFG
+  - A deadlock detection algorithm must guarantee:
+    1. Progress
+      - All existing deadlocks must be found in finite time
+    2. Safety
+      - Must not report deadlocks that do not exist

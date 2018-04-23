@@ -234,10 +234,52 @@ TODO: Rest
   - Each process channel computes channel state as the set of white messages it
     receives after saving its local state
 
-## Mutliple Snapshots
+## Multiple Snapshots
 - Instead of red/white, use counter `k`
 - On first snapshot, `k = 0` is white, `k = 1` is red
 - On second snapshot, `k = 1` is white, `k = 2` is red
 - If two nodes start snapshot concurrently, they will both increment and the
   snapshot will be the same
+
+# Wave Algorithms
+- Sends request through network to gather information
+- Can be used for: termination detection, routing, leader election, transaction
+  commit voting
+- A wave algorithm needs three conditions:
+  - Finite
+  - One or more decide events
+  - `∀ a ∈ D, p ∈ P. ∃ b ∈ p.E. b ≺ a` where
+    - `D` is the decide events
+    - `P` is the processes
+    - `p.E` is the events in a process `p`
+    - Means every process must participate in each decide event
+
+## Traversal Algorithm
+- An initiator sends a token to visit each process
+- The token may collect/distribute information on the way
+- The token returns to the initiator
+- The initiator makes the decision
+
+### Tarry's Algorithm
+- Traversal algorithm for undirected networks
+- Two main rules:
+  - A process never forwards the token through the same channel twice
+  - A process only forwards the token to its parent when there is no other
+    option
+    - The parent is the first person to send the token to it
+- Performance
+  - Number of messages: `2E`
+  - Time to complete: `2E`
+- Depth first search
+  - Token is forward to a process that has not yet held the token, in preference
+    to one that has
+  - Means that frond edges will only connect ancestors/descendants
+  - We can make Tarry's algorithm DFS by adding a rule:
+    - If rules 1&2 allow it, send the token down the same channel as soon as you
+      receive it
+  - Advantages
+    - Let the token carry information of all processes that carried it
+    - Avoid sending this information down frond edges (meaning that extra memory
+      would be required)
+    - Messages only travel down spanning tree edges, so `2E → 2N - 2`
 

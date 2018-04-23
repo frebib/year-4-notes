@@ -717,3 +717,114 @@ Can segment the tree up however you want to create zones
 ## NFS
 - Remote filesystem for thin clients
 
+# Routing Protocols
+- Isn't handled by the network, we are responsible for the next hop
+- Can't dictate beyond the next hope
+- Loops can happen because of this
+
+## Static Routing
+- Say that "this network goes to this router, this network goes to this router,
+  other networks go to this router"
+- No resilience
+
+## Interior vs. Exterior Routing
+- Interior is when all equipment is managed by one entity
+  - Small networks, max 100s
+  - More trust between nodes
+- Exterior is when equipment is managed by multiple entities
+  - Needs to be able to handle the entire internet
+  - No central authority
+
+## Objectives
+- Find the best path
+- Find the best path _now_ if it changes regularly, which it will with large
+  networks
+- Find the minimal spanning tree
+- Metrics
+  - When building a minimal spanning tree, need to evaluate edges
+  - This is difficult: must include bandwidth, latency, reliability, etc.
+
+## Internal Routing
+
+### Distance Vector
+- Simple early algorithm
+- TODO: What is this?!
+
+### Routing Information Protocol (RIP)
+- Each connected network is one hop away
+- Each node broadcasts all the networks it knows how to reach, along with their
+  hop count
+- Metrics are from 0-16
+  - 0 is us
+  - 16 is unreachable
+  - Sets maximum diameter of network
+- Limits ability to use metrics to indicate slow/unreliable links
+- Problem:
+  - A is next to B
+  - A tells C that it is next to B
+  - C thinks it is 2 away from B
+  - A→B link goes down
+  - C tells A it is two away from B
+  - Link distances will get bigger and bigger until 16, then removed
+- TTLs in packets are large, so packets going through loops could take a while
+- Solution 1: flash update
+  - Usually send packets every 30s
+  - Now also send packets when things change
+  - Same progression, but a lot quicker
+- Solution 2: split horizon
+  - Keep track of which interface advertises which networks
+  - Only send updates from one interface to all the other interfaces
+- Solution 3: poison reverse
+  - When a link breaks, send metric 16 update
+- Good for small networks, starts to fail for large
+  - Slow propgations of topology
+
+#### RIPv2
+- Uses subnetmasks instead of classful networks like RIP
+- Added security with hash, sequence numbers
+- Not used
+- Also have RIPng, RIPv2 with IPv6
+
+### Open Shortest Path First (OSPF)
+- Link state protocol
+- Devices on a subnet exchange `HELLO` packets to learn about local neighbours
+- Elect a designated router + backup (DR + BDR)
+  - From devices that have multiple interfaces
+- DR and BDR exchange link state advertisements (LSA) with neighbouring routers
+- When LSA information changes, recompute a set of routing tables
+- DR + BDR announce a complete set of non-local routes to other systems on the
+  local network
+
+#### Areas
+- Network will have a small group of highly connected core routers, networks
+  connected to one of the core routers
+- One area's router will advertise the area
+
+#### Pros and Cons
+- Pros:
+  - Converges within a few seconds of topology change, DR/BDR routers exchange
+    LSAs on demand
+- Cons:
+  - CPU intensive, not a problem any more
+  - Complex to configure
+  - Shortage of open source implementations
+
+### Load Balancing
+- RIP can balance across networks with same metrics
+- OSPF can do the same for metrics that are close enough to each other
+
+## External Routing
+- Autonomous systems (AS)
+  - Large networks on the internet
+  - Each routable network has exactly one AS number
+- You get ASNs from ISPs (TODO: ?)
+- Assumption that everyone in an AS knows how to reach everyone inside that AS
+
+### Border Gateway Protocol (BGP)
+- Routers peer over TCP
+- Updates are incremental
+- The route to a network reached by another router has a cost equal to the one
+  advertised by the router, plus the cost of getting to that router
+- Each route also contains the vector containing an ordered list of all ASs that
+  the route passed through
+

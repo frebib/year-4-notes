@@ -1,5 +1,25 @@
 # Networks
 
+# Topics List
+- Transmission
+  - ATM, WDM, SDH (all at a very high level only)
+- Ethernet
+  - Switching, collisions, bridging, broadcasting, VLANs, Link Aggregation
+- IP
+  - Addressing, IPv4 and v6 subnets and prefixes, routing, routing protocols
+    (OSPF, RIP, convergence properties), NAT
+- UDP
+  - Applications, advantages and disadvantages
+- TCP
+  - Applications, advantages and disadvantages, mechanisms and operation,
+    sequence numbers, receive windows, slow start, window scaling, PAWS,
+    timestamping, multipathing
+- DNS
+  - Concepts, resource records, RR sets, basic operation, recursive and
+    authoritative servers, caching
+- Higher layer protocols
+  - Basic operation of HTTP, FTP, SMTP
+
 # Basics
 - Measure network performance with:
   - Throughput (bits per second)

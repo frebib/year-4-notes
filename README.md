@@ -58,9 +58,9 @@
 
 ## Second Term
 ### Distributed and Parallel Computing
-[Lecture Slides](../../tree/master/dp/lecture-slides)
+[Lecture Slides](../../tree/master/dpc/lecture-slides)
 |
-[Notes](dp/notes.md)
+[Notes](dpc/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27250)
 |

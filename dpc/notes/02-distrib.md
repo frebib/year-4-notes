@@ -350,3 +350,87 @@ TODO: Rest
       - All existing deadlocks must be found in finite time
     2. Safety
       - Must not report deadlocks that do not exist
+
+# WFGs Continued
+- There is a node `v` for each process in the network
+- Nodes can be active or blocked
+- Active node can make n-out-of-m requests of other nodes and then becomes
+  blocked, or grant requests to other nodes
+- A blocked node can not make or grant requests, but can become active if a
+  number of its requests are granted
+- When a blocked node gets n-out-of-m requests granted, it purges the remaining
+  `m - n` requests
+- When node `a` gets a request from node `b`, there is a dependency for `b→a`
+- When `a` grants `b`'s request, the dependency moves to `a→b` until `b` releases
+  the resource
+
+## Distributed WFG
+- Do not wish to centralise
+- Each node retains information about local part of WFG
+- Distributed deadlock detection algorithm invoked by initiator
+- Each node `u` has a set of variables:
+  - `OUTᵤ`: Set of nodes that `u` has sent ungranted requests to
+  - `INᵤ`: Set of nodes that `u` has received requests from
+  - `nᵤ`: Number of nodes that `u` needs to receive until it becomes unblocked
+    - `0 ≤ nᵤ ≤ |OUTᵤ|`
+    - `nᵤ = 0 ⇒ OUTᵤ = {}`
+
+## Bracha-Toueg Deadlock Detection Algorithm
+- Idea: simulate granting of grantable requests and check if initiator node is
+  unblocked
+- Variations:
+  - Network with instant messages, base algorithm is static during deadlock
+    detection
+    - Needs `INᵤ, OUTᵤ, nᵤ` to be precalculated from the local state and
+      channel states of a globally consistent snapshot
+  - Network with time delays in message delivery, base algorithm is static
+    - Relaxes the need for the channel states to be used
+  - Network with time delays, base algorithm is dynamic
+    - Relaxes the need for the global snapshot to be precalculated, i.e.
+      integrates taking snapshot with deadlock detection
+  - We will only look at variation 1
+- Get a spanning tree by virtually calling two nested echo algorithms
+  - The first spanning tree is rooted at the initiator (using notify/done
+    messages)
+  - Nested spanning trees are rooted at each active node (using grant/ack
+    messages)
+
+```python
+  def notify(u):
+    """
+    Traverse the tree, building a spanning tree. If we find a node that is not
+    waiting on any resources (i.e. `u.n == 0`) call `grant()` on it.
+    """
+    u.notified = True
+    for w in u.out:
+      w ! NOTIFY
+    if u.n == 0:
+      grant(u)
+    for w in u.out:
+      w ? DONE
+
+  def grant(u):
+    """
+    Grant the resource held by this node.
+    """
+    u.free = True
+    for w in u.in:
+      w ! GRANT
+    for w in u.in:
+      w ? ACK
+
+  def receive(u, message):
+    if message == NOTIFY:
+      if not u.notified:
+        notify(u)
+      return DONE
+
+    elif message == GRANT:
+      if u.n > 0:
+        u.n -= 1
+        if u.n == 0:
+          grant(u)
+      return ACK
+```
+- Will say whether WFG is currently deadlocked, not if one will happen
+

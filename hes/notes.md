@@ -205,7 +205,7 @@ Butterfly for computing ANF:
 
 A full ANF butterfly table:
 
-![](https://i.imgur.com/kGQgcEo.png)
+![](https://i.imgur.com/AcCZiza.jpg)
 
 - We take the rows that are set to one in the final column and use the inputs
   of these rows to form the boolean function

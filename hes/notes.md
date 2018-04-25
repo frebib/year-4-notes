@@ -210,8 +210,8 @@ A full ANF butterfly table:
 - We take the rows that are set to one in the final column and use the inputs
   of these rows to form the boolean function
 - If 000 is set, the result is inverted (+1)
-- Example table above results in: x<sub>2</sub> + x<sub>1</sub> +
-  x<sub>1</sub> * x<sub>2</sub>... + 1
+- Example table above results in: x<sub>0</sub> + x<sub>1</sub> +
+  x<sub>0</sub> * x<sub>1</sub>... + 1
 
 ## Implementation of Asymmetric (Public Key) Cryptography
 

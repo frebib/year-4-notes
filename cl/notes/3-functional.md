@@ -1,7 +1,6 @@
 # Lambda Calculus
 
 ## Syntax
-
 ```
 M ::= x
     | MM
@@ -11,11 +10,14 @@ M ::= x
 N ::= 1 | 2 | 3 | ...
 ```
 
-We don't need `N` for lambda calculus, but it makes it easier to understand
+- We don't need `N` for lambda calculus, but it makes it easier to understand
+- Left associative, so `M₁M₂M₃` is read as `(M₁M₂)M₃`
+- But `λx.xy` is `λx.(xy)`
+
 
 ## Free Variables
-
 - Variables that have no value
+- If a lambda expression has no free variables, it is called closed
 - `z(x y)`: `z`, `x`, `y` are free
 - `λx.x`: none are free
 - `λx.y x`: `y` is free
@@ -24,13 +26,14 @@ We don't need `N` for lambda calculus, but it makes it easier to understand
 - `(λx.x)(λy.x) y`: `y` and second `x` are free
 
 ## Substitution
-
 - `M₁[x |-> M₂]`
   - Set `x` to `M₂` in the context of `M₁`
-- For example, `(y x)[x |-> 5]` becomes (y 5)
+- For example, `(y x)[x |-> 5]` becomes `(y 5)`
+  - `(x x)[x |-> y]` becomes `(y y)`
+  - `(x x)[y |-> x]` becomes `(x x)`
+  - `(z y)[y |-> λa.a]` becomes `(z (λa.a))`
 
 ## Beta Reduction
-
 Beta reduction is the application of a value to a variable:
 ```
 ((λx.M₁)M₂) ->β (M₁[x |-> M₂])
@@ -50,35 +53,54 @@ For example:
 
 Beta reduction has issues:
 - Not deterministic. You can have two possible beta reductions in one go
-- Not efficient. Copying the entirety of a value into all references will not be quick
+- Not efficient. Copying the entirety of a value into all references will not
+  be quick
+This makes it not a practical language.
 
 ## Lambda Calculus Examples
 
-TODO: Add parts about loops, pairs, etc.
+### Let
+`let x = M₁ in M₂` becomes `(λx.M₂)M₁`
+
+### Loops
+`((λx.xx)(λx.xx))` can loop forever - TODO: Is this useful?
+
+### Pairs
+- `(M₁, M₂) = λv.v M₁ M₂`
+- `fst = λp.p(λx.λy.x)`
+- `snd = λp.p(λx.λy.y)`
+
+```
+fst (M₁, M₂)
+  ->  (λp.p(λx.λy.x)) (λv.v M₁ M₂)
+  ->β (λv.v M₁ M₂)(λx.λy.x)
+  ->β (λx.λy.x) M₁ M₂
+  ->β (λy.M₁) M₂
+  ->β M₁
+```
 
 # CEK Machine
 
 ## CEK Components
-
 - `C` stands for code (or control)
   - The expression the machine is currently trying to evaluate
 - `E` stands for environment
-  - Holds the bindings of free variabels in `C`
+  - Holds the bindings of free variables in `C`
 - `K` stands for continuation
   - Holds what the machine to do once finished with `C`
 
 ## Closure
-
 A value `W` is defined as:
 ```
 W ::= n
     | clos(λx.M, E)
 ```
-Where `n` is a constant, and `clos(...)` is a closure including `x`, `M`, and `E`.
+Where `n` is a constant, and `clos(...)` is a closure including `x`, `M`, and
+`E`.
 
 ## Environment
 
-The environment is a a list of values:
+The environment is a list of values:
 ```
 E = {x₁ |-> W₁, x₂ |-> W₂, ...}
 E = {} = ∅
@@ -102,13 +124,14 @@ Where:
 - `E` is the environment
 
 ## Function Calls
-
 To evaluate `M₁M₂`, we need to:
-1) Evaluate `M₁` getting `W₁`, pushing the frame `(○ M₂ E)` so we can later evalute M₂
-2) Evaluate `M₂` (popped from stack) getting `W₂`, and push the frame `(W₁ ○)` to the stack
+1. Evaluate `M₁` getting `W₁`, pushing the frame `(○ M₂ E)` so we can later
+   evaluate M₂
+2. Evaluate `M₂` (popped from stack) getting `W₂`, and push the frame `(W₁ ○)`
+   to the stack. `W₁` is pushed on to the stack.
+3. Apply `W₁` to `W₂`.
 
 ## CEK Rules
-
 ```
 <x | E | K> → <lookup x in E | E | K>
 ```
@@ -118,8 +141,8 @@ If we have a variable `x`, we must look it up in `E` and set the value to be the
 <M₁M₂ | E | K> → <M₁ | E | (○ M₂ E), K>
 ```
 If we have an application of `M₁M₂`, we
-1) Set the current code to `M₂`
-2) Push onto the continuation `M₂` along with the current environment `E`
+1. Set the current code to `M₁`
+2. Push onto the continuation `M₂` along with the current environment `E`
 
 ```
 <λx.M | E | K> → <clos(λx.M, E) | E | K>
@@ -129,10 +152,18 @@ If we have a lambda expression, close it with the current environment
 ```
 <W | E₁ | (○ M E₂), K> → <M | E₂ | (W ○), K>
 ```
-TODO: Last two rules
+If `C` is a constant or closure `W`, and we've got a RHS to process on the
+stack, swap the two. This discards the current environment
 
 ```
 <W | E₁ | (clos(λx.M, E₂) ○), K> → <M | E₂[x |-> W] | K>
+```
+If `C` is a constant or closure `W`, and we've got a closure to process on the
+stack, bind `W` to the closure value
+
+We say `M` evaluates to `W` if:
+```
+<M | ø | ■> →* <W | E | ■>
 ```
 
 Examples:
@@ -186,7 +217,8 @@ If we encounter a `here M`, push a `»` onto the stack
 ```
 <go N | E | K₁, », K₂> → <N | E | K₂>
 ```
-If we encounter a `go N`, go to after the next `»` in the stack. `K₁` and `K₂` are sequences in the stack, and `K₁` does not contain any `»`
+If we encounter a `go N`, go to after the next `»` in the stack. `K₁` and `K₂`
+are sequences in the stack, and `K₁` does not contain any `»`
 
 ```
 <W | E | », K> → <W | E | K>

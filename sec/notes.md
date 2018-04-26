@@ -89,3 +89,33 @@
 - SYN, SYN/ACK, ACK in firewall
 - Re-randomise ISN
 
+# Isolation
+- Each process should be run with least privileges
+- Need root access for low ports
+- Need to isolate machines from each other
+  - If attacker gains access to one process, they can mess with others on the
+    machine
+  - Can be done through running different services as different users
+  - Ideally different machines (including VMs/containers)
+
+## Virtualisation
+- Type 1 hypervisor
+  - Host runs hypervisor
+  - Usually linux
+- Type 2 hypervisor
+  - OS running on host
+  - This OS runs all the VMs
+- Para-virtualisation
+  - OS slightly modified
+  - Uses special network/graphics/other drivers to pass to VMs
+- Zones/jails/containers
+  - Machine runs one kernel
+  - Subset of processes are isolated with their own init, filesystem, networking
+  - Lightweight
+  - Easy to manage
+  - Security looks good, but hard to audit
+
+## `chroot()`
+- `chroot(/some/dir/)` makes all processes onwards see `/some/dir/` as `/`
+- Can't `cd` out of `/some/dir/`
+

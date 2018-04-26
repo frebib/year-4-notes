@@ -119,3 +119,10 @@
 - `chroot(/some/dir/)` makes all processes onwards see `/some/dir/` as `/`
 - Can't `cd` out of `/some/dir/`
 
+# Attack Trees
+- Build a tree, with attacker's goal at the top
+- Children are ways to achieve parent's goal
+- Should keep attack vectors separate, so that "hacking" one thing doesn't give
+  the attacker multiple vectors
+  - e.g. firewalls should be on separate machines
+

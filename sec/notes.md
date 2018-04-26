@@ -126,3 +126,47 @@
   the attacker multiple vectors
   - e.g. firewalls should be on separate machines
 
+# Network Elements
+
+## Spectrum of Boxes
+- Hubs
+  - Copy ethernet packets from one interface to all interfaces
+  - Done electronically
+- Simple Bridges
+  - Copy ethernet packets, dropping malformed ones
+  - Provide no protection apart from flooding attacks
+- Switches
+  - Copy packets if source and host are on other sides
+  - Stops attackers snooping on data on other side of switch
+- Filtering switches
+- Routers
+  - Looks at IP header
+  - Chooses correct interface
+  - Doesn't propagate broadcast packets
+- Filtering routers/firewalls
+  - Look at TCP/UDP ports and block/pass based on those values
+  - Minimum requirement to be a security component
+- Stateful firewalls
+  - Look at the state of TCP connections
+  - Tracks sequence numbers, sensible responses, etc.
+  - Blocks complex attacks on TCP
+- Deep packet inspecting firewall
+  - Looks at whole packet
+  - Virus scanner
+  - Block encryption it doesn't know about
+  - Unethical?
+
+## Intrusion Detection/Prevention Systems (IDS/IPS)
+- Gets copy of data from switches/routers
+- Examines whole packets for worrying conditions
+- Reports attacks, or tells routers to drop traffic
+- Will do things like checking SMTP commands
+
+## Switch Authentication
+- Configure switch to only accept certain host
+- e.g. set MAC address, block other ones
+- Does not scale well
+- Can be bypassed through MAC filtering, but does require attacker to
+  proactively do something suspicious
+- Can also run 802.1x over ethernet, not widely done
+

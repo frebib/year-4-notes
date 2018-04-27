@@ -194,6 +194,13 @@ Examples:
 -> <2 | {f |-> λx.x, x |-> 2} | ■>
 ```
 
+## Optimisations
+- Constant propagation
+  - Easier than in imperative languages, as symbols stay constant
+- Function inlining still possible
+  - `let f = λx.M in ...f V...`
+  - Becomes `let f = λx.M in ...M[x |-> V]...`
+
 ## Here and Go
 
 The language is now extended:
@@ -235,4 +242,52 @@ If we encounter a `»` on the stack, ignore it
 -> <go 5 | ∅ | (clos(λx.2, ∅) ○), »>
 -> <5 | ∅ | ■>
 ```
+
+## Static Single Assignment
+- Every variable is only assigned once
+- Equivalent of `let` but in intermediate languages (LLVM-IR)
+
+For example:
+```c
+// Can't replace `x` with `5` because of modification
+x = 5;
+x = x + 1;
+y = x * 2;
+
+// Change to use `x₁` and `x₂`
+x₁ = 5;
+x₂ = x₁ + 1;
+y = x₂ + 1;
+
+// Allows us to replace `x₁` with `5`
+x₂ = 5 + 1;
+y = x₂ + 1;
+```
+
+## Contextual Equivalence
+i.e. Two programs behave the same
+
+`M` can be reduced to `n` - written as `M↓n`:
+```
+<M | ø | ■> ->* <n | E | ■>
+```
+
+A context `C` is a "term with a hole":
+```
+C ::= ○
+    | M C
+    | C M
+    | λx.C
+```
+
+We write `C[M]` for the term we get by plugging `M` into the hole position `○`
+in `C`.
+
+`M₁` and `M₂` are contextually equivalent if for all contexts `C` and integers
+`n`:
+```
+C[M₁]↓n iff C[M₂]↓n
+```
+
+This means we can replace `M₁` with `M₂` if it is faster (and vice versa).
 

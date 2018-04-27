@@ -170,3 +170,24 @@
   proactively do something suspicious
 - Can also run 802.1x over ethernet, not widely done
 
+# Firewalls
+- Looks at packet headers, and blocks/passes based on some policy
+- Not based on packet contents
+- Usually live on:
+  - Routers
+  - Dedicated firewall machines
+  - Computers acting as routers
+  - Computers looking after themselves
+- Keep unusual/unwanted packets away from applications
+- They can not:
+  - Detect malware etc.
+  - Detect misuse of legitimate protocols
+- Don't do anything that an OS can't do, but
+  - Provide smaller attack vector
+  - Only have to audit one machine for it
+  - Use hardened OSs
+- Track TCP state
+  - Discard packets that don't line up, should happen anyway but can help
+    prevent untested code paths being run etc.
+  - Helps with DoS attacks
+

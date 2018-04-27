@@ -74,6 +74,8 @@
 [Canvas](https://canvas.bham.ac.uk/courses/27256)
 
 ### Computer Aided Verification
+[Lecture Slides](../../tree/master/cav/lecture-slides)
+|
 [Notes](cav/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27245)

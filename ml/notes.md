@@ -1,19 +1,16 @@
 # Machine Learning 2017/18
 
 # Intro
-
 Machine learning is improving in a task `T`, w.r.t. performance measure `P`,
 based on experience `E`.
 
 # Supervised Linear Modelling
-
 We try to fit a linear line to some data set, making these assumptions:
 - There is a relationship between the variables
 - This relationship is linear
 - This relationship will hold in the future
 
 ## Linear Modelling (by Least Squares, and Maximum Likelihood)
-
 We have some inputs `X = {x₁, x₂, ..., xn}` and their corresponding labels `T =
 {t₁, t₂, ... tn}`. We want to predict the `t` for any `x`.
 
@@ -26,21 +23,18 @@ t = mx + c
 Where `m` and `c` are learnt variables.
 
 ### With single variables
-
 We need to derive `m` and `c` (a.k.a `w₁` and `w₂`) that minimises a loss
 function.
 
 ### Vectorizing
-
 We can vectorize this by converting `m` and `c` into a vector of weights `W =
-{c, m}` and the input becomes `X = {1, x}`. Therefore, we can do `t = trans(W) *
+{c, m}` and the input becomes `X = {1, x}`. Therefore, we can do `t = W.t ⋅
 X`.
 
 This has the benefit of us being able to add more input attributes to `X`
 without having to restructure our algorithms.
 
-### Loss/Cost Function
-
+### Least Squares Loss Function
 A function that estimates how poorly our model performs on the dataset.
 
 We use here squared difference:
@@ -49,8 +43,19 @@ L = avg((t - t')²)
 ```
 Where `t` is the ground truth, and `t'` is our prediction.
 
-### Deriving Optimal Values for the Weights `W`
+### Maximum Likelihood Loss Function
+Try to maximise the likelihood of the prediction being correct
+```
+L = p(t|X, w, σ²) = mult(N(w.t⋅xₙ, σ²) for xₙ in X)
+```
+where
+- `X` is the input data
+- `w` is the learnt weights
+- `σ²` is the learnt standard deviation
 
+Deriving these weights gives us the same results as least squares
+
+### Deriving Optimal Values for the Weights `W`
 We need to find `dW/dL = 0`, i.e. what values of `W` give use the minimum value
 for our loss function
 
@@ -60,7 +65,7 @@ minima/maxima?
 We can derive from the loss function `L` the minimum value is given by:
 
 ```
-W' = (trans(X) * X)⁻¹ * trans(X) * t
+W' = (X.t ⋅ X)⁻¹ * X.t ⋅ t
 ```
 
 Where `W'` is our approximation for the perfect values of `W`.

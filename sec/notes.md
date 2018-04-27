@@ -191,3 +191,10 @@
     prevent untested code paths being run etc.
   - Helps with DoS attacks
 
+# Proxies
+- Make request to stub server
+- Stub server puts in queue
+- Stub client reads from queue
+- Stub cilent sends request to real server
+- Issues with VOIP, too much delay
+

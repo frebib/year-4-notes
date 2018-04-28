@@ -539,7 +539,7 @@ Recover q:
 
 
 - In CPA, assume a key for first S-Box for input byte x<sub>i</sub>, then
-  predict the intermediate result
+  predict the intermediate result as (S(x<sub>i</sub> XOR k<sup>^</sup>))
 - Convert value into hypothetical power consumption using HW model
 - Determine the "match" between prediction and reality of traces
 

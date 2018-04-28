@@ -49,3 +49,35 @@
     to `s'`
   - `s ∈ S` is a reachable state iff it is reachable from some `s₀ ∈ I`
 
+## Nondeterminism
+- Outcome of event is not known in advance
+- e.g. 10% likelihood a message send fails
+- Can resemble an abstraction of a system
+- Can resemble interaction with another system (e.g. a human)
+
+## Concurrency - Asynchronous
+- We can model two LTSs working in parallel
+- If `M₁, M₂` are LTSs, to asynchronously combine them, we write `M₁ ||| M₂`
+- Each transition becomes whether `M₁` or `M₂` is moved forward one step
+- Typically the actions/progressions are written as `α, β`
+- Formally
+  - `M₁, M₂` are LTSs
+    - `Mᵢ = (Sᵢ, Actᵢ, →ᵢ, Iᵢ, APᵢ, Lᵢ)` for `i = [1, 2]`
+  - `M₁ ||| M₂ = (S₁ x S₂, Act₁ ∪ Act₂, →', I₁ x I₂, AP₁ ∪ AP₂, L')` where
+    - `L'((s₁, s₂)) = L₁(s₁) ∪ L₂(s₂)`
+    - if `(s₁, α₁, s₁') ∈ →₁` then `((s₁, s₂), α₁, (s₁', s₂')) ∈ →'` for all
+      `s₁ ∈ S₂, s₂ ∈ S₂` (and vice versa)
+
+## Concurrency - Synchronous
+- Written as `M₁ ||ₕ M₂`
+  - Where `h ⊆ Act` is a set of handshake actions
+- Synchronise only on actions in `h`
+- Formally
+  - Same as asynchronous, except from `→'`
+  - if `(s₁, α, s₁') ∈ →₁ ^ (s₂, α, s₂') ∈ →₂` then `((s₁, s₂), α, (s₁', s₂') ∈
+    →'`
+- If we move actions from `h`, we start to see deadlocks in the system, because
+  the combined LTS does not know what to do when an action occurs in one LTS but
+  not the other
+
+

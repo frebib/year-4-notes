@@ -198,3 +198,83 @@
 - Stub cilent sends request to real server
 - Issues with VOIP, too much delay
 
+# Wired/Wireless Security
+
+## Wired Networks
+- You know where the wires are
+- Tapping wires requires effort and is detectable
+- Tempest attacks are hard
+  - Looking for radiation from a wire
+  - Fibre makes this risk essentially zero
+- Can do MAC filtering
+  - Easily bypassed
+
+## 802.1x Authentication
+- Client supplies username and password
+  - Or proves ownership of certificate
+- Pre-auth, port is restricted to auth only, or VLAN
+- Can do "posture analysis", checking how patched a device is
+- Problems
+  - Difficult to generalise to printers/servers/webcams
+  - Who has the keys? Device or user? Can malicious user copy keys to other
+    devices?
+  - Gets complicated with multiple supplicant support
+  - Trivially bypassed through carefully timed switching of MAC addresses
+- Benefits
+  - Posture analysis is useful
+  - Requires attacker to do something overt
+
+## Wireless Networks
+- None of the inherent security of wired networks
+
+### Wired Equivalent Privacy (WEP)
+- Everyone has shared key (40 bits, later 104 bits)
+- Encrypt packets using RC4
+- All stations with key can see all packet contents
+- Broken
+  - Attacker can attempt to obtain key
+  - Generating random IVs very difficult in embedded devices
+- RC4
+  - Uses key and IV to generate evolved keystream of bytes, which are XOR'd with
+    message to form cipher text
+  - Can either recover key, or recover evolved keystream
+  - Inject unencrypted packets into the network, and then see how the network
+    encrypts them
+
+### Wi-Fi Protected Access (WPA)
+- Emergency interim fix to WEP
+- Add sequence numbers
+- Better key mixing
+- Integrity checks
+- Sill weak
+
+### WPA2
+- Initial secret (PSK, or per-user login)
+  - Generates ephemeral key used for one session (~1hr)
+- Uses AES128
+- Needs new hardware
+- Can't see other's traffic
+  - But can use special key for broadcast traffic
+
+#### WPA2 PSK
+- Use a pre-shared key
+- Mixes in SSID to help prevent dictionary attacks
+- No forward secrecy
+
+#### WPA2 Enterprise
+- Per-user key is negotiated
+- Compromising key only compromises that key's user
+
+### Wirless Security Objectives
+- Authentication
+  - Don't want neighbours using up bandwidth
+- Confidentiality
+  - Don't want others on my network to see my data
+- Integrity
+  - Don't want MITM attacks
+
+### Wireless Protected Setup
+- Bad
+- 8 digit pin
+- Split into 2 4s, each verified separately
+

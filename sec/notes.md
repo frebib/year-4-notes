@@ -278,3 +278,29 @@
 - 8 digit pin
 - Split into 2 4s, each verified separately
 
+# Intrusion Detection Systems (IDSs)
+- Look at all traffic passing through a network
+- Access to headers, payloads, timing, etc.
+- Triggered by:
+  - Patterns in packets, i.e. matching payloads of packets against signatures
+    of known malware
+  - Behaviour: matching against known behaviours of malware, e.g. lots of
+    probing
+  - Heuristic: matching against changes in network performance, or obviously
+    dubious activity
+- Possible set ups
+  - Behind firewall (monitors traffic that makes it through the firewall)
+  - In front of firewall (for research purposes)
+  - Mirror port: most switches has ability to pass all traffic to a mirror port,
+    used for debugging
+- Lots of false positives, many rules are for old irrelevant attacks
+
+## Host IDSs
+- Tripwire
+  - Take hashes of critical files
+  - Compare with files on disk periodically
+  - How do you secure the hashes/kernel/etc?
+- OSSEC
+  - Similar to tripwire
+  - Log analysis, filtering and response
+

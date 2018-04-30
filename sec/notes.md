@@ -392,3 +392,11 @@
 - Cache poisoning
   - Get corrupt data into DNS cache
 
+# VPNs
+- IP-in-IP to get packets between parts of the virtual network
+  - IP packet becomes payload in new IP packet
+- Not secure by itself
+- Can use IPsec
+- Can use SSL-VPN
+- Networks address space should not clash
+

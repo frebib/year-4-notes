@@ -120,3 +120,49 @@ captured by `P`).
     `σ ∈ (2^AP)*`, there exists a infinite word `σ' ∈ (2^AP)^ω` such that `σσ' ∈
     LivenessProperty`
 
+# Linear Temporal Logic (LTL)
+```
+ψ ::= true
+    | a ∈ AP
+    | ψ ^ ψ
+    | ¬ψ
+    | ○ ψ
+    | ψ U ψ
+    // The rest are derivable from the above
+    | ψ v ψ
+    | false
+    | □ ψ
+    | ◇ ψ
+```
+
+- `○ ψ`: Next
+  - In the next state, `ψ` is true
+  - `○ a ⇒ {?, a, ?, ...}`
+- `ψ₁ U ψ₂`: Until
+  - `ψ₂` is true eventually, and `ψ₂` is true until then
+  - `a U b ⇒ {a^¬b, a^¬b, b, ?, ...}`
+- `□ ψ`: Always
+  - `ψ` is always true in all states
+  - Equivalent to `false U ψ`
+  - `□ a ⇒ {a, a, a, a, ...}`
+- `◇ ψ`: Eventually
+  - `ψ` will eventually be true
+  - Equivalent to `true U ψ`
+  - `◇ a ⇒ {¬a, ¬a, ¬a, a, ?, ...}`
+
+## Expressing in LTL
+- We can express invariants (`□ φ`)
+- We can express safety properties (`□ (receive → ○ ack)`)
+- We can express liveness properties (`◇ terminates`)
+- Two formulas `ψ₁, ψ₂` are equivalent if they are satisfied by the same traces
+  - `(ψ₁ ≡ ψ₂) ↔ (σ |= ψ₁ ↔ σ |= ψ₂)` for all traces `σ`
+
+## Equivalences
+- `□ ψ ≡ ¬◇¬ψ`, `◇ψ ≡ ¬□¬ψ`
+- `□ □ ψ ≡ □ ψ`
+- `◇ ψ ≡ ψ v (○ ◇ ψ)`
+- `□(ψ₁ ^ ψ₂) ≡ (□ ψ₁) ^ (□ ψ₂)`
+- `σ |= ¬ψ ↔ σ |≠ ψ`
+  - However, `M |= ¬ψ ↔ M |≠ ψ` is **not** true
+  - No trace in `M` statisfied `ψ` vs. not all traces in `M` satisfies `ψ`
+ 

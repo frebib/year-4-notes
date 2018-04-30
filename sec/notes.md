@@ -358,3 +358,37 @@
 ## OAuth
 - "I will accept you are `user@site.com` because `site.com` says so"
 
+# Denial of Service (DoS) Attacks
+- Killing applications/machines/networks
+- Can be done in variety of ways
+  - Just sending lots of packets
+    - Need high speed connection/lots of low speed connections
+  - Exploiting stuff like allocating on SYNs
+  - Relying on more complicated knowledge of applications
+- If attacker is idiot, can just filter them out
+- Cloudfare will proxy traffic through them
+  - Can make attacker run complex Javascript before getting to your server
+  - If there's HTTPS, requires Cloudfare to have certificate
+- Host your side on a CDN, rely on them to withstand the DoS
+- Anycasting
+  - Advertise of BGP multiple locations hosting that IP
+  - Attacker then has to take out each of those locations
+- Amplification attacks
+  - Small request, big response
+  - Forge source IP
+  - To avoid being the middle man:
+    - Default deny, rate limiting, paged responses (?)
+- Ingress filtering
+  - All packets leaving network should originate in the network
+- Egress filtering
+  - All packets entering the network should not originate in the network
+
+# DNS Attacks
+- Kaminsky attack
+  - Pretend to be name server, and reply with fake DNS response
+  - Guess the query ID number, which is only 16 bit, so doable
+  - "Solved" by doing over several ports, so that adds entropy to QID
+  - Don't NAT DNS!
+- Cache poisoning
+  - Get corrupt data into DNS cache
+

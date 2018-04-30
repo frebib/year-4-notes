@@ -135,7 +135,8 @@ To evaluate `M₁M₂`, we need to:
 ```
 <x | E | K> → <lookup x in E | E | K>
 ```
-If we have a variable `x`, we must look it up in `E` and set the value to be the current code
+If we have a variable `x`, we must look it up in `E` and set the value to be
+the current code
 
 ```
 <M₁M₂ | E | K> → <M₁ | E | (○ M₂ E), K>

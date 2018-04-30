@@ -304,3 +304,57 @@
   - Similar to tripwire
   - Log analysis, filtering and response
 
+# TLS And Friends
+- Transport Layer Security (TLS)
+- Standardisation and extension of Secure Sockets Layer (SSL)
+- Encrypted layer over TCP
+- Basic idea:
+  - Asymmetric encryption to agree on a key
+  - Zero knowledge proof to show possession of private key for certificate
+  - Symmetric encryption to encrypt data, HMAC to prove integrity
+- Some combinations are weak, some implementations have flaws
+- Huge range of negotiated cipher suites
+
+## Certificates
+- Public key, signed by certification authority (CA)
+  1. Server sends cert
+  2. Client checks cert using CA key
+  3. Client sends random to server using public key
+  4. Random is used to set up symmetric encryption
+
+## Some Initial Problems
+- Clients are rubbish at generating random numbers
+  - So the nonces will be insecure, especially on portable devices
+- Communication starts with session key encrypted by server public key
+  - So if server private key is recovered in future, then all communications can
+    be decrypted, provided they were recorded
+  - AKA no forward secrecy
+  - Can do Diffie-Hellman key exchange to try and fix this
+    - But as weak as the weakest RNG
+
+## Implementations
+- OpenSSL
+  - Old, lots of portability support
+- LibreSSL
+
+## Hardware Security Modules (HSM)
+- Put key in HSM, and HSM provides interfaces for encryption decryption etc.
+- HSM is secured, so harder to get key
+
+## TLS Benefits
+- Confidentiality, integrity
+- Protects against MitM attacks if certificates are properly checked
+
+## One Time Passwords (OTP)
+- Secure hardware shares secret with server
+- Token combines secret with counter/clock, displays result
+- Used as password
+- Server accepts expected password plus some next `n` expected passwords, just
+  incase the button was pressed without the code being entered
+- Secret is hard to extract, so secure
+- Can be done with texts as well (OTP over the air)
+- Protects against key loggers
+
+## OAuth
+- "I will accept you are `user@site.com` because `site.com` says so"
+

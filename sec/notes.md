@@ -400,3 +400,46 @@
 - Can use SSL-VPN
 - Networks address space should not clash
 
+# IPsec
+- Two modes of encapsulation
+  - Tunnel, transport
+- Two modes of use
+  - AH (authentication), ESP (encryption)
+- Two mechanisms for keying
+  - Static and dynamic (IKE)
+- Layers
+  - Data plane transformation has to happen at wire-speed
+    - Big focus on speed
+  - Management layer, i.e. key exchange, much less demanding
+  - Transformation in kernel, key exchange in user-space
+- Problems
+  - Implementation is complex
+  - Key management issues
+- Implementations: KAME, FreeS/WAN
+- AH vs. ESP
+  - AH (authentication header)
+    - Integrity of payload and immutable parts of header
+    - Keyed hash
+    - Ensures it comes from where it claims to have come from
+  - ESP (encapsulated security payload)
+    - Provides encryption and optionally payload integrity
+  - AH+ESP
+    - Full integrity and encryption
+    - Dropped in favour of other mechanisms that do the same basic job
+- Transport vs. Tunnel
+  - Transport
+    - When both nodes speak IPsec
+    - Packets transformed directly
+    - IP header, ESP/AH header, payload
+  - Tunnel
+    - Communication between routers that carry traffic
+    - Packets are encapsulated (IP-in-IP)
+    - IP header transformed too
+    - IP header, ESP/AH header, IP header for end system, payload
+- Security Parameters Index (SPI)
+  - SP defines algs/keys in use for security associations
+  - Lookup in SPI table when handling packets
+  - AH packets contain SPI for looking up key
+- There are sequence numbers to prevent replay
+
+

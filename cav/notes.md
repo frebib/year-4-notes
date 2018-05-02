@@ -164,5 +164,17 @@ captured by `P`).
 - `□(ψ₁ ^ ψ₂) ≡ (□ ψ₁) ^ (□ ψ₂)`
 - `σ |= ¬ψ ↔ σ |≠ ψ`
   - However, `M |= ¬ψ ↔ M |≠ ψ` is **not** true
-  - No trace in `M` statisfied `ψ` vs. not all traces in `M` satisfies `ψ`
+  - No trace in `M` satisfied `ψ` vs. not all traces in `M` satisfies `ψ`
+
+# Computation Tree Logic (CTL)
+- In CTL, impossible to express "for every execution, it is always possible to
+  return to the initial state of the program"
+- Therefore, we introduce CTL with two quantifiers:
+  - `∀` for all paths
+  - `∃` there exists a path
+
+```
+φ ::= true | a | φ ^ φ | ¬φ | ∀ψ | ∃ψ
+ψ ::= ○ φ | φ U φ | ◇ φ | □ φ
+```
  

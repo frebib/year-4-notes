@@ -442,4 +442,17 @@
   - AH packets contain SPI for looking up key
 - There are sequence numbers to prevent replay
 
+## Internet Key Exchange
+- Can manage keys manually, or use IKE
+- Based on Diffie-Helman exchange
+- Can have MitM
+- Basic IKE flow
+  - Create an Internet Security Association Key Management Protocol Security
+    Association (ISAKMP SA (jesus))
+  - Use the ISAKMP SA to protect negotiation of keys for traffic
+- Can have main mode, involving five exchanges to set up keys
+- Can have aggressive mode, involving three exchanges, but also reveals
+  identities
+- Poor standard for implementations
+- Config is difficult
 

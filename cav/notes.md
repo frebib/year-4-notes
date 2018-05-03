@@ -14,7 +14,7 @@
 - Advanced verification techniques
   - Bounded model checking
 
-# Labeled Transition Systems (LTSs))
+# Labeled Transition Systems (LTSs)
 - A tuple `(S, Act, →, I, AP, L)` where
   - `S` is a set of states
   - `Act` is a set of actions
@@ -177,4 +177,41 @@ captured by `P`).
 φ ::= true | a | φ ^ φ | ¬φ | ∀ψ | ∃ψ
 ψ ::= ○ φ | φ U φ | ◇ φ | □ φ
 ```
+
+## Equivalences
+- `∀ψ ≡ ¬∃¬ψ`
+- `∃ψ ≡ ¬∀¬ψ`
+
+## Existential Normal Form (ENF)
+New grammar:
+```
+φ ::= true | a | φ ^ φ | ¬φ | ∃ (○ φ) | ∃ (φ U φ) | ∃ (□ φ)
+```
+- No `ψ`, everything encapsulated in `φ`
+- No `∀`, no `∃◇`
+- Done using previously mentioned equivalences
+
+## Expressiveness
+- We've seen you can represent things in CTL that you can't in LTL
+- However, you can't represent `◇□a` in CTL
+- `∀◇∀□a` does not work
+  - Consider a LTS with three states:
+    - `s₀` where `L(s₀) = {a}`, has a loop and leads to `s₁`
+    - `s₁` where `L(s₁) = {}`, leads to `s₂`
+    - `s₂` where `L(s₂) = {a}`, has a loop
+  - CTL formula would break because not all paths have always `a`
+- Same for `∀□∃◇a`
+
+## CTL*
+Superset of CTL and LTL
+```
+φ ::= true | a | φ ^ φ | ¬φ | ∀ψ | ∃ψ
+ψ ::= φ | ψ ^ ψ | ¬ψ | ○ ψ | ψ U ψ | ◇ ψ | □ ψ
+```
+
+## Fairness
+- Introduce another LTS that picks which of the two other LTSs to execute
+- So `M₁ ||| M₂` becomes `M₁ || F || M₂` where
+  - `F` is the fairness LTS that choses between `M₁` and `M₂`
+  - `||` uses the actions that need to be executed by either `M₁, M₂`
  

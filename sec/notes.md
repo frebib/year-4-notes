@@ -456,3 +456,33 @@
 - Poor standard for implementations
 - Config is difficult
 
+# VPNs 2.0: This Time Its Personal
+
+## SSL VPN
+- Client-less option
+  - Systems provide access to HTTP resources via an SSL connection between
+    browser and VPN server, proxying through to original server
+  - Not technically a VPN
+  - Can have problems, due to all resources coming from single domain
+    - XXS, cookies issues, etc, if any one of the resources is compromised
+- SSL forwarding
+  - Run a local app listening on `127.0.0.1:port`, and are tunnelled to
+    `server:port`
+- OpenVPN
+  - Uses auth mechanisms from SSL (OpenSSL)
+  - Runs over TCP/UDP
+    - Means it's ok for firewalls
+
+## Point-to-Point Protocol (PPP)
+- Layer 2 Tunnelling Protocol (L2TP)
+  - Sends packets as UDP containing tunnelled data
+  - Used to tunnel PPP
+- PPP derived from HDLC
+- Sends IP packets down serial lines
+- Has its own auth mechanism
+  - Allows username/password
+  - Can negotiate MTU, IPs
+- No encryption in PPP and L2TP
+  - But we can use IPsec
+  - Complex to set up
+

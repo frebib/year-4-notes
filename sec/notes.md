@@ -486,3 +486,10 @@
   - But we can use IPsec
   - Complex to set up
 
+# Bring Your Own Desktop (BYOD)
+- People will do it anyway, regardless of company policy
+- How do we deal with it?
+  - Need to consider islanding, separating devices from each other for minimal
+    interaction
+  - TFA?
+

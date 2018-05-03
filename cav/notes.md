@@ -214,4 +214,59 @@ Superset of CTL and LTL
 - So `M₁ ||| M₂` becomes `M₁ || F || M₂` where
   - `F` is the fairness LTS that choses between `M₁` and `M₂`
   - `||` uses the actions that need to be executed by either `M₁, M₂`
- 
+
+# CTL Model Checking
+- Given an LTS `M`, and a CTL formula `φ`, check whether `M |= φ`
+  - i.e. check whether `s |= φ` for all initials tates `s ∈ I`
+  - Assume `M` is finite, and has no terminal states
+- `Sat(φ)` is the satisfaction set for CTL formula `φ`
+  - i.e. set of all states that satisfy `φ`
+  - i.e. `Sat(φ) = {s ∈ S | s |= φ}`
+- So we check if `I ⊆ Sat(φ)`
+
+## Calculating `Sat(φ)`
+- Done recursively
+- Done on ENF
+```
+Sat(true) = S
+Sat(a) = {s ∈ S | a ∈ L(s)}
+Sat(φ₁ ^ φ₂) = Sat(φ₁) ∩ Sat(φ₂)
+Sat(¬φ) = S \ Sat(φ)
+
+// All states where one of the next states satisfies `φ`
+Sat(∃ (○ φ)) = {s ∈ S | Post(s) ∩ Sat(φ) ≠ ∅}
+
+// Uses graph search algorithms
+Sat(∃ (φ₁ U φ₂)) = CheckExistsUntil(Sat(φ₁), Sat(φ₂))
+Sat(∃ (□ φ)) = CheckExistsAlways(Sat(φ))
+```
+
+### Exists Until (`∃U`)
+- Trying to calculate `∃ (φ₁ U φ₂)`
+- Given `Sat(φ₁), Sat(φ₂)`
+- Backwards search of the LTS from `Sat(φ₂)`
+  - `T₀ := Sat(φ₂)`
+  - `Tᵢ := Tᵢ₋₁ ∪ {s ∈ Sat(φ₁) | Post(s) ∩ Tᵢ₋₁ ≠ ∅}`
+  - Until `Tᵢ = Tᵢ₋₁`
+  - `Sat(∃U)` is the final `Tᵢ`
+
+### Exists Always (`∃□`)
+- Trying to calculate `∃ (□ φ)`
+- Given `Sat(φ)`
+- Again, backwards search of the LTS from `Sat(φ)`
+  - `T₀ := Sat(φ)`
+  - `Tᵢ := Tᵢ₋₁ ∩ {s ∈ Sat(φ | Post(s) ∩ Tᵢ₋₁ ≠ ∅}`
+  - Until `Tᵢ = Tᵢ₋₁`
+  - `Sat(∃□)` is the final `Tᵢ`
+- Alternative: Strongly Connected Components (SCCs)
+  - SSC is a maximal connected subgraph
+  - Non-trivial SSC is an SSC with at least one transition
+  - Remove all states not satisfying `φ` making `M'`
+  - Find non-trivial SSCs in `M'`
+  - `Sat(∃□)` is the set of states that can reach an SSC in `M'`
+
+### Complexity
+- `O(|M| * |φ|)`
+- `|M|` numer of states + transitions
+- `|φ|` number of operators
+

@@ -27,12 +27,27 @@ Example: _rail fence cipher_
 - Not secure. Message of size _n_, there are at most n possibilities for
   the key.
 
+### Security Game
+**Parties:**
+- Attacker(A): Aims to obtain plaintext for a given ciphertext
+- Challenger(C): Provides the challenge for an attacker
+
+**Moves of the game:**
+1. C selects message length _n_ and chooses key _k_
+2. C chooses message _m_ and sends encrypted message Enc<sub>k</sub>(_m_) to A
+3. A does some computation and outputs a message
+
+- A wins the game if A's output is essentially the same as _m_
+- A has probability of at least 1/n of winning the game for any message
+- Protocol is insecure
+
 ### Permutations
 > A re-arrangement of an ordered list of elements with a 1-1 correspondence
   of itself.
 
 Two notations are used for 1,2,3 -> 2,3,1:
 - **Array notation:** ![](https://i.imgur.com/f9yM8HM.png)
+  * Re-ordered list below the original
 - **Cycles:**
   - Apply permutation to 1 and note 1 and result
   - Repeat permutation for result until reaching initial number
@@ -43,7 +58,8 @@ Two notations are used for 1,2,3 -> 2,3,1:
 - Two permutations can be **composed**, resulting in another permutation
   - E.g. 1,2,3 -> 2,1,3 composed with 1,2,3 -> 3,2,1 = 1,2,3 -> 3,1,2
   - See explanation [here](https://math.stackexchange.com/questions/549186/the-product-or-composition-of-permutation-groups-in-two-line-notation#549191)
-- **Inverse** of permutation _s_ is permutation _t_, such that _s_ composed with _t_ is the identity
+- **Inverse** of permutation _s_ is permutation _t_, such that _s_ composed
+  with _t_ is the identity
 
 #### Monoalphabetic substitution cipher
 - **Key:** permutation of the alphabet
@@ -56,7 +72,18 @@ Two notations are used for 1,2,3 -> 2,3,1:
 ## Modern Cryptography
 
 ### Modular arithmetic
-(Not covered in detail in lecture)
+- Numbers _a_ and _b_ are congruent modulo _n_ (written a ≡ b(mod n))
+  , if _a_ - _b_ is divisible by _n_
+- If 0 <= a <= n, write [a]<sub>n</sub> as residue class of _a_ modulo _n_,
+  for set of all _b_ where a ≡ b(mod n)
+  * Essentially a set of all possible values modulo _n_
+- Arithmetic on residue classes:
+  * [a]<sub>n</sub> + [b]<sub>n</sub> = [c]<sub>n</sub>
+    if (a + b) ≡ c(mod n)
+  * [a]<sub>n</sub> − [b]<sub>n</sub> = [c]<sub>n</sub>
+    if (a − b) ≡ c(mod n)
+  * [a]<sub>n</sub> ∗ [b]<sub>n</sub> = [c]<sub>n</sub>
+    if (a ∗ b) ≡ c(mod n)
 
 ### Probability
 - Always a chance of getting the correct key from guesswork
@@ -67,7 +94,7 @@ Two notations are used for 1,2,3 -> 2,3,1:
 
 
 - Let P : U → [0, 1] be a probability distribution.
-  - An event A is a subset of U.
+  - An event A is a subset of U (U being a finite set).
   - The probability of an event A, written P[A], is defined as:
     ![](https://i.imgur.com/daavv76.png)
 
@@ -76,7 +103,6 @@ Two notations are used for 1,2,3 -> 2,3,1:
 - XOR (⊕) is addition modulo 2 on each bit
 
 ### One-time pad (29/09/2017)
-- First cipher which is secure
 - Message and keys are bitstrings
 
 
@@ -93,7 +119,7 @@ Two notations are used for 1,2,3 -> 2,3,1:
   - P[E(_k_, _m_<sub>1</sub>) = _c_] = P[E(_k_, _m_<sub>2</sub>) = _c_]
 - Satisfies perfect security
   - For randomly-chosen _m_, _c_ and _n_, P[E(_k_, _m_) = _c_] =
-    ![](http://www.sciweavers.org/upload/Tex2Img_1506705424/eqn.png)
+    <sup>1</sup>/<sub>2<sup>n</sup></sub>
 
 ### Formulation of cipher algorithm
 Let K, M and C be the sets keys, messages and ciphertexts.
@@ -109,6 +135,13 @@ D(_k_, E(_k_, _m_)) = _m_
 - **Block cipher:** operating on fixed-length groups of bits, called blocks
 - **Stream cipher:** encrypting plaintext continuously. Bits are encrypted one
   at a time, differently for each bit.
+
+### Players
+- **Alice**: sender of encrypted message
+- **Bob**: intended receiver of encrypted message. Has the key.
+- **Eve** (Passive): intercepts messages, trying to identify plaintexts or keys
+- **Mallory** (Active): intercepts and modifies messages to identify plaintexts
+  or keys
 
 ### Feistel cipher
 - Same encryption scheme applied iteratively for several rounds
@@ -135,7 +168,7 @@ D(_k_, E(_k_, _m_)) = _m_
 - Works same as encryption but with reversed order of keys
   - Split ciphertext block into two equal pieces _C_ = (_R_<sub>_r_</sub>,
     _L_<sub>_r_</sub>)
-  - For each round _i_ = _r_, _r_-1,...,1 compute
+  - For each round _i_ = _r_, _r_ - 1,...,1 compute
     - _R_<sub>_i_-1</sub> = _L_<sub>_i_</sub>
     - _L_<sub>_i_-1</sub> = _R_<sub>_i_</sub> ⊕ _F_(_K_<sub>_i_-1</sub>,
       _L_<sub>_i_</sub>)
@@ -146,33 +179,37 @@ D(_k_, E(_k_, _m_)) = _m_
 - Steps:
   - Initial permutation on plaintext
   - 16 rounds of Feistel cipher
-  - Opposite of initial permutation
+  - Inverse of initial permutation
 
 
 - Block length of 64 bits
-- Number of rounds r is 16
+- 16 rounds _R_
 - Key length is 56 bits
 - Round key length is 48 bit for each subkey _K_<sub>0</sub>,...,
-  _K_<sub>15</sub>. Derived from 56 bit key via special key schedule.
+  _K_<sub>15</sub>.
+  * Derived from 56 bit key via key schedule.
 
 
 ![](https://i.imgur.com/4XwYIbb.png)
 
 #### DES Feistel function
 - Four stage procedure:
-  - **Expansion permutation:** Expand 32 bit message half block to 48 bit block
+  - **Expansion permutation:** Expand 32-bit message half block to 48-bit block
     by doubling 16 bits and permuting them.
-  - **Round key addition:** Compute XOR of 48 bit block with round key
+  - **Round key addition:** Compute XOR of 48-bit block with round key
     _K_<sub>_i_</sub>.
-  - **S-Box:** Split 48 bit into eight 6 bit blocks. Each is given as input to
-    8 substitution boxes, substituting 6 bit blocks with 4 bit blocks.
-  - **P-Box:** Combine the eight 4 bit blocks to 32 bit block and apply
+  - **S-Box:** Split 48 bits into eight 6-bit blocks. Each is given as input to
+    8 substitution boxes, substituting 6-bit blocks with 4-bit blocks.
+  - **P-Box:** Combine the eight 4-bit blocks to 32-bit block and apply
     another permutation.
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Data_Encription_Standard_Flow_Diagram.svg/600px-Data_Encription_Standard_Flow_Diagram.svg.png"
+  style="width: 18em" />
 
 #### DES operation notation
 - **Cyclic shifts** on bitstring blocks: _b_ <<< _n_ means move bits of block
   _b_ by _n_ to the left, bits that would have fallen out are added at the
-  right of _b_. Similar but in the other direction for _b_ >>> _n_.
+  right of _b_. Other direction is _b_ >>> _n_.
 - **Permutations on the position of bits**: Written as output order of
   input bits.
   - e.g. 4123 means:
@@ -189,8 +226,8 @@ D(_k_, E(_k_, _m_)) = _m_
   - Output is corresponding entry in table
 
 #### Key schedule
-- Computing different keys for each round
-- 64 bit key (56 bit key with 8 parity bits)
+- Computes different keys for each round
+- 64-bit key (56-bit key with 8 parity bits)
 - Steps:
   - Apply PC-1 permutation to remove parity bits
   - Split in half to get (_C_<sub>0</sub>, _D_<sub>0</sub>)
@@ -199,7 +236,7 @@ D(_k_, E(_k_, _m_)) = _m_
     - _D_<sub>_i_</sub> = _D_<sub>_i_-1</sub> <<< _p_<sub>_i_</sub>
     - Where _p_<sub>_i_</sub> = 1 (if _i_ = 1,2,9,16) else 2
   - Join _C_<sub>i</sub> and _D_<sub>i</sub> and apply permutation PC-2 to
-    produce a 48 bit output
+    produce a 48-bit output
 
 ### Security of block ciphers (03/10/2017)
 - Use an abstract notion: pseudorandom permutations
@@ -212,27 +249,53 @@ D(_k_, E(_k_, _m_)) = _m_
     D(k, E(k, x)) = x for all k and x.
 
 #### Security of pseudorandom permutations
-- Secure is an adversary can't distinguish it from a "genuine"
+- Secure if an adversary can't distinguish it from a "genuine"
   random permutation
-- There are far fewer pseudorandom permutations than in total
+- Far fewer pseudorandom permutations than total permutations
+  - 2<sup>n</sup>! permutations
+  - 2<sup>n</sup> pseudorandom permutations
+
+### Pseudorandom permutation security game
+Let X = {0,1}<sup>n</sup>, F be the set of all permutations on X
+and E a pseudorandom permutation over (K, X)
+
+- Challenger chooses a random bit _b_ ∈ {0,1}
+- If _b_ = 0, challenger chooses _k_ ∈ K at random,
+  if _b_ = 1, challenger chooses a permutation _f_ on X at random
+- Attacker does arbitrary computations
+- Attacker has access to a black box, which is a function from X to X operated
+  by the challenger. He can ask the challenger for the values
+  _g_(x<sub>1</sub>),…,_g_(x<sub>n</sub>) during his computation
+- If _b_ = 0, challenger answers query _g_(x<sub>i</sub>) by returning
+  _E_(k, x<sub>i</sub>), if _b_ = 1, the answer is _f_(x<sub>i</sub>)
+- Attacker outputs a bit _b_' ∈ {0,1}
+
+Attacker wins the game if _b_ = _b_'
 
 ### Negligible functions
 A function of natural numbers to positive real number is negligible if the
 output number is less than 1/(everything greater than the input)
 
-### Pseudorandom permutation
-{insert definition here}
+A pseudorandom permutation is secure if P[_b_=_b_'] - <sup>1</sup>/<sub>2</sub>
+is negligible in size of _K_
 
-### Back to DES
+### DES
 - Good design but only 56 bit keys - 2<sup>56</sup> security
-- 2DES encrypts twice, key length of 112 bit, not much more secure
+- 2DES encrypts twice
+  Enc<sub>K<sub>1</sub></sub>(Enc<sub>K<sub>2</sub></sub>(M)),
+  key length of 112 bit (_K_<sub>1</sub>_K_<sub>2</sub>)
+  , not much more secure
+  - ~2<sup>57</sup> work to find 112-bit key _K_<sub>1</sub>_K_<sub>2</sub>
+    1. Try all keys _K_<sub>2</sub>, store encryption of M in order
+    2. Try all keys _K_<sub>1</sub>, compute decryption of C, check if value
+       is in previous list
 
 #### 3DES
 - Good but slow
 - 168 bit key split into K<sub>1</sub>, K<sub>2</sub>, K<sub>3</sub>
 - Encrypt M: Enc<sub>K<sub>1</sub></sub>(Dec<sub>K<sub>1</sub></sub>(
   Enc<sub>K<sub>1</sub></sub>(M)))
-  - Enc-Dec-Enc gives option of setting K<sub>1</sub>, K<sub>2</sub>,
+  - Enc-Dec-Enc gives option of setting K<sub>1</sub> =  K<sub>2</sub> =
     K<sub>3</sub> so we can also do DES
 - Security of 2<sup>118</sup>
 

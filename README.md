@@ -88,3 +88,10 @@
 [Notes](sec/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27274)
+
+### Advanced Functional Programming
+[Lecture Code](../../tree/master/afp/lecture-code)
+|
+[Notes](afp/Notes.lagda)
+|
+[Canvas](https://canvas.bham.ac.uk/courses/27237)

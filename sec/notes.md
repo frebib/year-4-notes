@@ -493,3 +493,14 @@
     interaction
   - TFA?
 
+# Legal
+- EU Laws
+  - European Convention on Human Rights
+  - European Data Protection Directive
+  - European Data Retention Direction
+- Most countries have something like Regulation of Investigatory Powers Act
+- Telecoms slang yo:
+  - Licensed operators (LOs)
+  - Other LOs (OLOs)
+  - Mobile LOs (MOLOs)
+

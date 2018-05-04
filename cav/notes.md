@@ -299,3 +299,35 @@ Sat(∃ (□ φ)) = CheckExistsAlways(Sat(φ))
   - Thus `w` is accepted
 - The language of `α` is denoted by `L(α)`
 - `α₁, α₂` are equivalent iff `L(α₁) = L(α₂)`
+- `L` is a regular language iff `L = L(E)` for some regex `E`
+- `L` is a regular language iff `L = L(α)` for some NFA `α`
+
+## Regular Safety Properties
+- Example
+  - "A failure never occurs", `□ ¬ fail`
+  - `AP = {fail}`, `2^AP = {∅, {fail}}`
+  - NFA `α`:
+    - `q₀`, `L(q₀) = ∅`, transition to self and `q₁`, initial state
+    - `q₁`, `L(q₁) = {fail}`, accepting state
+  - `L(α) = {{{fail}}, {∅, {fail}}, {∅, ∅, {fail}}, ...}`
+  - `.*{fail}`
+
+## Checking LTSs
+- Given an LTS `M` and regular safety property `P`
+  - `M |= P ↔ Traces(M) ⊆ P`
+  - `M |= P ↔ Traces(M) ∩ BadPrefixes(P) = ∅`
+- Given an LTS `M` and an NFA `α` that represents bad prefixes of P
+  - `M |= P ↔ Traces(M) ∩ L(α) = ∅`
+- We can construct the product of `M` and `α`, written as `M ⊙ α`
+  - `M = (S, Act, →, I, AP, L)`
+  - `α = (Q, Σ, δ, Q₀, F)`
+  - `M ⊙ α = (S x Q, Act, →', I', {accept}, L')`
+  - `I' = {(s₀, q) | s₀ ∈ I, q₀ -L(s₀)-> q, q₀ ∈ Q₀}`
+  - `L'((s, q)) = if q ∈ F then {accept} else ∅`
+  - `→'`:
+    - If `s -act-> s'` and `q -L(s')-> q'`
+    - Then `(s, q) -act-> (s', q')`
+- Therefore:
+  - `M |= P ↔ M ⊙ α |= □ ¬ accept`
+  - i.e. if there's no reachable accept state in `M ⊙ α`
+

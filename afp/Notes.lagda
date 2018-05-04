@@ -165,8 +165,114 @@ definition of equality:
 \begin{code}
 module Equality where
   data _≡_ {A : Set} : A → A → Set where
-    refl : (a : A) → a ≡ a
+    refl : {a : A} → a ≡ a
   infix 0 _≡_
+
+  sym : {A : Set}{a b : A} → a ≡ b → b ≡ a
+  sym refl = refl
+
+  trans : {A : Set}{a b c : A} → a ≡ b → b ≡ c → a ≡ c
+  trans refl refl = refl
+
+  cong : {A B : Set}{a b : A} → (f : A → B) → a ≡ b → f a ≡ f b
+  cong f refl = refl
+
 \end{code}
 
-This definition will be used from now on
+This definition will be used from now on. We can compare it with the previous definition:
+\begin{code}
+module NatEqualityComparison where
+  open NaturalNumbers
+  open NatEquality
+  open Equality
+
+  prove→≡ : {n m : Nat} → prove-eq n m → n ≡ m
+  prove→≡ zero-eq = refl
+  prove→≡ (succ-eq n m p) = cong succ (prove→≡ p)
+
+  ≡→prove : {n m : Nat} → n ≡ m → prove-eq n m
+  ≡→prove (refl {zero}) = zero-eq
+  ≡→prove (refl {succ n}) = succ-eq n n (≡→prove refl)
+\end{code}
+
+## Equality with lists
+We can try out this equality type when making proofs on lists.
+
+First, we define lists:
+\begin{code}
+module Lists where
+  data List (A : Set) : Set where
+    [] : List A
+    _∷_ : A → List A → List A
+  infix 5 _∷_
+
+  _++_ : {A : Set} → List A → List A → List A
+  [] ++ ys = ys
+  (x ∷ xs) ++ ys = x ∷ (xs ++ ys)
+
+  [_] : {A : Set} → A → List A
+  [ x ] = x ∷ []
+
+  map : {A B : Set} → (A → B) → List A → List B
+  map f [] = []
+  map f (x ∷ xs) = f x ∷ map f xs
+
+  fold : {A B : Set} → (A → B → B) → B → List A → B
+  fold f acc [] = acc
+  fold f acc (x ∷ xs) = fold f (f x acc) xs
+\end{code}
+
+And now we can start some proofs:
+\begin{code}
+module ListsEquality where
+  open Lists
+  open Equality
+
+  unit-++-l : {A : Set}{xs : List A} → [] ++ xs ≡ xs
+  unit-++-l {xs = []} = refl
+  unit-++-l {xs = x ∷ xs} = cong (_∷_ x) refl
+
+  unit-++-r : {A : Set}{xs : List A} → xs ++ [] ≡ xs
+  unit-++-r {xs = []} = refl
+  unit-++-r {xs = x ∷ xs} = cong (_∷_ x) unit-++-r
+\end{code}
+
+A more complicated proof is to prove that the reverse of the reverse of a list is itself (involution):
+
+TODO: Complete
+
+\\begin{code}
+  rev : {A : Set} → List A → List A
+  rev [] = []
+  rev (x ∷ xs) = (rev xs) ++ [ x ]
+
+  rev-invol : {A : Set}{xs : List A} → xs ≡ rev (rev xs)
+  rev-invol {xs = []} = refl
+  rev-invol {xs = x ∷ xs} = goal where
+
+    -- p₃ : {A : Set}{x : A}{xs : List A} → rev (rev (x ∷ xs)) ≡ rev (rev xs ++ [ x ])
+    -- p₃ = refl
+
+    p₀ : {A : Set}{xs ys : List A} → rev (xs ++ ys) ≡ rev ys ++ rev xs
+    p₀ {xs = []} {ys} = p₀₀ where
+      p₀₀ : {A : Set}{as : List A} → as ≡ as ++ []
+      p₀₀ {as = []} = refl
+      p₀₀ {as = a ∷ as} = cong (_∷_ a) p₀₀
+    p₀ {xs = x ∷ xs} {ys} = sym (trans
+                                (p₀₀ (rev ys) (rev xs) [ x ])
+                                (cong (λ xs' → xs' ++ xs) p₀)) where
+      p₀₀ : {A : Set} → (as bs cs : List A) → as ++ (bs ++ cs) ≡ (as ++ bs) ++ cs
+      p₀₀ [] bs cs = refl
+      p₀₀ (a ∷ as) bs cs = cong (_∷_ a) (p₀₀ as bs cs)
+
+    p₂ : {A : Set}{x : A}{xs : List A} → rev [ x ] ++ rev (rev xs) ≡ x ∷ rev (rev xs)
+    p₂ = refl
+
+    p₃ : {A : Set}{x : A}{xs : List A} → x ∷ rev (rev xs) ≡ x ∷ xs
+    p₃ {x = x} = cong (_∷_ x) (sym rev-invol)
+
+    goal : {A : Set}{x : A}{xs : List A} → x ∷ xs ≡ rev (rev (x ∷ xs))
+    goal = sym (trans p₀ p₂)
+
+\\end{code}
+

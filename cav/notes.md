@@ -270,3 +270,32 @@ Sat(∃ (□ φ)) = CheckExistsAlways(Sat(φ))
 - `|M|` numer of states + transitions
 - `|φ|` number of operators
 
+# Automata-based Model Checking
+
+## Notation
+- `w = {A₀, A₁, ..., Aₙ}`
+  - Finite word over alphabet `Σ` where `Aᵢ ∈ Σ`
+- `σ = {A₀, A₁, ...}`
+  - Infinite word over alphabet `Σ` where `Aᵢ ∈ Σ`
+- `w` is a prefix of `σ` with length `n`, ending at `Aₙ`
+- `σ'` is a infinite suffix of `σ`, starting at `Aₙ`
+- `Σ*` set of finite words over `Σ`
+- `Σ^ω` set of infinite words over `Σ`
+
+## Non-deterministic Finite Automata
+- Tuple `α = (Q, Σ, δ, Q₀, F)` where
+  - `Q` is a finite set of states
+  - `Σ` is an alphabet (actions)
+  - `δ : Q x Σ -> 2^Q` is a transition function
+  - `Q₀ ⊆ Q` is a set of initial states
+  - `F ⊆ Q` is a set of accept states
+- There is an `A` transition from `q` to `q'`...
+  - Written as `q -A-> q'`
+  - If `q' ∈ δ(q, A)`
+- There is a run of `α` on a finite word `w = {A₀, A₁, ...}` if
+  - There is a sequence of states `{q₀, q₁, ...}` where
+  - `q₀ ∈ Q₀` and `qᵢ -Aᵢ-> qᵢ₊₁` for all `i`
+- An accepting run is an `w` that ends in some `q ∈ F`
+  - Thus `w` is accepted
+- The language of `α` is denoted by `L(α)`
+- `α₁, α₂` are equivalent iff `L(α₁) = L(α₂)`

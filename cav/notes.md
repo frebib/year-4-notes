@@ -348,10 +348,33 @@ Sat(∃ (□ φ)) = CheckExistsAlways(Sat(φ))
   - "`crit` is true infinitely often"
   - `((¬crit)*crit)^ω`
 
-## Non-deterministic Buchi Automata
+## Non-deterministic Buchi Automata (NBA)
 - Identical syntactically to NFAs
 - Acceptance condition changes
   - The accept state does not need to be visited once, but has to be visited
     inifinitely often
 - Represent `ω`-regular languages
+
+### Non-blocking NBAs
+- An NBA is non-blocking if every symbol/action is available in every state
+  - i.e. `δ(q, A) ≠ ∅` for all `q ∈ Q` and `A ∈ Σ`
+- We can always convert a blocking NBA to a non-blocking NBA by adding a trap
+  state:
+  - All undefined actions lead to it
+  - It loops unconditionally to itself
+
+### Checking Against LTS
+- We can do product of LTS and NBA, as with safety properties
+- And then we need to find a reachable cycle in the product that contains an
+  accepting state
+- This means that there is a path in the LTS that satisfies the property the NBA
+  describes
+- This is **not** the procedure for checking the property on an LTS
+- To check whether an LTS `M` satisfies an LTL property `ψ`:
+  - `M |= ψ`
+  - `Traces(M) ⊆ Words(ψ)`
+  - `Traces(M) ∩ Words(¬ψ) = ∅`
+  - `Traces(M) ∩ Lω(α)` where `α` is an NBA that represents `¬ω`
+  - `M |= ψ` iff there is no accepting path (cycle) in `M ⊙ α`
+- Complexity is `O(|M| * 2^(|ψ|))`
 

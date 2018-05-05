@@ -331,3 +331,27 @@ Sat(∃ (□ φ)) = CheckExistsAlways(Sat(φ))
   - `M |= P ↔ M ⊙ α |= □ ¬ accept`
   - i.e. if there's no reachable accept state in `M ⊙ α`
 
+# `ω`-regular Languages
+- A regular expression over `Σ` is defined as:
+  - `E ::= ∅ | ε | A ∈ Σ | E + E | E.E | E*`
+  - TODO: Does `E + E` mean or, and `E.E` mean concat?
+- A `ω`-regular expression over `Σ` is defined as:
+  - `G = E₀.(F₀)^ω + E₁.(F₁)^ω + ... + Eₙ.(Fₙ)^ω`
+- `Lω(G) ⊆ Σ^ω` is the language of a `ω`-regular expression `G`
+  - `Lω(G) = L(E₀).L(F₀)^ω ∪ L(E₁).L(F₁)^ω ∪ ... ∪ L(Eₙ).L(Fₙ)^ω`
+- `L ⊆ Σ^ω` is a `ω`-regular language if
+  - `L = Lω(G)` for some `ω`-regular expression `G`
+- `P ⊆ (2^AP)^ω` is a `ω`-regular property if
+  - `P` is a `ω`-regular language over 2^AP
+- Example
+  - `AP = {wait, crit}`
+  - "`crit` is true infinitely often"
+  - `((¬crit)*crit)^ω`
+
+## Non-deterministic Buchi Automata
+- Identical syntactically to NFAs
+- Acceptance condition changes
+  - The accept state does not need to be visited once, but has to be visited
+    inifinitely often
+- Represent `ω`-regular languages
+

@@ -473,7 +473,42 @@ Apply encryption/decryption block by block.
 - Block cipher secure if attacker can only win half the time
 
 ## Stream Ciphers
-{Missing notes}
+- Generate a pseudorandom key stream, the length of data to encrypt
+
+### LFSR (Linear-Feedback Shift Register)
+- A register of bit cells shifted by one every clock cycle
+- Initialised with a pseudorandom
+- New input is a result of a function on bits in the register
+- If it has _n_ bits, keystream period is at most 2<sup>n</sup>
+- Not very secure
+
+### Combining LFSRs
+- Given lots of output, tap positions (function input) can be computed
+- Combine many LFSRs in non-linear fashion to produce key stream
+
+### A5/1
+- Used in GSM phone communication
+- Built from three LFSRs with irregular clock cycle
+- Register only shifted if clock bit is the same as majority of three clock bits
+
+**Security**
+- Clock shifts make cryptanalysis harder
+- Mainstream PC with 1TB flash memory can break in a few seconds
+
+### RC4
+- Two phases
+  - Initialisation of _S_ ("key schedule"
+  - Keystream generation phase
+
+**Properties**
+- Compact, well studied
+- Many attacks, led to downfall of WEP
+
+### WEP
+- Based on RC4
+- RC4 run based on seed = pre-shared WEP key (128-bit) and an IV (24-bit)
+- Small IV means key streams repeat after at most 2<sup>24</sup> frames
+- First bytes of key stream known by adversary, standard headers always sent
 
 ## Integrity and Authentication (24/10/2017)
 ### Integrity of messages

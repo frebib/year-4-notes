@@ -300,17 +300,15 @@ is negligible in size of _K_
 - Security of 2<sup>118</sup>
 
 ## AES (06/10/17)
-- 128 bit key size
-- Block size of 128, 192 or 256
+- 128-bit block size
+- Key size of 128, 192 or 256-bit
 - Works in rounds, with round keys
   * 10, 12 or 14 rounds depending on number of bits in the key
 - Is a _substitution-permutation network_ (not a Feistel network)
-- Came about from a competition winner (run by NIST in 1997)
-  * 15 submissions (1998)
-  * 5 finalists (1999)
-  * Rijndael won, became AES (2000)
 
 ### Encryption Process
+**AES-128**:
+
 Arrange the message in a 4×4 matrix (8 bits per square), spreading 128 bits
 over the grid, as below:
 
@@ -320,16 +318,19 @@ over the grid, as below:
 |8|8|8|8|
 |8|8|8|8|
 
-Below is 1 round defined. AES consists of 10 rounds
+Below is 1 round defined. AES-128 consists of 10 rounds:
 - Byte Substitution
   - Gives non-linearity
 - ShiftRows
+  - Permutes bytes
 - MixColumns
   - MixColumns and ShiftRows give _diffusion_
 - Key Addition (XOR with round key)
 
+No MixColumns in final round.
+
 #### SubBytes
-- Using the S-box lookup table, map each value in the matrix to the matching
+- Using the S-box lookup table, map each byte in the state matrix to a
   value in the table
 
 #### ShiftRows
@@ -340,27 +341,28 @@ Cyclic shift each row left by the row index, top to bottom, starting at row 0
 
 #### MixColumns
 - Achieved by multiplying with a matrix
-- Use ⊕ (xor) for addition
+- Use ⊕ (XOR) for addition
 - Use ⊗ "special" operation for multiplication
 
 #### AddRoundKey
 - Use the key schedule to compute round keys
-- Xor round key with state matrix
+- Can be represented as matrix, same as the state
+- XOR round key with state matrix
 
 ### Key schedule
-AES requires 11 round keys (one initial, 10 for the rounds)
+AES-128 requires 11 round keys (one initial, 10 for the rounds)
 
-<pre><code>
-for i := 1 to 10 do
-    T := W <sub>4i−1</sub> ≪ 8
-    T := SubBytes(T)
-    T := T ⊕ RC<sub>i</sub>
+```text
+<b>for</b> i := 1 <b>to</b> 10 <b>do</b>
+    T := W<sub>4i−1</sub> ≪ 8
+    T := <i>SubBytes</i>(T)
+    T := T ⊕ <i>RC</i><sub>i</sub>
     W 4i := W<sub>4i−4</sub> ⊕ T
-    W 4i+1 := W<sub>4i−3</sub> ⊕ W <sub>4i</sub>
-    W 4i+2 := W<sub>4i−2</sub> ⊕ W <sub>4i+1</sub>
-    W 4i+3 := W<sub>4i−1</sub> ⊕ W <sub>4i+2</sub>
-end
-</code></pre>
+    W 4i+1 := W<sub>4i−3</sub> ⊕ W<sub>4i</sub>
+    W 4i+2 := W<sub>4i−2</sub> ⊕ W<sub>4i+1</sub>
+    W 4i+3 := W<sub>4i−1</sub> ⊕ W<sub>4i+2</sub>
+<b>end</b>
+```
 
 ### AES and finite fields of polynomials (10/10/2017)
 - e.g. a bit string written as a polynomial
@@ -419,18 +421,16 @@ So far, only small "erosions" of AES
    containing the error
 5. [Efficiency] It should be efficient (e.g. parallelisable)
 
-<!-- TODO: Fill this table out -->
-
 |   |ECB|CBC|CTR|GCM|
 |--:|:-:|:-:|:-:|:-:|
 | 1 | ✘ | ✔ | ✔ | ✔ |
-| 2 | ✘ | ✔ |   |   |
-| 3 |   | ✘ |   |   |
-| 4 |   | ✘ |   |   |
-| 5 |   | ✘ | ✔ |   |
+| 2 | ✘ | ✔ | ✔ | ✔ |
+| 3 | ✘ | ✘ | ✔ | ✔ |
+| 4 | ✔ | ✘ | ✔ | ✔ |
+| 5 | ✔ | ✘ | ✔ | ✔ |
 
 ### ECB (Electronic Codebook Mode)
-It's not secure
+Apply encryption/decryption block by block.
 
 ![](https://blog.filippo.io/content/images/2015/11/Tux\_ecb.jpg)
 
@@ -454,6 +454,23 @@ It's not secure
 - Uses a random nonce as well as a counter IV (which is incremented for each
   block), combined together
 - As with CBC, the nonce is sent publicly along with the ciphertext
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/CTR_encryption_2.svg/1202px-CTR_encryption_2.svg.png)
+
+### Block Cipher Mode Security Game (IND-CPA)
+1. Challenger generates a key
+1. Attacker performs a polynomial number of computations, possibly asking for
+   encryption of some messages
+1. Attacker asks for encryption of some number of messages
+1. Attacker submits two messages _m_<sub>0</sub> and _m_<sub>1</sub> at random
+1. Challenger chooses bit _b_ ∈ {0,1} at random
+1. Challenger returns encryption of _m_<sub>_b_</sub>
+1. Attacker performs a polynomial number of computations, possibly asking for
+   encryption of some messages
+1. Attacker outputs bit _b_'
+
+- Attacker wins if _b_' = _b_
+- Block cipher secure if attacker can only win half the time
 
 ## Stream Ciphers
 {Missing notes}

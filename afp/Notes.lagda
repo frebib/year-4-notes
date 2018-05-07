@@ -235,6 +235,10 @@ module ListsEquality where
   unit-++-r : {A : Set}{xs : List A} → xs ++ [] ≡ xs
   unit-++-r {xs = []} = refl
   unit-++-r {xs = x ∷ xs} = cong (_∷_ x) unit-++-r
+
+  ++-assoc : {A : Set} → (as bs cs : List A) → as ++ (bs ++ cs) ≡ (as ++ bs) ++ cs
+  ++-assoc [] bs cs = refl
+  ++-assoc (a ∷ as) bs cs = cong (_∷_ a) (++-assoc as bs cs)
 \end{code}
 
 A more complicated proof is to prove that the reverse of the reverse of a list is itself (involution):
@@ -275,4 +279,58 @@ TODO: Complete
     goal = sym (trans p₀ p₂)
 
 \\end{code}
+
+# Binary Search Trees
+
+We can define BSTs in Agda. First we need to define comparison proofs for natural numbers:
+\begin{code}
+module ProveComp where
+  open NaturalNumbers
+  data _≤p_ : Nat → Nat → Set where
+    ≤-zero : (n : Nat) → zero ≤p n
+    ≤-succ : (n m : Nat) → n ≤p m → (succ n) ≤p (succ m)
+\end{code}
+
+We also will need the `Maybe` type, and a comparison for that type:
+\begin{code}
+module Maybes where
+  data Maybe (A : Set) : Set where
+    none : Maybe A
+    some : A → Maybe A
+
+  data _≤?_ {A : Set} {Leq : A → A → Set} : Maybe A → Maybe A → Set where
+    ≤?-some : (a b : A) → (Leq a b) → (some a) ≤? (some b)
+    ≤?-nonel : (a : A) → none ≤? (some a)
+    ≤?-noner : (a : A) → (some a) ≤? none
+\end{code}
+
+Now we can define the BST:
+\begin{code}
+
+module BinarySearchTrees (A : Set) (Leq : A → A → Set) where
+  open Maybes
+
+  Leq? : Maybe A → Maybe A → Set
+  Leq? = _≤?_ {A}{Leq}
+
+  mutual
+    data Bst : Set where
+      leaf : Bst
+      fork : (elem : A) → (left right : Bst) →
+             Leq? (bst-min right) (some elem) →
+             Leq? (some elem) (bst-max left) →
+             Bst
+
+    bst-min : Bst → Maybe A
+    bst-min leaf = none
+    bst-min (fork elem leaf _ _ _) = some elem
+    bst-min (fork elem left _ _ _) = bst-min left
+
+    bst-max : Bst → Maybe A
+    bst-max leaf = none
+    bst-max (fork elem _ leaf _ _) = some elem
+    bst-max (fork elem _ right _ _) = bst-max right
+\end{code}
+
+
 

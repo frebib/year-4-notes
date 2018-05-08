@@ -204,6 +204,8 @@ Special case of k-fold where `K = N`
 
 ### When To Use?
 - Not too much data attributes (~20)
+  - Because kNN takes into account each variable with equal weighting, and more
+    attributes implies more attributes that don't mean anything
 - Lots of training data
 - Can learn complex target functions (lots of wiggly class boundaries)
 
@@ -499,4 +501,25 @@ Algorithm:
     - Subsets can overlap
     - Increases runtime
 - When evaluating, run all and average the response
+
+# Comparison of Models
+
+## Supervised
+- Linear regression
+- Bayesian classification (maximum a posterior)
+- Bayesian classification (maximum likelihood)
+  - Better when classes are equally distributed
+- Bayesian classification (naive bayes)
+  - Better for low amount of data
+- K nearest neighbours
+  - Worse for high amount of attributes
+    - Because more likely to provide bad attributes
+- Support vector machines
+  - Better for low amount of data
+  - Better for dealing with outliers
+- Randomised decision forests
+
+## Unsupervised
+- K-means clustering
+- Hierarchical agglomerative clustering
 

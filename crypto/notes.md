@@ -514,14 +514,17 @@ Apply encryption/decryption block by block.
 ### Integrity of messages
 **Goal:** Ensure change of message by attacker can be detected
 **Definition:** Cryptographic hash functions are functions from bitstrings of
-almost any length to a bitstring of a small, fixed length
+almost any length to a bitstring of a small, fixed length such that:
   - Easy to compute
-  - One-way (hard to invert
+  - One-way (hard to invert)
   - Collision-resistant. Infeasible to find two files with the same hash
 
 #### Collision-resistance
+- Output space much smaller than input space. There are many collisions!
+- Should be computationally hard to find a single collision
+- If a collision is found, the hash function is considered broken
 - Changing one bit of input should "completely change" the output
-- e.g. typically half of output bits are changed
+  - e.g. typically half of output bits are changed
 
 #### One-way vs collision-resistant
 **One-way:** given y, infeasible to find x such that h(x) = y
@@ -539,10 +542,28 @@ almost any length to a bitstring of a small, fixed length
 #### MD4 algorithm
 - IV is constant (part of hash function definition)
 - K constant (part of the hash function definition)
-{Missing notes}
+- Message padded to length less than multiple of 512
+- 64-bit representation of message length added
+- Split into 512-bit blocks, processed to produce hash value
 
 #### MD4 compression function
-{Missing notes}
+- **Input**: 512-bit block and current value of A,B,C,D
+- **Output**: new A,B,C,D values
+- Input is split into 16 chunks
+- Three rounds of 16 steps transform A,B,C,D into new values using a particular
+  function for each round
+
+### MD5
+- Same as MD4 but with a fourth round
+
+### SHA-1
+- Extension of MD4
+- Extends hash size to 160 bits
+
+### SHA-2
+- More bitwise operations
+- Increased block sizes
+- Increased hash length
 
 ### SHA-3
 - Uses _sponge construction_ rather than _Merkle-Damgard_ construction
@@ -583,14 +604,26 @@ Uses CBC operation of block cipher
 
 ### Security of hash function
 Secure if attacker can't output a collision.
-{Missing notes}
 
 ### Security of MAC
 MAC is secure if attacker cannot produce a valid (message, tag) pair that he
 hasn't seen before. (Assume he doesn't have the key)
 
 ### MAC Game
-{Missing rules}
+- Attacker does some computations supplying messages to challenger
+- Challenger returns MACs for messages
+- Attacker does more computations and supplies a message, tag pair not equal to
+  any previously seen
+- Challenger outputs 1 if the tag is valid for the message, otherwise 0
+
+The attacker wins if the challenger outputs 1.
+
+MAC is secure if no attacker can win the game with non-negligible probability.
+
+### MAC Results
+- If block cipher is secure and message lengths are fixed, CBC-MAC is secure
+- If hash function is secure, HMAC is a secure MAC
+- If block cipher is secure, PMAC is a secure MAC
 
 ## Authenticated encryption (31/10/2017)
 For privacy and integrity:
@@ -606,9 +639,12 @@ For privacy and integrity:
 - MAC-then-encrypt
   - Compute MAC, encrypt message-MAC pair
   - E<sub>k2</sub> (m, MAC<sub>k1</sub> (m))
+  - Doesn't provide both privacy and integrity unless encryption is CBC or CTR
+    with random IV (for example)
 - Encrypt and MAC
   - Pair of ciphertext and MAC
   - E<sub>k1</sub> (m), MAC<sub>k2</sub> (m)
+  - Doesn't provide both privacy and integrity
 
 ### Authenticated encryption game
 - Challenger picks random encryption key
@@ -617,16 +653,21 @@ For privacy and integrity:
 - Attacker does more computations, submits different ciphertext c to challenger
 - Attacker has won if he's forged a valid ciphertext c (where MAC is correct)
 
+Authenticated encryption scheme is secure if:
+- It satisfies IND-CPA
+- An attacker wins the game with only negligible probability
+
 ### Galois counter mode (GCM)
 - Encrypt-then-MAC is secure but requires two passes over data
 - GCM only needs to pass through data once
+
 
 - Encrypts nonce and counter value, produces key stream to XOR with plain text
 - Computes an authentication tag on ciphertext
 - Can authenticate additional unencrypted data
 
 #### GCM: the authentication tag
-{Missing notes}
+{Missing notes (Complicated for exam)}
 
 ## Public Key Cryptography
 {Missing first D. Galindo lecture notes}

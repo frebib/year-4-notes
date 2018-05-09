@@ -317,8 +317,8 @@ module BinarySearchTrees (A : Set) (Leq : A → A → Set) where
     data Bst : Set where
       leaf : Bst
       fork : (elem : A) → (left right : Bst) →
-             Leq? (bst-min right) (some elem) →
-             Leq? (some elem) (bst-max left) →
+             Leq? (bst-min left) (some elem) →
+             Leq? (some elem) (bst-max right) →
              Bst
 
     bst-min : Bst → Maybe A
@@ -330,7 +330,27 @@ module BinarySearchTrees (A : Set) (Leq : A → A → Set) where
     bst-max leaf = none
     bst-max (fork elem _ leaf _ _) = some elem
     bst-max (fork elem _ right _ _) = bst-max right
-\end{code}
 
+module NatBsts where
+  open NaturalNumbers
+  open ProveComp
+  open Maybes
+  open BinarySearchTrees Nat _≤p_ renaming (Bst to NatBst)
+
+  example₀ : NatBst
+  example₀ = fork ₁ leaf leaf (≤?-nonel ₁) (≤?-noner ₁)
+
+  example₁ : NatBst
+  example₁ = fork ₃ leaf leaf (≤?-nonel ₃) (≤?-noner ₃)
+
+  example₂ : NatBst
+  example₂ = fork ₂ example₀ example₁ 1≤?2 2≤?3 where
+    1≤?2 : some ₁ ≤? some ₂
+    1≤?2 = ≤?-some ₁ ₂ (≤-succ zero (succ zero) (≤-zero (succ zero)))
+    2≤?3 : some ₂ ≤? some ₃
+    2≤?3 = ≤?-some (succ (succ zero)) (succ (succ (succ zero)))
+             (≤-succ (succ zero) (succ (succ zero))
+              (≤-succ zero (succ zero) (≤-zero (succ zero))))
+\end{code}
 
 

@@ -503,6 +503,46 @@ Algorithm:
     - Increases runtime
 - When evaluating, run all and average the response
 
+# Point Clouds
+- We can draw approximate point clouds based off the mean and covariance
+  matrices of a point cloud
+- We will assume two dimensions
+- Uniform variance and no covariance:
+  - e.g. `[[a, 0], [0, a]]`
+  - Circle point cloud, where `a` is proportional to its width
+- Non-uniform variance and no covariance
+  - e.g. `[[a, 0], [0, b]]`
+  - Ellipse point cloud, where `a` is proportional to its width on `x`-axis, and
+    `b` is proportional to its heigh on `y`-axis
+  - Ellipse is always axis-aligned
+- Uniform variance and covariance
+  - e.g. `[[a, c], [c, a]]`
+  - Ellipse point cloud, where `a` is proportional to its width on both axes,
+    and `c` is how "thin" the ellipse is
+  - Aligned with `x = y` line
+  - Unless `c` is negative, then aligned with `x = -y`
+- Non-uniform variance and covariance
+  - e.g. `[[a, c], [c, b]]`
+  - Ellipse point cloud, where `a` is proportional to its width on `x`-axis, and
+    `b` is proportional to its heigh on `y`-axis, and `c` is how "thin" the
+    ellipse is
+  - Assuming `b` is positive, is more aligned to `x`-axis if `a > b` and vice
+    versa
+
+## Decision Boundaries
+- Without naive bayes assumption
+  - Identical variance, no covariance
+    - Linear decision boundary
+  - Identical variance, identical covariance
+    - Linear decision boundary
+  - Non-identical variance, non-identical covariance
+    - Non-linear decision boundary
+- With naive bayes assumption
+  - Identical variance
+    - Linear decision boundary
+  - Non-identical variance
+    - Non-linear decision boundary
+
 # Comparison of Models
 
 ## Supervised

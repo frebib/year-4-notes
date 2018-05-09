@@ -669,35 +669,305 @@ Authenticated encryption scheme is secure if:
 #### GCM: the authentication tag
 {Missing notes (Complicated for exam)}
 
-## Public Key Cryptography
-{Missing first D. Galindo lecture notes}
+## Public Key Encryption - Syntax
+Public key encryption scheme consists of the following algorithms:
+- KG(λ) - input **security parameter** λ - outputs a pair of enc/dec keys
+  (PK, SK)
+- Enc(PK, m;r) - inputs public key PK, plaintext _m_ - outputs ciphertext C
+- Dec(SK, C) - inputs decryption key SK, ciphertext C - outputs plaintext _m_
+
+## Modular Arithmetic
+- a = b (mod N) or a ≡ b mod N if N divides b − a
+- if b − a = q · N for integer q, a and b are congruent modulo N or the
+  reduction modulo N of a is b
+- Z<sub>N</sub> for N ∈ Z, N > 0 is defined as Z<sub>N</sub>
+  = {0, 1, . . . , N − 2, N − 1}
 
 ## Greatest Common Divisor (Euclidean Algorithm) (07/11/2017)
-{Sorry what?}
+```text
+while b != 0 do
+  r = a mod b
+  a = b
+  b = r
+return a
+```
+
+{Euclidean Algorithm not needed for exam}
 
 ### Inverses modulo N
-{Que?}
+- _x_ ∈ Z<sub>N</sub> has inverse _y_ ∈ Z<sub>N</sub> such that _x_·_y_
+  = 1 mod N if gcd(N,_x_) = 1
+- Z<sup>*</sup><sub>N</sub> is the subset of Z<sub>N</sub> of all its invertible
+  elements
+- φ(N) is the number of invertible elements in Z<sup>*</sup><sub>N</sub>
 
 ### Euler's theorem
-{Letter, modulo, idk}
+- a<sup>φ(N) ≡ 1 mod N
 
 ### Fermat's little theorem
-{Stupid name for a theorem}
+- For prime _p_ and integer _a_ != 0 mod _p_, _a_<sup>_p_-1</sup> ≡ mod _p_
+- For any _a_, _a_<sup>_p_</sup> ≡ _a_ mod _p_
 
 ### RSA
 - Key generation KG(λ)
   - Generate two distinct primes, p and q of same bit-size λ
   - Compute N = p x q and Φ = (p - 1)(q - 1)
   - Select random int e, 1 < e < phi such that gcd(e,Φ) = 1
-  - Compute d, inverse of e mod Φ (e x d = 1 mod phi) using extended euclidean
+  - Compute d, inverse of e mod Φ (e x d = 1 mod Φ) using extended euclidean
     algorithm
   - Public key is PK = (N, e)
   - Private key is SK = d
 
 
 - **Encryption:** Enc(PK, m)
-  - With message (m) and public key (PK = N, e)
+  - With message (m) and public key (PK = (N,e))
   - Ciphertext c = m<sup>e</sup> mod N
 - **Decryption:** Dec(SK, c)
   - With ciphertext c, N from public key and private key (SK = d)
   - Message m = c<sup>d</sup> mod N
+
+#### Decryption Proof
+- Dec(SK, Enc(PK, m)) = m
+- Does (m<sup>e</sup>)<sup>d</sup> = 1 mod N ?
+- Since e · d ≡ 1 mod φ(N), there is _k_ such e · d = 1 + k · φ(N)
+- If m != 0 mod N, by Euler's theorem m<sup>φ(N)</sup> ≡ 1 mod N
+- m<sup>e·d</sup> = m<sup>1+k·φ(N)</sup>
+  ≡ m · (m<sup>φ(N)</sup>)<sup><sup>k</sup></sup> ≡ m · 1 ≡ m mod N
+
+#### Chinese Remainder Theorem
+{Missing notes}
+
+#### Proof that decryption works (CRT)
+- e · d ≡ 1 mod φ, there is _k_ such that e · d = 1 + k · φ
+- If m != 0 mod p, by Fermat's little theorem m<sup>p-1</sup> ≡ 1 mod p
+- Gives m<sup>1+k ·(p−1)·(q−1)</sup> ≡ m mod p
+  - Gives m<sup>ed</sup> ≡ m mod p for all m
+  - Gives m<sup>ed</sup> ≡ m mod q for all m
+  - By CRT, if p != q then m<sup>ed</sup> ≡ m mod N
+
+#### Attacks Against RSA Encryption
+- **Factoring**: given N = p x q, compute p and q
+- **Secret key recovery**: given (N, e) with N = p x q, compute d
+  = e<sup>-1</sup> mod φ(N)
+  - φ(N) = (p-1)(q-1)
+- **Breaking RSA primitive**: given (N, e) with random y, find x such that
+  y = x<sup>e</sup> mod N
+- **Dictionary attack**: m<sub>0</sub> -> c<sub>0</sub>,
+  m<sub>1</sub> -> c<sub>1</sub>
+- **Malleability attack**: given encryption c = m<sup>e</sup> mod N, it's
+  possible to create encryption of m' = λ · m mod N by computing:
+  - c' = (m)<sup>e</sup> · λ<sup>e</sup> = (m · λ)<sup>e</sup> mod N
+
+### One-Wayness
+**Game**
+1. Challenger gives PK to attacker
+2. Challenger gives encryption of random m using PK
+3. Attacker performs computations and outputs m'
+
+
+- Attacker wins the game if m' = m
+- Secure if attacker only wins with negligible probability (Pr[m'=m])
+
+### Defence Against Dictionary Attacks
+**IND-CPA Game**
+1. Challenger gives PK to attacker
+2. Attacker performs computations
+3. Attacker submits messages m<sub>0</sub> and m<sub>1</sub> of equal length to
+   the challenger
+4. Challenger selects a bit b ∈ {0, 1} at random
+5. Challenger returns encryption of m<sub>b</sub>
+6. Attacker performs computations and outputs b'
+
+
+- Attacker wins the game if b' = b
+- Secure if attacker can only win with negligible probability (Pr[b'=b] - 0.5)
+
+#### IND-CPA Secure PK Encryption
+- Add padding to RSA
+- Encrypt random number rather than message (H is hash function)
+  - Enc: E<sub>PK</sub>(r), H(r)⊕m)
+  - Dec(c<sub>1</sub>,c<sub>2</sub>):
+    H(D<sub>SK</sub>(c<sub>1</sub>))⊕c<sub>2</sub>
+
+### Sophie Germain Primes q
+- If both q and 2q + 1 are prime, q is Sophie Germain prime
+- Generate p such that p - 1 = 2 x q for some prime q
+  - Generate random prime p
+  - Test if q = (p - 1)/2 is prime, if not, generate a new p
+
+### ElGamel Encryption
+- p = 2 x q + 1 prime
+- g such that g<sup>q</sup = 1 mod p
+- G<sub>q</sub> is the subgroup of Z<sup>*</sup<sub>p</sub> generated by g
+- h = g<sup>x</sup> mod p
+- PK: (G, g, h). SK: x
+
+
+- Enc: c = (g<sup>r</sup>, h<sup>r</sup> · m)
+- Dec (c<sub>1</sub>, c<sub>2</sub>): m = c<sub>2</sub>
+  · (c<sub>1</sub><sup>x</sup>)<sup>-1</sup> mod p
+
+#### Security of ElGamel
+- One-way if solving CDH is infeasible
+- IND-CPA secure if solving Decisional DH is infeasible
+- ElGamel is multiplicative, can obtain enc of m' · m by multiplying previous
+  ciphertexts
+
+#### IND-CCA Game
+1. Challenger give PK to attacker
+2. Attacker given access to decryption oracle for ciphertext inputs
+3. Attacker submits messages m<sub>0</sub> and m<sub>1</sub> of equal length to
+   the challenger
+4. Challenger selects random bit b ∈ {0, 1}
+5. Challenger returns encryption of m<sub>b</sub>
+6. Attacker uses oracle to decrypt c != c<sub>b</sub> and outputs b'
+
+
+- Attacker wins the game is b' = b
+- ElGamel is not IND-CCA secure
+  - Given c = (g<sup>r</sup> , h<sup>r</sup> · m) where pk = (g, h)
+  - Ask for decryption of c' = (g<sup>r+1</sup> , h<sup>r+1</sup> · m)
+    and recover m
+
+### Twin ElGamel Encryption
+- Adds a MAC to ciphertext
+- Is IND-CCA secure if computational DH assumption holds and MAC is unforgeable
+
+## Diffie-Hellman Key Exchange
+- Two parties can establish a shared key without previous communication
+- Let p and q(=p-1) be primes
+- Let g be a generator
+- Alice generates a random _a_ less than q and publishes g<sup>a</sup> mod p,
+  keeping _a_ secret
+- Bob does the same for a _b_
+- Alice and Bob compute g<sup>ab</sup>
+- Alice and bob now share the same value (key)
+
+### MITM
+- DH is vulnerable to man in the middle attack
+
+- Stop MITM attack by guaranteeing authenticity of g<sup>a</sup> g<sup>b</sup>
+- Use public key digital signatures
+- CA is used to authenticate public keys (gives relation between PK and identify
+  of its owner)
+- CA signs the relationship
+
+### Certificate Process
+- Alice generates PK,SK and sends PK to CA
+- CA performs identity check
+- Alice proves knowledge of SK to CA (decrypt data encrypted with PK)
+- CA issues cert to Alice
+- Alice sends cert to Bob
+- Bob verifies cert and extracts Alice's PK
+
+### Certificate Issuance
+- Cert contains (CERTDATA, σ)
+- σ is CA's signature on CERTDATA
+- CERTDATA contains
+  - PK, ID<sub>Alice</sub>
+  - CA Name
+  - Cert expiry
+  - Restrictions
+  - Security level
+
+### Digital Signatures Schemes
+- Better than using MAC since no need to share MAC key with all users
+- MAC does not prevent parties from cheating each other
+- Signatures are: publicly verifiable, transferable, non-repudiable
+
+### Syntax of Digital Signatures
+- We have verifying key and signing key
+- Sign(sk, m;r) - Inputs: signing key sk, message m
+- Verify(vk, m, σ) - Inputs: verifying key vk, message m, signature σ
+
+### Usage
+1. Signer generates vk and sk
+2. Signer publicly announces vk
+3. Verifier accepts vk
+4. Signer produces signature σ on document M using sk
+5. Verifier who has vk can verify signature for document using vk
+
+### Unforgeability Game
+- **Init**: Challenger gives vk to attacker
+- **Find**: Attacker does computations, asks for challenger to sign messages
+- Challenger returns signatures for messages
+- **End**: Attacker outputs pair (m, s)
+
+
+- Attacker wins if (m, s) is a valid signature for m that was not in **Find**
+  phase
+- Digital signature scheme secure against existential forgery if attacker only
+  has negligible probability of winning the game
+
+### Signature from Trapdoor One-Way Bijections
+- Function is:
+  - Easy to compute given PK
+  - Efficiently invertible with **trapdoor** SK
+  - Infeasible to invert without SK
+
+### RSA - Full Domain Hash (RSA-FDH)
+- Let H be secure hash function
+- Sign((N,e,d),m): σ = F<sub>d</sub><sup>-1</sup>(H(m))
+  = H(m)<sup>d</sup> mod N
+- Verify((N,e),m,σ): Yes/No if H(m) = F<sub>N,e</sub>(σ) = σ<sup>e</sup> mod N
+
+
+- Unforeable signature scheme under assumption hat RSA problem is infeasible to
+  break
+
+### Secure H
+- H must be one-way, otherwise...
+- If an adversary can invert the hash function (find M such that H(M) = y)
+- Forgery is easy
+  - Attacker chooses random σ
+  - Attacker computes σ<sup>e</sup> mod N
+  - Attacker computes M such that H(M) = σ<sup>e</sup> mod N
+  - Attacker outputs pair (M,σ) as forgery
+
+
+- H must be collision-resistant, otheriwse...
+- Adversary can find collisions M1 != M2, such that H(M1) = H(M2)
+- Forgery is easy
+  - Request signature σ on M1
+  - Output pair (M2,σ) as forgery
+
+- H must not have structural properties
+- If a hash has properties H(M1 XOR M2) = H(M1) x H(M2) for M1,M2 same size
+- Forgery is easy
+  - Request signature σ1 on M1
+  - Request signature σ2 on M2
+  - Set σ = σ1 x σ2 and M = M1 XOR M2
+  - Output pair (M,σ) as forgery
+
+### H as a Random Oracle
+- Behaves as a public random function
+  - H(M1) = H(M2) with probability 1/|Y| for M1 != M2
+  - Attacker regards, H as lookup table
+- In practice, instantiate function H with hash function
+
+### Instantiate H in RSA-FDH
+H(M) = SHA-512(1||M) || ... || SHA-512(4||M)
+
+### Schnorr Signature Scheme
+- Sign(sk, M):
+  - Choose random r from {0,...,q-1}
+  - Compute s = H(M||g<sup>r</sup>)
+  - Compute t = (r + x · s) mod q
+  - Output σ = (s,t)
+- Verify(vk,σ,m):
+  - Parse σ as (s,t)
+  - Accept signature if H(M||g<sup>t</sup>y<sup>-s</sup>) = s
+
+
+- Unforgeable under Discrete Logarithm assumption in Random Oracle Model
+
+### DSA
+- Sign(sk,M):
+  - Choose random r
+  - Compute s = (g<sup>r</sup> mod p) mod q
+  - Compute t = (H(M) + x · s) · r<sup>-1</sup> mod q
+  - Output σ = (s, t)
+- Verify(vk,σ,m):
+  - Calculate u1 = H(M) · t<sup>-1</sup> mod q
+  - Calculate u2 = s · t<sup>-1</sup> mod q
+  - Accept signature if (g<sup>u1</sup> · y<sup>u2</sup>) mod p mod q = s

@@ -286,9 +286,18 @@ We can define BSTs in Agda. First we need to define comparison proofs for natura
 \begin{code}
 module ProveComp where
   open NaturalNumbers
+  open Booleans
+
   data _≤p_ : Nat → Nat → Set where
     ≤-zero : (n : Nat) → zero ≤p n
     ≤-succ : (n m : Nat) → n ≤p m → (succ n) ≤p (succ m)
+
+  -- The check version of `_≤p_`
+  _≤_ : Nat → Nat → Bool
+  zero ≤ zero = true
+  zero ≤ succ m = true
+  succ n ≤ zero = false
+  succ n ≤ succ m = n ≤ m
 \end{code}
 
 We also will need the `Maybe` type, and a comparison for that type:
@@ -353,4 +362,70 @@ module NatBsts where
               (≤-succ zero (succ zero) (≤-zero (succ zero))))
 \end{code}
 
+# Suspend
 
+We can use the suspend pattern to help with `if` statements.
+
+Take a look at this problem of proving min is homogeneous:
+\begin{code}
+module MinHom where
+  open NaturalNumbers
+  open Booleans
+  open ProveComp
+  open Equality
+
+  min : Nat → Nat → Nat
+  min m n = if m ≤ n then m else n
+
+  {- Commented to remove goal
+  min-hom : (n m : Nat) → succ (min n m) ≡ min (succ n) (succ m)
+  min-hom zero zero = refl
+  min-hom zero (succ m) = refl
+  min-hom (succ n) zero = refl
+  min-hom (succ n) (succ m) = {!!} -- now we run into problems
+  -}
+
+  -- We can also rewrite min using the `with` syntax. This doesn't solve our problem,
+  -- but we can use arbirary pattern matching
+  min' : Nat → Nat → Nat
+  min' n m  with n ≤ m
+  min' n m | true = n
+  min' n m | false = m
+
+  -- What we can do is use the "inspect" pattern, which allows us to inspect the value
+  -- of a pattern match.
+
+  -- First, we must define supsension, which is a function that returns a value when
+  -- called with a unit
+  data Unit : Set where
+    unit : Unit
+  Suspend : Set → Set
+  Suspend A = Unit → A
+
+  -- Then we can suspend a function application:
+  suspend : {A : Set}{B : A → Set} → (f : (a' : A) → B a') → (a : A) → Suspend (B a)
+  suspend f a = λ { unit → f a }
+
+  -- Get the value out of a suspension:
+  force : {A : Set} → Suspend A → A
+  force s = s unit
+
+  -- Equality between suspended and unsuspended types
+  data _≣_ {A : Set} : Suspend A → A → Set where
+    refl-susp : {x : Suspend A}{y : A} → (force x) ≡ y → x ≣ y
+
+  -- We can show that suspending a value keeps its equality
+  inspect : {A : Set} → (s : Suspend A) → s ≣ force s
+  inspect s = refl-susp refl
+
+  -- And now we can prove min-hom!
+  min'' : Nat → Nat → Nat
+  min'' n m with n ≤ m | inspect (suspend (_≤_ m) n)
+  min'' n m | true | refl-susp x = m
+  min'' n m | false | s = n
+
+  min-hom' : (n m : Nat) → succ (min'' n m) ≡ min'' (succ n) (succ m)
+  min-hom' n m with n ≤ m | inspect (suspend (_≤_ m) n)
+  min-hom' n m | true | refl-susp x = refl
+  min-hom' n m | false | s = refl
+\end{code}

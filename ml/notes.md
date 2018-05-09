@@ -469,6 +469,7 @@ Algorithm:
 # Supervised Learning - Ensemble Methods
 
 ## Ensemble Methods
+- Combine weak classifiers to make a strong classifier
 - Boosting
   - Train a new classifier focusing on training examples misclassified b
     earlier model
@@ -480,7 +481,7 @@ Algorithm:
 - For each split node `n`, go right if `fₙ(x) ≤ thₙ`, and go left otherwise,
   where
   - `x` is `N` dimensional attributes
-  - `fₙ` selects a single attribute from its input
+  - `fₙ` is of the form `f(x) = w₀x₀ + w₁x₁ + ... + wₙxₙ`
   - `thₙ` is the threshold value
 - For each leaf node, return a probability distribution across all classes
 
@@ -491,8 +492,8 @@ Algorithm:
 - Try several combinations of `f` and `th`
   - Separate `X` according to `f` and `th` into `Xₗ, Xᵣ`
   - Pick the `f` and `th` that optimise the information gain of this split
-  - `IG(Xₗ, Xᵣ) = E(Xₗ + Xᵣ) - (|Xₗ|/|Xₙ|)E(Xₗ) - (|Xᵣ|/|Xₙ|)E(Xᵣ)`
-    - where `E = sum(P(c)log₂(P(c)) for c in classes)`
+  - `IG(Xₗ, Xᵣ) = E(Xₗ + Xᵣ) - (|Xₗ|/|X|)E(Xₗ) - (|Xᵣ|/|X|)E(Xᵣ)`
+    - where `E = -sum(P(c)log₂(P(c)) for c in classes)`
 - Recurse for left and right children
 
 ### Randomised Decision Forests

@@ -227,7 +227,22 @@
 - Used mostly in telco core networks (?)
 - Not used now because of cheap ethernet
 
-TODO: Some other techs mentioned here, but not in any detail - need to know?
+### Wave Division Multiplexing (WDM)
+- Use different colour light ot transmit multiple streams down a single fibre
+- Dense/Coarse WDM (DWDM/CWDM)
+  - Coarse: 20nm difference between adjacent channels
+  - Dense: 0.8/0.4/0.2nm difference between adjacent channels
+- Can go up to 10Tbps+
+- Telcos do ethernet straight over WDM
+- Long range
+
+### Synchronous Digital Hierarchy (SDH)
+- Deals in "trails" of data (which I think is just a stream of data...?)
+- Trails are 2Mbps+
+- Multiplexes these trails into STM1/4/16/64 which has speeds of
+  155Mbps/622Mbps/2.4Gbps/10Gbps
+- Extract and insert individual 2Mbps trails into the total stream
+- Still mostly used for long-haul internet traffic
 
 # Internet Protocol (IP)
 - Network layer that can

@@ -16,7 +16,8 @@
   - How motivated/prepared are they?
 - Change management
   - How do we deal with new assets and threats?
-  - How do we maintain existing security mechanisms and currently working/running systems?
+  - How do we maintain existing security mechanisms and currently
+    working/running systems?
 - Metrics and audit
   - How do we know how well we are doing?
   - Is 'it' being done at all?
@@ -50,15 +51,19 @@
 #### IL 3
 - "Risk to an individual’s personal safety or liberty"
 - "Loss to HMG/Public Sector of £millions"
-- "Undermine the financial viability of a minor UK based or UK-owned organisation"
+- "Undermine the financial viability of a minor UK based or UK-owned
+  organisation"
 
 #### IL 6
 - "Lead directly to widespread loss of life"
-- "Major, long term damage to the UK economy (to an estimated total in excess of £10 billion)"
-- "Major, long term damage to global trade or commerce, leading to prolonged recession or hyperinflation in the UK"
+- "Major, long term damage to the UK economy (to an estimated total in excess
+  of £10 billion)"
+- "Major, long term damage to global trade or commerce, leading to prolonged
+  recession or hyperinflation in the UK"
 
 ### Exercises/Suggestions
-- A load of suggestions in the slides for stuff. Will probably go into detail later.
+- A load of suggestions in the slides for stuff. Will probably go into
+  detail later.
 
 ### Cycle of Quality Systems (03/10/2017)
 - Plan
@@ -80,7 +85,8 @@
 
 ## Manufacturing
 - **Policies:** state objectives and criteria of system
-- **Procedures:** state how to do things, check to ensure fulfilment of policy objectives
+- **Procedures:** state how to do things, check to ensure fulfilment of
+  policy objectives
 - **Work Instructions** or **Method Statements:** done in more detail
 - **Quality Records audited:** compliance checked with policies and procedures
 
@@ -101,7 +107,8 @@
 ### Policies
 - Describe how things should be, not how to do them
 - Sets objectives and high-level operational requirements
-- Written by senior managers, approved by other senior managers or board-level directors
+- Written by senior managers, approved by other senior managers or board-level
+  directors
 - Short in length, long in duration
 
 
@@ -119,7 +126,8 @@
 
 ### Procedures
 - Describe how to do something correctly
-- Can be checked against policies to confirm they implement requirements and objectives (should state which policies they are derived from)
+- Can be checked against policies to confirm they implement requirements and
+  objectives (should state which policies they are derived from)
 - Generate quality records
 - Written by operational managers
 - Approved by their line managers
@@ -183,9 +191,11 @@
 
 
 **HMG #1**
-- **Threat source:** a person/organisation that desires to breach security and benefit
+- **Threat source:** a person/organisation that desires to breach security and
+  benefit
 - **Threat actor:** a person that performs an attack
-- **Threat level:** a level attributed to the to capability/motivation of a threat actor/source to an asset
+- **Threat level:** a level attributed to the to capability/motivation of a
+  threat actor/source to an asset
 
 
 **Deterrable?**
@@ -197,7 +207,8 @@
 - Only considers methods plausible for identified threat sources
 
 #### Risks
-- Risks are things that might happen to an asset, combining likelihood with impact
+- Risks are things that might happen to an asset, combining likelihood with
+  impact
 - Risks for ISO 27001 include fire and flood that don't have threat actors
 
 
@@ -250,7 +261,8 @@ FOI = focus of interest
 #### Physical Intruder (PI)
 - Gains unauthorised physical access to equipment
   - e.g. someone breaking into a data centre
-- By gaining access they have already broken the law so are more likely to cause damage or being more brutal and leaving traces
+- By gaining access they have already broken the law so are more likely to
+  cause damage or being more brutal and leaving traces
 
 #### Privileged User (PU)
 - Registered user/account holder that manages applications etc. within the FoI
@@ -275,10 +287,12 @@ FOI = focus of interest
 #### Shared Service Subscribers (SSS)
 - Someone who is an authorised user of services used by the FoI
 - Not a registered user of the systems/services within the FoI
-- e.g. FoI may rely on same power distribution service as user, user could make it unavailable, affecting FoI
+- e.g. FoI may rely on same power distribution service as user, user could
+  make it unavailable, affecting FoI
 
 #### Supplier (SUP)
-- Someone in supply chain that provides, maintains, has access to software/equipment
+- Someone in supply chain that provides, maintains, has access to
+  software/equipment
 - May have knowledge to allow/facilitate compromise of security property
 
 {Missing slides/notes}

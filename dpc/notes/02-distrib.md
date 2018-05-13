@@ -253,7 +253,23 @@
   - Each process channel computes channel state as the set of white messages it
     receives after saving its local state
 
-## Multiple Snapshots
+### Correctness
+- `a ≺ b ^ pre(b) → pre(a)`
+  - `a, b ∈ q` then trivially true
+  - `a := send(m), b := recv(m)`
+    - `pre(b) → white(b)`
+    - `white(b) → white(a)`
+    - `white(a) → pre(a)`
+- `m ∈ Cpq → pre(send(m)) ^ post(send(m))`
+  - `m ∈ Cpq → white(send(m)) → pre(send(m))` because of rules
+  - `m ∈ Cpq → control(q) ≺ recv(m)`
+  - `control(q) ≺ recv(m) → red(recv(m)) → post(recv(m))`
+- `pre(send(m)) ^ post(send(m)) → m ∈ Cpq`
+  - `pre(send(m)) → white(send(m))`
+  - `post(recv(m)) → control(q) ≺ recv(m)`
+  - `control(q) ≺ recv(m) → m ∈ Cpq`
+
+### Multiple Snapshots
 - Instead of red/white, use counter `k`
 - On first snapshot, `k = 0` is white, `k = 1` is red
 - On second snapshot, `k = 1` is white, `k = 2` is red

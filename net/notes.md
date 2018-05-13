@@ -1,24 +1,51 @@
 # Networks
 
 # Topics List
-- Transmission
-  - ATM, WDM, SDH (all at a very high level only)
-- Ethernet
-  - Switching, collisions, bridging, broadcasting, VLANs, Link Aggregation
-- IP
-  - Addressing, IPv4 and v6 subnets and prefixes, routing, routing protocols
-    (OSPF, RIP, convergence properties), NAT
-- UDP
-  - Applications, advantages and disadvantages
-- TCP
-  - Applications, advantages and disadvantages, mechanisms and operation,
-    sequence numbers, receive windows, slow start, window scaling, PAWS,
-    timestamping, multipathing
-- DNS
-  - Concepts, resource records, RR sets, basic operation, recursive and
-    authoritative servers, caching
-- Higher layer protocols
-  - Basic operation of HTTP, FTP, SMTP
+- [x] Transmission (all at a very high level only)
+  - [x] ATM
+  - [x] WDM
+  - [x] SDH
+- [x] Ethernet
+  - [x] Switching
+  - [x] Collisions
+  - [x] Bridging
+  - [x] Broadcasting
+  - [x] VLANs
+  - [x] Link aggregation
+- [x] IP
+  - [x] Addressing
+  - [x] IPv4 and v6 subnets and prefixes
+  - [x] Routing
+  - [x] Routing protocols
+    - [x] RIP
+    - [x] OSPF
+    - [x] Convergence properties
+  - [x] NAT
+- [x] UDP
+  - [x] Applications
+  - [x] Advantages and disadvantages
+- [ ] TCP
+  - [x] Applications
+  - [x] Advantages and disadvantages
+  - [ ] Mechanisms and operation
+  - [x] Sequence numbers
+  - [x] Receive windows
+  - [ ] Slow start
+  - [ ] Window scaling
+  - [ ] PAWS
+  - [ ] Timestamping
+  - [ ] Multipathing
+- [ ] DNS
+  - [ ] Concepts
+  - [ ] Resource records
+  - [ ] RR sets
+  - [ ] Basic operation
+  - [ ] Recursive and authoritative servers
+  - [ ] Caching
+- [ ] Higher layer protocols (Basic operation of)
+  - [ ] HTTP
+  - [ ] FTP
+  - [ ] SMTP
 
 # Basics
 - Measure network performance with:
@@ -134,23 +161,21 @@
   - We know the CRC
   - We calculate the CRC continuously
   - Once we calculate the CRC of the data _and_ the CRC (which is at the end of
-  the data), we know the data has finished
+    the data), we know the data has finished
 
 ### Collisions
 - Only one sender on the wire at any one time
 - Senders must wait until no one else is sending on the line
 - Detecting collision
   - As you transmit, if you listen back and don't see what you sent, then
-  someone else is sending
+    someone else is sending
 - When a collision happens
   - "Jam" the network by sending a particular pattern
   - Whole network must know about the collision before the packet has finished
-    being sent
-    - TODO: Why?
-  - This created the minimum packet size of 64 octets
-    - TODO: Why?
+    being sent, so they don't think the packet is valid
+  - This created the minimum packet size of 64 bytes
 - Recovery from collision
-  - On the `n`th attempt to retransmit, chose a random number `k` from [0, 2^n]
+  - On the `n`th attempt to retransmit, chose a random number `k` from [0, 2ⁿ]
     and delay `512k` bit periods before trying again
   - After 10 attempts, give up
   - Randoms don't need to be good quality here
@@ -176,8 +201,8 @@
   - TODO: What is cat3, and its realtion to coax/tp?
 
 ### Repeaters, Hubs, Bridges
-- Repeaters amplify the signal on the wire, there are still collisions across the
-  repeater
+- Repeaters amplify the signal on the wire, there are still collisions across
+  the repeater
 - Bridge receives, buffers and transmits frames, so collisions aren't propagated
 - Ether hubs are repeaters, not bridges
 - Imagine two networks A and B

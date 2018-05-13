@@ -332,7 +332,7 @@
 - We can make Tarry's algorithm DFS by adding a rule:
   - If rules 1&2 allow it, send the token down the same channel as soon as you
     receive it
-- Advantages
+- We can use this to speed up search time:
   - Let the token carry information of all processes that carried it
   - Avoid sending this information down frond edges (meaning that extra memory
     would be required)

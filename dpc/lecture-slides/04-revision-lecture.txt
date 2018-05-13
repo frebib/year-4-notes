@@ -1,0 +1,30 @@
+Exam: Wednesday 16th May 9:30-11:00
+
+My availability:
+    Today until 17:00
+    Not tomorrow (Friday)
+    After that, email for an appointment.
+
+60% GPU
+40% Distributed Algorithms
+
+GPU:
+   Basics, Latency/Throughput, Architecture,
+   Ahmdahl, Gustafson-Barsis                               10%
+
+   Operations: Map, Reduce, Scatter,
+   Gather, Scan (inclusive/Exclusive, Normal/Segmented),
+   Compact, Sort                                           20%
+
+   Optimisation:
+        Divergence
+        Coalesced Global Memory accesses
+        Shared Memory Bank Conflicts
+        Configuration Limits
+        Occupancy
+                                                           30%
+
+Distributed Algorithms:
+    Space-Time Diagrams & Clocks                           10%
+    The various algorithms                             2 x 10%
+    Proof                                                  10%

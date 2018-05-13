@@ -305,18 +305,38 @@
 - Performance
   - Number of messages: `2E`
   - Time to complete: `2E`
-- Depth first search
-  - Token is forward to a process that has not yet held the token, in preference
-    to one that has
-  - Means that frond edges will only connect ancestors/descendants
-  - We can make Tarry's algorithm DFS by adding a rule:
-    - If rules 1&2 allow it, send the token down the same channel as soon as you
-      receive it
-  - Advantages
-    - Let the token carry information of all processes that carried it
-    - Avoid sending this information down frond edges (meaning that extra memory
-      would be required)
-    - Messages only travel down spanning tree edges, so `2E → 2N - 2`
+
+#### Correctness
+- Token ends up at initiator
+  - Token never sent through the same channel in same direction twice
+  - When non-initiator holds token, received it one more time than it has sent
+    it
+  - Hence there is always a channel it has not sent it down yet, so can always
+    send it on
+  - Unless it is the initiator, in which case the algorithm ends
+- The token travels through each channel in each direction once
+  - Do this through reductio ad absurdum
+  - Assume that at termination, a channel has not been traversed by token in
+    both directions
+  - Let `p` be the (a) earliest visited (b) non-initiator process (c) that has a
+    channel not traversed in the outgoing direction
+  - Let `s` be the parent of `p` that has all channels traversed
+  - As `s` is `p`'s parent, `p` must have sent the message back to `s`
+  - But in order to send to parent, `p` must have sent down all channels
+  - Contradiction!
+
+#### Depth first search
+- Token is forward to a process that has not yet held the token, in preference
+  to one that has
+- Means that frond edges will only connect ancestors/descendants
+- We can make Tarry's algorithm DFS by adding a rule:
+  - If rules 1&2 allow it, send the token down the same channel as soon as you
+    receive it
+- Advantages
+  - Let the token carry information of all processes that carried it
+  - Avoid sending this information down frond edges (meaning that extra memory
+    would be required)
+  - Messages only travel down spanning tree edges, so `2E → 2N - 2`
 
 ## Echo Algorithm
 - Wave, but not traversal algorithm

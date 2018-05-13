@@ -283,6 +283,14 @@ There is the concept of a warp:
   - Use an atomic operation: `atomicAdd(&(array[i]), 1);`
 - TODO: Is this fast? How does it work? Not mentioned in the slides
 
+## Occupancy
+- Each SM has a maximum number of blocks and warps that it can run concurrently
+  - Maximum blocks « maximum warps
+- If you have less warps running than the max number of warps, you fail to reach
+  100% occupancy
+- If you have loads of small blocks, then you might not reach the maximum number
+  of warps, but you will reach the maximum number of blocks
+
 # GPU Programming Patterns
 - Map
   - One-to-one, each thread responsible for converting one element

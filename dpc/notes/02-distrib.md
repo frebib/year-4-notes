@@ -58,7 +58,7 @@
   - Set of configurations: `(λ, δ) ∈ C`
     - Global state of the algorithm
     - `C` is the set of all possible configurations of an algorithm
-  - Binary transition relation on `C`: `λ → δ`
+  - Binary transition relation on `C: λ → δ`
     - Changes the global state from one configuration to another
   - A set of initial configurations: `I`
 - A configuration is terminal if there are no transitions out of the
@@ -149,7 +149,7 @@
   - No starvation (no node waits forever)
   - Only 3 messages per use of resource (ask, grant, release)
   - However, single point of failure, and a big bottleneck
-- Decentralised
+- Decentralised (Ricart-Agrawala)
   - To request a resource, send message to all process requesting resource
   - When process receives message:
     - If not using and doesn't want
@@ -203,7 +203,26 @@
   - `b` is pre-snapshot → `q` has not received a marker when `b` occurs
   - Since channels are FIFO, `p` has not sent a marker when `a` occurs
   - Hence, `a` is pre-snapshot
-TODO: Rest
+  - This chain of causality travels through to all events
+- Message `m` between `p, q` is in channel state `Cpq` iff send of `m` at `p` is
+  pre-snapshot, and receive at `q` is post-snapshot
+  - Forward direction
+    - Assume `m ∈ Cpq`
+    - Since `q` has saved `m`, it must occur after we have the control message
+      from another channel (or `q` is the initiator), so receive of `m` is
+      post-snapshot
+    - Since `q` has saved `m`, it must occur before `q` has the control message
+      from `p`, so the send of `m` is before `p` has the control message, so
+      send of `m` is pre-snapshot
+  - Backwards direction
+    - Assume send of `m` is pre-snapshot and receive of `m` is post-snapshot
+    - Send of `m` pre-snapshot implies `p` saves state after sending `m`, hence
+      control message sent down `Cpq` after `m`
+      - And received in same order due to FIFO
+    - Receive of `m` post-snapshot implies that `q` has received the control
+      message already from a different node (or `q` is initiator)
+    - Since `q` has saved local state but hasn't received control message from
+      `p`, it saves `m` in `Cpq`
 
 ## Lai-Yang-Mattern Algorithm
 - Works on non-FIFO channels

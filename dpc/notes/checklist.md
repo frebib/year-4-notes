@@ -1,0 +1,41 @@
+# Checklist
+
+- [ ] GPU
+  - [ ] Basics
+  - [ ] Latency/throughput
+  - [ ] Architecture
+  - [ ] Speed estimation
+    - [ ] Ahmdahl
+    - [ ] Gustafson-Barsis
+  - [ ] Operations
+    - [ ] Map
+    - [ ] Reduce
+    - [ ] Scatter
+    - [ ] Gather
+    - [ ] Scan (inclusive/exclusive, normal/segmented)
+    - [ ] Compact
+    - [ ] Sort
+  - [ ] Optimisation:
+    - [ ] Divergence
+    - [ ] Coalesced global memory accesses
+    - [ ] Shared memory bank conflicts
+    - [ ] Configuration Limits
+    - [ ] Occupancy
+- [ ] Distributed Algorithms
+  - [ ] Space-time diagrams
+  - [ ] Logical clocks
+    - [ ] Lamport's clock
+    - [ ] Vector clocks
+  - [ ] Various algorithms
+    - [ ] Distributed mutual exclusion
+    - [ ] Chandy-Lamport snapshot
+      - [ ] Proofs
+    - [ ] Lai-Yang-Mattern snapshot
+      - [ ] Proofs
+    - [ ] Tarry
+      - [ ] Proofs
+    - [ ] Echo
+    - [ ] Waits-For Graph (WFG)
+    - [ ] Bracha-Toueg WFG
+  - [ ] Proofs
+

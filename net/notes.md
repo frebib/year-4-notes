@@ -24,28 +24,32 @@
 - [x] UDP
   - [x] Applications
   - [x] Advantages and disadvantages
-- [ ] TCP
+- [x] TCP
   - [x] Applications
   - [x] Advantages and disadvantages
-  - [ ] Mechanisms and operation
+  - [x] Mechanisms and operation
+    - [x] Three-way handshake
+    - [x] Finish handshake
   - [x] Sequence numbers
   - [x] Receive windows
-  - [ ] Slow start
-  - [ ] Window scaling
-  - [ ] PAWS
-  - [ ] Timestamping
-  - [ ] Multipathing
-- [ ] DNS
-  - [ ] Concepts
-  - [ ] Resource records
-  - [ ] RR sets
-  - [ ] Basic operation
-  - [ ] Recursive and authoritative servers
-  - [ ] Caching
-- [ ] Higher layer protocols (Basic operation of)
-  - [ ] HTTP
-  - [ ] FTP
-  - [ ] SMTP
+    - [x] Go-Back-N
+    - [x] Selective repeat
+  - [x] Slow start
+  - [x] Window scaling
+  - [x] PAWS
+  - [x] Timestamping
+  - [x] Multipathing
+- [x] DNS
+  - [x] Concepts
+  - [x] Resource records
+  - [x] RR sets
+  - [x] Basic operation
+  - [x] Recursive and authoritative servers
+  - [x] Caching
+- [x] Higher layer protocols (Basic operation of)
+  - [x] HTTP
+  - [x] FTP
+  - [x] SMTP
 
 # Basics
 - Measure network performance with:

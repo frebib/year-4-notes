@@ -464,21 +464,23 @@
 - Client acknowledges, send `(ACK, seq=x+1, ack=y+1)`
 
 ### Close Connection
-- Send TCP packet with `FIN` flag
-- Reply with `FIN+ACK`
-- Reply with `ACK`
+- `FIN/ACK/FIN/ACK`
+- `FIN-ACK/FIN-ACK`
+- `FIN/FIN-ACK/ACK`
 
 ### Window Scaling
-- Receive window limited to 64k
+- Receive window limited to 64k (16 bits)
 - Very low limit
-- To solve this, there's a scaling value
-- Increases window size to 2^14
+- To solve this, there's a scaling value, 4 bits, max 14, default 7
+- `new_window_size = window_size << window_scale`
+- Increases window size to `2^(16+14) = 2^30`
 
 ### PAWS
 - 4GB worth of sequence numbers, so if you want to send more than 4GB there's
   no way to distinguish between new and old packets
-- We add a timestamp to the headers in order to distinguish
+- We add a millisecond timestamp to the headers in order to distinguish
 - This timestamp can also be used to measure round-trip time
+- Also allows us to reliably measure round-trip-time
 
 ### Slow Start
 - LAN is faster than WAN mainly
@@ -584,6 +586,8 @@
 - e.g. Wifi and 4G together
 - Performance + fail safe
 - Very new
+- Say `MP_CAPABLE` in initial connections
+- Say `MP_JOIN` over different interface(s) with MAC to join initial connection
 
 # Network Address Translation (NAT)
 - Extends scarce IP numbers
@@ -668,11 +672,11 @@
 - Full load balancing
 - Full failover
 
-# Domain Name System (DNS)
+# Domain Name Service (DNS)
 - Maps names to IP numbers (v4, v6) and vice versa
-- Locates resources (TODO: ?)
+- Locates resources
 - Once you own a domain name
-  - Create resource records within the domain
+  - Create resource records for the domain
   - Delegate portions of the namespace to other nameservers
   - Zone: group of resource records served from one nameserver
 - Lots of caching involved
@@ -689,8 +693,8 @@
 - `TXT` records contain random text information
 - Each record has a class, but is always set to internet (`IN`)
 - Represented as (name, TTL, class, type, data)
-  - `foo.domain.com` represented as `[3]foo[6]domain[3]com[0]` where `[3]` is the
-    byte value for 3 (`0b00000011`)
+  - `foo.domain.com` represented as `[3]foo[6]domain[3]com[0]` where `[3]` is
+    the byte value for 3 (`0b00000011`)
 
 ## Time to Live (TTL)
 - In seconds
@@ -756,11 +760,31 @@ Can segment the tree up however you want to create zones
 - New mechanism:
   - Server listens on high port
   - Client calls to it from high port
+- Active mode
+  - Client connects to server on `:21`
+  - Client opens a port on `:P` where `P > 1024`
+  - Client tells server selected `:P`
+  - Server sends data to `:P`
+- Passive mode
+  - Client connects to server on `:21`
+  - Server opens a port on `:P` where `P > 1024`
+  - Server tells client selected `:P`
+  - Client receives data to `:P`
 
 ## Simple Mail Transfer Protocol (SMTP)
 - Sending email
 - Extensions for auth, encryption, etc.
 - Mail user agents (MUAs) talk to mail transport/submission agents (MTAs/MSAs)
+
+### Message Format
+```
+HELO
+MAIL FROM you@gmail.com
+RCPT TO them@gmail.com
+DATA some message
+.
+QUIT
+```
 
 ## POP3
 - Downloading email

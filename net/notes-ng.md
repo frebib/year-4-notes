@@ -35,6 +35,7 @@ TODO: Add ARP section
 
 ## Switching/Bridging
 - Repeater
+  - a.k.a. hub
   - Amplify data transfer between multiple ethernet wires
 - Bridges
   - Puts packets into a queue and waits to transmit them
@@ -373,6 +374,7 @@ is propagated, meaning only one propagation needs to happen
 - This could lead to router running out of memory
 - So what we do, is send one packet, then two, and then increase some amount
   every time we get an ACK (usually exponentially), until we hit rec window
+- If packets are dropped, we multiplicatively decrease how much we send
 
 ## Window scaling
 - Receive window limited to 64k (16 bits)
@@ -402,7 +404,13 @@ is propagated, meaning only one propagation needs to happen
 
 # DNS
 ## Concepts
-## Resource Records
+## Resource Records (RR)
+### Sets
+- Collection of RRs relating to the same domain
+- Different types (`A`, `AAAA`, `PTR`, etc.)
+- Can have multiple of the same type
+  - If two `A` RRs, client will round-robin chose which response to use
+
 ## Basic Operation
 ## Recursive and Authoritative Servers
 ## Caching
@@ -432,7 +440,7 @@ is propagated, meaning only one propagation needs to happen
   - Client connects to server on `:21`
   - Server opens a port on `:P` where `P > 1024`
   - Server tells client selected `:P`
-  - Client receives data to `:P`
+  - Client receives data on `:P`
 
 ## SMTP
 - Sending email

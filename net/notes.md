@@ -1,5 +1,9 @@
 # Networks
 
+**Moved to [notes-ng](notes-ng.md), these notes go through all the slides, while
+the other notes go through all of the check list below, meaning it contains less
+but more precise information**
+
 # Topics List
 - [x] Transmission (all at a very high level only)
   - [x] ATM

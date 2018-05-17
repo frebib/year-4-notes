@@ -1,41 +1,44 @@
 # Checklist
 
-- [ ] GPU
-  - [ ] Basics
-  - [ ] Latency/throughput
-  - [ ] Architecture
-  - [ ] Speed estimation
-    - [ ] Ahmdahl
-    - [ ] Gustafson-Barsis
-  - [ ] Operations
-    - [ ] Map
-    - [ ] Reduce
-    - [ ] Scatter
-    - [ ] Gather
-    - [ ] Scan (inclusive/exclusive, normal/segmented)
-    - [ ] Compact
-    - [ ] Sort
-  - [ ] Optimisation:
-    - [ ] Divergence
-    - [ ] Coalesced global memory accesses
-    - [ ] Shared memory bank conflicts
-    - [ ] Configuration Limits
-    - [ ] Occupancy
+- [x] GPU
+  - [x] Basics
+  - [x] Latency/throughput
+  - [x] Architecture
+  - [x] Speed estimation
+    - [x] Ahmdahl
+    - [x] Gustafson-Barsis
+  - [x] Operations
+    - [x] Map
+    - [x] Reduce
+    - [x] Scatter
+    - [x] Gather
+    - [x] Scan (inclusive/exclusive, normal/segmented)
+    - [x] Compact
+    - [x] Sort
+      - [x] Odd-even sort
+      - [x] Parallel merge sort
+      - [x] Bitonic sort
+      - [x] Radix sort
+  - [x] Optimisation:
+    - [x] Divergence
+    - [x] Coalesced global memory accesses
+    - [x] Shared memory bank conflicts
+    - [x] Configuration limits
+    - [x] Occupancy
 - [ ] Distributed Algorithms
-  - [ ] Space-time diagrams
-  - [ ] Logical clocks
-    - [ ] Lamport's clock
-    - [ ] Vector clocks
+  - [x] Space-time diagrams
+  - [x] Logical clocks
+    - [x] Lamport's clock
+    - [x] Vector clocks
   - [ ] Various algorithms
-    - [ ] Distributed mutual exclusion
-    - [ ] Chandy-Lamport snapshot
+    - [x] Distributed mutual exclusion
+    - [x] Chandy-Lamport snapshot
       - [ ] Proofs
-    - [ ] Lai-Yang-Mattern snapshot
+    - [x] Lai-Yang-Mattern snapshot
       - [ ] Proofs
-    - [ ] Tarry
+    - [x] Tarry
       - [ ] Proofs
-    - [ ] Echo
-    - [ ] Waits-For Graph (WFG)
-    - [ ] Bracha-Toueg WFG
-  - [ ] Proofs
+    - [x] Echo
+    - [x] Waits-For Graph (WFG)
+    - [x] Bracha-Toueg WFG
 

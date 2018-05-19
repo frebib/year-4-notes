@@ -1,5 +1,9 @@
 # Network Security
 
+**Moved to [notes-ng](notes-ng.md), these notes go through all the slides, while
+the other notes go through all of the check list from Ian, meaning it contains
+less but more precise information**
+
 # Introduction
 - What are we protecting?
   - Confidentiality

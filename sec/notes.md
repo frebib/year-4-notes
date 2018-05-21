@@ -377,6 +377,8 @@ less but more precise information**
 - Anycasting
   - Advertise of BGP multiple locations hosting that IP
   - Attacker then has to take out each of those locations
+  - Can sort of be done through multiple DNS A/AAAA records, but doesn't give
+    geographic importance
 - Amplification attacks
   - Small request, big response
   - Forge source IP

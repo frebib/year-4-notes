@@ -418,51 +418,54 @@ Concepts and components
 - Better documentation/standards
 
 # Virtual Private Network (VPN)
-- IP-in-IP to get packets between parts of the virtual network
+- Connect different physical networks together
+- Edge routers on each networks have some sort of "tunnel" between them to send
+  packets between the nodes in the networks
+- IP-in-IP
+  - Used as tunnel between networks
   - Original IP packet becomes payload in new IP packet
-- Not secure by itself
+  - Not secure by itself, can inject/read/modify packets
 - Can use IPsec
 - Can use SSL-VPN
-- Networks address space should not clash
-- Can connect different sites of the same company, without exposing internal
-  applications
-
-## Protocols
-TODO: What goes here?
-
-## OpenVPN/SSL-VPN
-- SSL-VPN
-  - Client-less option
-    - Systems provide access to HTTP resources via an SSL connection between
-      browser and VPN server, proxying through to original server
-    - Not technically a VPN
-    - Can have problems, due to all resources coming from single domain
-      - XXS, cookies issues, etc, if any one of the resources is compromised
-  - SSL forwarding
-    - Run a local app listening on `127.0.0.1:port`, and are tunnelled to
-      `server:port`
-- OpenVPN
-  - Uses auth mechanisms from SSL (OpenSSL)
-    - i.e. certificates
+  - Works like a reverse proxy
+  - Requires only the browser
+  - Host HTTPS site with one-time authentication per session
+  - User uses resources through HTTPS session
+  - All resources comes from the same domain, means that XSS etc. protections
+    fail
+- Can use OpenVPN
+  - Uses SSL
+  - Option to remember certificate, making MitM impossible (compared to SSL-VPN)
   - Runs over TCP/UDP
-    - Means it's ok for firewalls
+    - Good for firewalls
+  - Requires OpenVPN client (user space) and TUN/TAP drivers (kernel space)
+- PPP, L2TP, and IPsec
+  - Point to Point Protocol (PPP): Sending IP packets down serial lines
+    - Has authentication, but not encryption
+  - Layer 2 Tunnelling Protocol (L2TP): Sends packets as UDP (i.e. a layer 2
+    protocol) for firewalling and NAT
+  - PPP + L2TP: Can tunnel traffic with authentication, but not encryption
+  - PPP + L2TP + IPsec: Security!
+    - IPsec set up first, so PPP authentication is secure
+- IPsec XAuth
+  - Can be used with PPP + L2TP
+  - Problem:
+    - Most IPsec authentication mechanisms are oriented around host-to-host
+    - Difficult to set up user-to-host authentication, easy and secure for
+      ordinary users
+    - Can use PSK as password, but not great
+  - IPsec XAuth provides mechanism for sending arbitrary messages at the
+    beginning of a connection
+  - Allows us to set up XAuth over these arbitrary messages
+  - Weakly standardised, proprietary extensions
+- Cisco IPsec
+  - Proprietary, but reverse engineered
+  - XAuth supported
+  - Requires Cisco clients
+- Networks address space should not clash
+- Useful for connecting different sites of the same company, without exposing
+  internal applications
 
-## IPsec
-## Extensions to IPsec
 ## IPv6 issues
-
-## SSL VPN
-
-## Point-to-Point Protocol (PPP)
-- Layer 2 Tunnelling Protocol (L2TP)
-  - Sends packets as UDP containing tunnelled data
-  - Used to tunnel PPP
-- PPP derived from HDLC
-- Sends IP packets down serial lines
-- Has its own auth mechanism
-  - Allows username/password
-  - Can negotiate MTU, IPs
-- No encryption in PPP and L2TP
-  - But we can use IPsec
-  - Complex to set up
+TODO
 

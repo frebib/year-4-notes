@@ -14,6 +14,8 @@
 [Notes](dss/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27248)
+|
+[Past Papers](../../tree/master/dss/past-papers)
 
 ### Secure Programming
 [Lecture Slides](../../tree/master/sp/lecture-slides)
@@ -21,6 +23,8 @@
 [Notes](sp/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27286)
+|
+[Past Papers](../../tree/master/sp/past-papers)
 
 ### Secure System Management
 [Lecture Slides](../../tree/master/ssm/lecture-slides)
@@ -28,6 +32,8 @@
 [Notes](ssm/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27287)
+|
+[Past Papers](../../tree/master/cl/past-papers)
 
 ### Compilers and Languages
 [Lecture Slides](../../tree/master/cl/lecture-slides)
@@ -67,8 +73,6 @@
 [Past Papers](../../tree/master/dpc/past-papers)
 
 ### Hardware and Embedded Systems Security
-[Lecture Slides](../../tree/master/hes/lecture-slides)
-|
 [Notes](hes/notes.md)
 |
 [Canvas](https://canvas.bham.ac.uk/courses/27256)

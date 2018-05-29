@@ -3,7 +3,7 @@
 # Syllabus
 - Modelling sequential and parallel systems
   - Labeled transition systems (LTS)
-  - Parallel computation
+  - Parallel composition
 - Temporal logic
   - LTL, CTL, CTL\*
 - Model checking
@@ -12,7 +12,11 @@
 - Verification tools (SPIN)
   - Not on exam
 - Advanced verification techniques
-  - Bounded model checking
+  - Bounded model checking via propositional satisfiability
+  - Symbolic model checking
+    - Not on exam
+  - Probabilistic model checking
+    - Not on exam
 
 # Labeled Transition Systems (LTSs)
 - A tuple `(S, Act, →, I, AP, L)` where
@@ -101,7 +105,9 @@ captured by `P`).
 - Invariants
   - Something good is always true
   - `InvariantProperty = {{A₀, A₁, A₂...} | Aᵢ |= φ}`
-  - All traces where every state conforms to some proposition `φ`
+  - All traces where every state conforms to some propositional logic formula
+    `φ`
+    - This means no CTL/LTL in `φ`, just something of the form `a ^ b`
   - Can easily check - just ensure it is true for all reachable states
 - Safety properties
   - A failure does not occur
@@ -227,6 +233,7 @@ Superset of CTL and LTL
 ## Calculating `Sat(φ)`
 - Done recursively
 - Done on ENF
+
 ```
 Sat(true) = S
 Sat(a) = {s ∈ S | a ∈ L(s)}

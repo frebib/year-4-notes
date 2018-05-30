@@ -428,4 +428,64 @@ module MinHom where
   min-hom' n m with n ≤ m | inspect (suspend (_≤_ m) n)
   min-hom' n m | true | refl-susp x = refl
   min-hom' n m | false | s = refl
+
+\end{code}
+
+Simple proposition that if two numbers sum to zero, then the first must be zero too:
+\begin{code}
+module SumZero where
+  open NaturalNumbers
+  open Equality
+  open Hilbert
+  sum-zero : (m n : Nat) → m + n ≡ zero → m ≡ zero
+  sum-zero zero n p = refl
+  sum-zero (succ m) n p = enq (goal (m + n) p) where
+    goal : (m : Nat) → succ m ≡ zero → ⊥
+    goal m ()
+\end{code}
+
+# Martin Escardo's Lectures
+
+## Dependent Equality
+
+The `Vec` type is a list that has its length embedded into its type.
+We can define it as so:
+\begin{code}
+module Vector where
+  open NaturalNumbers
+  open Equality
+
+  data Vec (A : Set) : (n : Nat) → Set where
+    [] : Vec A zero
+    _∷_ : {n : Nat} → A → Vec A n → Vec A (succ n)
+
+  _++_ : {A : Set}{n m : Nat} → Vec A n → Vec A m → Vec A (n + m)
+  [] ++ ys = ys
+  (x ∷ xs) ++ ys = x ∷ (xs ++ ys)
+\end{code}
+
+We can define equality for the `Vec` type with dependendent equality.
+
+We can't use the normal `≡` type, because it requires that the LHS and RHS have the same type.
+
+TODO: Complete dependent equality
+\begin{code}
+module DependentEquality where
+  open Vector
+  open NaturalNumbers
+  open Equality
+
+  _≡[_]_ : {A : Set}{B : A → Set}{a₀ a₁ : A} → B a₀ → a₀ ≡ a₁ → B a₁ → Set
+  a ≡[ refl ] b = a ≡ b
+
+  cong-dep : {A : Set}{B : A → Set}{a₀ a₁ : A} → (f : (a : A) → B a) → (p : a₀ ≡ a₁) → f a₀ ≡[ p ] f a₁
+  cong-dep f refl = refl
+
+  +zero-id : {n : Nat} → n + zero ≡ n
+  +zero-id {zero} = refl
+  +zero-id {succ n} = cong succ +zero-id
+
+--  ++[]-id : {A : Set}{n : Nat} → (xs : Vec A n) → _≡[_]_ {B = Vec A} (xs ++ []) +zero-id xs
+--  ++[]-id [] = refl
+--  ++[]-id {A = A}{n = n}(x ∷ xs) = cong-dep {Nat}{Vec A}{n + zero}{n} {!!} {!!}
 \end{code}
